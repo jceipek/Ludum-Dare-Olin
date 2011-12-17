@@ -2,7 +2,9 @@
 # -*- coding: us-ascii -*-
 
 import sys
+import os
 import pygame
+from globals import *
 from pygame.locals import *
 from Box2D import *
 from manager import *
@@ -11,7 +13,7 @@ class myContactListener(b2ContactListener):
     def __init__(self):
         b2ContactListener.__init__(self)
     def BeginContact(self, contact):
-        print "HELLO\nHELLO\nHELLO\nHELLO\nHELLO\nHELLO\n"
+        pass
     def EndContact(self, contact):
         pass
     def PreSolve(self, contact, oldManifold):
@@ -71,8 +73,7 @@ def main():
 
     clock = pygame.time.Clock()
 
-    w = World(Vect(10, 10, "meters"), Vect(640, 480, "pixels"), (0, -10))
-    w.SetContactListener(myContactListener())
+    w = World(Vect(GAME_REAL_WIDTH, GAME_REAL_HEIGHT, "meters"), Vect(GAME_PIXEL_WIDTH, GAME_PIXEL_HEIGHT, "pixels"), GRAVITY)
     groundBodyDef = b2BodyDef()
     groundBodyDef.position = (5, 1)
     groundBody = w.CreateBody(groundBodyDef)
@@ -97,14 +98,25 @@ def main():
     body.CreateShape(shapeDef)
     body.SetMassFromShapes()
 
-    obj = pygame.Surface((640/10, 480/10))
+    IMG_COUNT = 30
+    IMG_W = 80
+    IMG_H = 80
+    background = pygame.Surface(screen.get_size())
+    background = background.convert()
+    background.fill((255, 255, 255))
+
+    obj = pygame.Surface((IMG_W, IMG_H))
     obj = obj.convert()
-    obj.fill((0, 255, 0))
+    obj.fill((255, 0, 0))
+    spritesheet = pygame.image.load(os.path.join('astronaut','walking.png'))
+    spritesheet.convert()
+    loopcount = 0
 
     #For Testing
-    inAir = True
+    #inAir = True
 
     while True:
+        loopcount += 1
         tstep = clock.tick(30)
         screen.blit(background, (0, 0))
         screen.blit(ground, (0, 480 - 480/10))
@@ -113,6 +125,9 @@ def main():
         print body.position
         posx = (10 - body.position.x) * (640/10) + 640/20
         posy = (10 - body.position.y) * (480/10) + 480/20
+        obj.blit(background, (0, 0))
+        obj.blit(spritesheet, (-IMG_W * (loopcount % IMG_COUNT), 0))
+        print posx,posy
         screen.blit(obj, (posx, posy))
 
         for event in pygame.event.get():
