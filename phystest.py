@@ -73,7 +73,7 @@ def main():
 
     clock = pygame.time.Clock()
 
-    w = World(Vect(GAME_REAL_WIDTH, GAME_REAL_HEIGHT, "meters"), Vect(GAME_PIXEL_WIDTH, GAME_PIXEL_HEIGHT, "pixels"), GRAVITY)
+    w = World(Vect(SCREEN_REAL_WIDTH, SCREEN_REAL_HEIGHT, "meters"), Vect(SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT, "pixels"), GRAVITY)
     groundBodyDef = b2BodyDef()
     groundBodyDef.position = (5, 1)
     groundBody = w.CreateBody(groundBodyDef)
