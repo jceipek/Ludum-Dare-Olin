@@ -3,6 +3,7 @@
 
 import sys
 import pygame
+from globals import *
 from pygame.locals import *
 from Box2D import *
 from manager import *
@@ -59,7 +60,7 @@ def main():
 
     clock = pygame.time.Clock()
 
-    w = World(Vect(10, 10, "meters"), Vect(640, 480, "pixels"), (0, -10))
+    w = World(Vect(GAME_REAL_WIDTH, GAME_REAL_HEIGHT, "meters"), Vect(GAME_PIXEL_WIDTH, GAME_PIXEL_HEIGHT, "pixels"), GRAVITY)
     groundBodyDef = b2BodyDef()
     groundBodyDef.position = (5, 1)
     groundBody = w.CreateBody(groundBodyDef)
