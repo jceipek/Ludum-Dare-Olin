@@ -5,7 +5,7 @@ import sys
 import pygame
 from pygame.locals import *
 from Box2D import *
-import manager
+from manager import *
 
 def box2d_example():
     world = b2AABB()
