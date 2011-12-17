@@ -9,17 +9,17 @@ from pygame.locals import *
 from Box2D import *
 from manager import *
 
-class myContactListener(b2ContactListener):
-    def __init__(self):
-        b2ContactListener.__init__(self)
-    def BeginContact(self, contact):
-        pass
-    def EndContact(self, contact):
-        pass
-    def PreSolve(self, contact, oldManifold):
-        pass
-    def PostSolve(self, contact, impulse):
-        pass
+#class myContactListener(b2ContactListener):
+#    def __init__(self):
+#        b2ContactListener.__init__(self)
+#    def BeginContact(self, contact):
+#        pass
+#    def EndContact(self, contact):
+#        pass
+#    def PreSolve(self, contact, oldManifold):
+#        pass
+#    def PostSolve(self, contact, impulse):
+#        pass
 
 def box2d_example():
     world = b2AABB()
@@ -60,6 +60,30 @@ def box2d_example():
         world.Step(timestep, velocityIterations, positionIterations)
         print body.position, body.angle
     return 0
+
+class Spaceman(object):
+    def __init__(self, body, obj, background):
+        self.body = body
+        self.obj = obj
+        self.sprWalkR = pygame.image.load(os.path.join('astronaut','walking.png'))
+        self.sprWalkR.convert()
+        self.sprWalkL = pygame.transform.flip(self.sprWalkR, True, False)
+        self.obj.blit(background, (0, 0))
+        self.obj.blit(self.sprWalkR, (0, 0))
+        self.IMG_COUNT = 30
+        self.IMG_W = 80
+    def getPosition(self):
+        return ( (10 - self.body.position.x) * (640/10) + 640/20, (10 - self.body.position.y) * (480/10) + 480/20 )
+    def updateImg(self, background, loopcount):
+        print self.body.GetLinearVelocity().x
+        if abs(self.body.GetLinearVelocity().x) > 1:
+            self.obj.blit(background, (0, 0))
+            if self.body.GetLinearVelocity().x > 0: #Moving Left
+                self.obj.blit(self.sprWalkL, (-self.IMG_W * (self.IMG_COUNT - loopcount % self.IMG_COUNT - 1), 0))
+            else:
+                self.obj.blit(self.sprWalkR, (-self.IMG_W * (loopcount % self.IMG_COUNT), 0))
+
+
 
 def main():
     pygame.init()
@@ -108,13 +132,11 @@ def main():
     obj = pygame.Surface((IMG_W, IMG_H))
     obj = obj.convert()
     obj.fill((255, 0, 0))
-    spritesheet = pygame.image.load(os.path.join('astronaut','walking.png'))
-    spritesheet.convert()
+
+    spaceman = Spaceman(body, obj, background)
+
+
     loopcount = 0
-
-    #For Testing
-    #inAir = True
-
     while True:
         loopcount += 1
         tstep = clock.tick(30)
@@ -122,12 +144,14 @@ def main():
         screen.blit(ground, (0, 480 - 480/10))
 
         w.Step(tstep / 1000.0, 10, 8)
-        print body.position
-        posx = (10 - body.position.x) * (640/10) + 640/20
-        posy = (10 - body.position.y) * (480/10) + 480/20
-        obj.blit(background, (0, 0))
-        obj.blit(spritesheet, (-IMG_W * (loopcount % IMG_COUNT), 0))
-        print posx,posy
+        #print body.position
+        posx, posy = spaceman.getPosition()
+        #posx = (10 - body.position.x) * (640/10) + 640/20
+        #posy = (10 - body.position.y) * (480/10) + 480/20
+        #obj.blit(background, (0, 0))
+        spaceman.updateImg(background, loopcount)
+        #obj.blit(spaceman.spritesheet, (-IMG_W * (loopcount % IMG_COUNT), 0))
+        #print posx,posy
         screen.blit(obj, (posx, posy))
 
         for event in pygame.event.get():
