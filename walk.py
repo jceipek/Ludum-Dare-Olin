@@ -15,9 +15,8 @@ def main():
     IMG_H = 80
     background = pygame.Surface(screen.get_size())
     background = background.convert()
-    background.fill((0, 0, 255))
+    background.fill((255, 255, 255))
     
-
     walker = pygame.Surface((IMG_W, IMG_H))
     walker.convert()
     walker.fill((255, 0, 0))
@@ -28,7 +27,10 @@ def main():
         loopcount += 1
         tstep = clock.tick(30)
         screen.blit(background, (0, 0))
+        walker.blit(background, (0, 0))
+        walker.blit(spritesheet, (-IMG_W * (loopcount % IMG_COUNT), 0))
         screen.blit(walker, (100, 100))
+        pygame.display.flip()
 
         print loopcount
 
