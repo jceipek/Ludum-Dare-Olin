@@ -29,10 +29,8 @@ def main():
         screen.blit(background, (0, 0))
         walker.blit(background, (0, 0))
         walker.blit(spritesheet, (-IMG_W * (loopcount % IMG_COUNT), 0))
-        screen.blit(walker, (100, 100))
+        screen.blit(walker, (int(loopcount * (38.0/30.0)), 400))
         pygame.display.flip()
-
-        print loopcount
 
         for event in pygame.event.get():
             if event.type == QUIT:
