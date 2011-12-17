@@ -72,16 +72,28 @@ class Spaceman(object):
         self.obj.blit(self.sprWalkR, (0, 0))
         self.IMG_COUNT = 30
         self.IMG_W = 80
+
+        self.curVel = None
     def getPosition(self):
         return ( (10 - self.body.position.x) * (640/10) + 640/20, (10 - self.body.position.y) * (480/10) + 480/20 )
     def updateImg(self, background, loopcount):
         print self.body.GetLinearVelocity().x
-        if abs(self.body.GetLinearVelocity().x) > 1:
+        if abs(self.body.GetLinearVelocity().x) >= 1:
             self.obj.blit(background, (0, 0))
             if self.body.GetLinearVelocity().x > 0: #Moving Left
                 self.obj.blit(self.sprWalkL, (-self.IMG_W * (self.IMG_COUNT - loopcount % self.IMG_COUNT - 1), 0))
             else:
                 self.obj.blit(self.sprWalkR, (-self.IMG_W * (loopcount % self.IMG_COUNT), 0))
+    def motionCheck(self):
+        self.curVel = self.body.GetLinearVelocity
+
+        if 0.2 < abs(self.curVel.x) < 1:
+            #Try to slow body to stop with impulse
+            self.body.ApplyForce(b2Vec2(-(self.body.GetMass()*self.body.GetLinearVelocity().x*FPS/2),0),self.body.GetWorldCenter())
+            print "You're too slow!"
+    
+    def tryMove(x, y):
+        #if self.curVel.x < 
 
 
 
@@ -114,11 +126,12 @@ def main():
     bodyDef = b2BodyDef()
     bodyDef.position = (5, 10)
     bodyDef.fixedRotation = True
+    bodyDef.linearDamping = 0.2
     body = w.CreateBody(bodyDef)
     shapeDef = b2PolygonDef()
     shapeDef.SetAsBox(1, 1)
     shapeDef.density = 0.1
-    shapeDef.friction = 0
+    shapeDef.friction = 0.1
     body.CreateShape(shapeDef)
     body.SetMassFromShapes()
 
@@ -140,6 +153,9 @@ def main():
     while True:
         loopcount += 1
         tstep = clock.tick(30)
+
+        spaceman.motionCheck()
+
         screen.blit(background, (0, 0))
         screen.blit(ground, (0, 480 - 480/10))
 
@@ -161,11 +177,11 @@ def main():
                 if event.key == K_ESCAPE:
                     return
                 if event.key == K_RIGHT:
-                    body.ApplyForce(b2Vec2(-20,0),groundBody.GetWorldCenter())
+                    spaceman.tryMove(-20,0)
                 if event.key == K_LEFT:
-                    body.ApplyForce(b2Vec2(20,0),groundBody.GetWorldCenter())
+                    body.ApplyForce(b2Vec2(20,0),body.GetWorldCenter())
                 if event.key == K_UP:
-                    body.ApplyForce(b2Vec2(0,100), groundBody.GetWorldCenter())
+                    body.ApplyForce(b2Vec2(0,100),body.GetWorldCenter())
 
         pygame.display.flip()
     return 0
