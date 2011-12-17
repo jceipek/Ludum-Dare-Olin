@@ -8,6 +8,7 @@ from globals import *
 from pygame.locals import *
 from Box2D import *
 from manager import *
+import Room
 
 #class myContactListener(b2ContactListener):
 #    def __init__(self):
@@ -85,21 +86,32 @@ class Spaceman(object):
             else:
                 self.obj.blit(self.sprWalkR, (-self.IMG_W * (loopcount % self.IMG_COUNT), 0))
     def motionCheck(self):
-        self.curVel = self.body.GetLinearVelocity
+        self.curVel = self.body.GetLinearVelocity()
 
         if 0.2 < abs(self.curVel.x) < 1:
             #Try to slow body to stop with impulse
             self.body.ApplyForce(b2Vec2(-(self.body.GetMass()*self.body.GetLinearVelocity().x*FPS/2),0),self.body.GetWorldCenter())
             print "You're too slow!"
     
-    def tryMove(x, y):
-        #if self.curVel.x < 
+    def tryMove(self, x, y):
+        #MAY NOT NEED THIS LINE
+        if self.curVel.x > -MAX_WALK_SPEED: #Not going too fast Right
+            if self.curVel.x+x*self.body.GetMass() > -MAX_WALK_SPEED: #You can accelerate all the way asked
+                self.body.ApplyForce(b2Vec2(x,0), self.body.GetWorldCenter())
+                print "normal move"
+            else: #You can only accelerate to the max walk speed
+                self.body.ApplyForce(b2Vec2(-MAX_WALK_SPEED-self.curVel.x,0), self.body.GetWorldCenter())
+                print "maxed out move"
+        
 
 
 
 def main():
     pygame.init()
     screen = pygame.display.set_mode((640, 480))
+
+    room = Room.Room(640,480)
+    room.boxes.append(Room.Box((50,50), 20, 20))
     
     background = pygame.Surface(screen.get_size())
     background = background.convert()
@@ -148,6 +160,9 @@ def main():
 
     spaceman = Spaceman(body, obj, background)
 
+    for object in room.GetAllObjects():
+        object.add(w)
+
 
     loopcount = 0
     while True:
@@ -170,18 +185,24 @@ def main():
         #print posx,posy
         screen.blit(obj, (posx, posy))
 
+        for object in room.GetAllObjects():
+            screen.blit(object.obj, object.getPosition())
+
         for event in pygame.event.get():
             if event.type == QUIT:
                 return
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     return
-                if event.key == K_RIGHT:
-                    spaceman.tryMove(-20,0)
+                #if event.key == K_RIGHT:
+                #    spaceman.tryMove(-20,0)
                 if event.key == K_LEFT:
                     body.ApplyForce(b2Vec2(20,0),body.GetWorldCenter())
                 if event.key == K_UP:
                     body.ApplyForce(b2Vec2(0,100),body.GetWorldCenter())
+        keysPressed = pygame.key.get_pressed()
+        if keysPressed[K_RIGHT]:
+            spaceman.tryMove(-10, 0)
 
         pygame.display.flip()
     return 0

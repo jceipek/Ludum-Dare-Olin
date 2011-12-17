@@ -4,3 +4,5 @@ SCREEN_REAL_WIDTH = 10 # In meters
 SCREEN_REAL_HEIGHT = 10 # In meters
 GRAVITY = (0,-10)
 FPS = 60
+
+MAX_WALK_SPEED = 1
