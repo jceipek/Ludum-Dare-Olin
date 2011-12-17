@@ -100,6 +100,10 @@ def main():
         for event in pygame.event.get():
             if event.type == QUIT:
                 return
+            #if event.type == KEYDOWN:
+            #    groundBody.applyForce(vect(-5,0,"meters"),groundBody.getWorldCenter())
+            #if event.type == KEYUP:
+            #    groundBody.applyForce(vect(5,0,"meters"), groundBody.getWorldCenter())
 
         pygame.display.flip()
     return 0
