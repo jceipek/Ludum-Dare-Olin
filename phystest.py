@@ -78,7 +78,7 @@ def main():
     body = w.CreateBody(bodyDef)
     shapeDef = b2PolygonDef()
     shapeDef.SetAsBox(1, 1)
-    shapeDef.density = 1
+    shapeDef.density = 0.1
     shapeDef.friction = 0.3
     body.CreateShape(shapeDef)
     body.SetMassFromShapes()
@@ -100,10 +100,10 @@ def main():
         for event in pygame.event.get():
             if event.type == QUIT:
                 return
-            #if event.type == KEYDOWN:
-            #    groundBody.applyForce(vect(-5,0,"meters"),groundBody.getWorldCenter())
-            #if event.type == KEYUP:
-            #    groundBody.applyForce(vect(5,0,"meters"), groundBody.getWorldCenter())
+            if event.type == KEYDOWN:
+                body.ApplyForce(b2Vec2(0,500),groundBody.GetWorldCenter())
+            if event.type == KEYUP:
+                body.ApplyForce(b2Vec2(0,-500), groundBody.GetWorldCenter())
 
         pygame.display.flip()
     return 0
