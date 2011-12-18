@@ -1,4 +1,4 @@
-from manager import Dimension
+from dimension import Dimension
 
 METER = Dimension(value=1.0, units={'m': 1})
 PIXEL = Dimension(value=1.0, units={'px': 1})
