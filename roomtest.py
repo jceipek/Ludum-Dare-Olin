@@ -12,14 +12,13 @@ class LevelDesigner:
         surface = pygame.display.set_mode((SCREEN_PIXEL_WIDTH + WIDGET_TOOLBAR_WIDTH,SCREEN_PIXEL_HEIGHT))
         room = rm.Room(SCREEN_REAL_WIDTH,SCREEN_REAL_HEIGHT)
 
-        box = rm.Box(realPosition=(10,10))
+        box = rm.Box(realPosition=(0,0))
         box.blitToScreen(surface)
         
         print box.size
 
     def main(self):
         
-
         while True:
             #for object in room.GetAllObjects():
 

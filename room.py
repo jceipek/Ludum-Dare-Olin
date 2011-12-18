@@ -15,11 +15,11 @@ class RenderableObject(object):
 
     def prepPhysics(self,w):
         bodyDef = b2BodyDef()
-        bodyDef.position = self.realPosition
+        bodyDef.position = self.position.metersTuple()
         bodyDef.linearDamping = 0.2
         self.body = w.CreateBody(bodyDef)
         shapeDef = b2PolygonDef()
-        shapeDef.SetAsBox(self.realSize[0], self.realSize[1])
+        shapeDef.SetAsBox(self.size[0], self.size[1])
         shapeDef.density = 0.4
         shapeDef.friction = 0.1
         self.body.CreateShape(shapeDef)
