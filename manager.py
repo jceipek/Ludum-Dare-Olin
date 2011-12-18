@@ -32,8 +32,16 @@ class World(b2World):
     def ToMeters(self, vect):
         return Vect()
 
+class Rect(Box2D.b2Body):
+    def __init__(self, world, pos):
+        bodyDef = b2BodyDef()
+        bodyDef.position = pos
+        self = world.CreateBody(bodyDef)
 
 def main():
+    w = World(Vect(10, 10, "meters"), (0, -10))
+    r = Rect(w, (5, 5))
+    print r
     return 0
 
 if __name__ == '__main__':
