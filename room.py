@@ -48,7 +48,6 @@ class RenderableObject(object):
         Blits to the initial position for this object
         Used by the level designer
         '''
-        print self.initPosition.ConvertTo(PIXEL).Strip()
         screen.blit(self.sprite,self.vp.ScreenCoords(self.initPosition).Strip())
 
     def getSize(self):
