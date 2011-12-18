@@ -7,10 +7,12 @@ import dimension as dim
 
 WIDGET_TOOLBAR_WIDTH = 200
 
+# Specifies the widget classes we have
 widgetClasses = (rm.Box,rm.HangingTurret)
 
 class ImageToolbox:
     def __init__(self):
+        # Creates a surface to hold all the images
         self.surface = pygame.Surface((WIDGET_TOOLBAR_WIDTH, SCREEN_PIXEL_HEIGHT))
         self.surface.fill((100,100,100))
         self.images = list()
@@ -20,6 +22,7 @@ class ImageToolbox:
         vert_padding = 10; #px
         vert_position = 10; #px
 
+        # Loads all images and blits them to the appropriate surface
         for cls in widgetClasses:
             obj = cls(position=None)
             self.surface.blit(obj.sprite,(horiz_padding,vert_position))
@@ -104,14 +107,25 @@ class LevelDesigner:
                         print "Hit Left"
                         vp.originDelta = vp.originDelta - dim.Vect(movement,zero)
                 elif event.type == MOUSEBUTTONDOWN:
-                    print "Mouse Clicked at ",event.pos
-                    print "Found object: ",self.toolbox.FindClickedObject(event.pos)
+                    self.handleClick(event.pos)
 
                 
             self.surface.blit(self.background,(0,0))
             for item in self.room.GetAllObjects():
                 item.blitToInitialPosition(self.surface)
             pygame.display.flip()
+
+    def handleClick(self,pos):
+        print "Mouse Clicked at ", pos
+        if self.clickInToolbox(pos):
+            print "Found object: ",self.toolbox.FindClickedObject(pos)
+
+        else:
+            pos = dim.Vect(PIXEL * pos[0], PIXEL * pos[1])
+            print "Physical Coordinates: ",mgr.ViewPort().PhysxCoords(pos)
+
+    def clickInToolbox(self,pos):
+        return pos[0] > SCREEN_PIXEL_WIDTH
         
 if (__name__ == "__main__"):
     LevelDesigner().main()
