@@ -62,7 +62,7 @@ class Rect(object):
         self.body.SetMassFromShape()
 
     def GetCornersPixels(self):
-        
+        pass
 
 def main():
     pygame.init()
