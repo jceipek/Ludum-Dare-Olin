@@ -1,7 +1,8 @@
 from manager import *
+from serializable import Serializable
 import os
 
-class Room(object):
+class Room(Serializable):
     '''
     Defines a room within the dungeon.
 
@@ -24,7 +25,7 @@ class Room(object):
     def GetAllObjects(self):
         return self.windows+self.platforms+self.doors+self.lasers+self.boxes+self.spawnPoints
 
-class Polygon(object):
+class Polygon(Serializable):
     '''
     Defines a polygon with an arbitrary number of points.
     '''
@@ -38,19 +39,20 @@ class Polygon(object):
 class Window(Polygon):
     pass
 
-class Door(object):
+class Door(Serializable):
     def __init__(self, height=None, distanceFromBottom=None):
         self.height = height
         self.onLeft = True
         self.distanceFromBottom = distanceFromBottom
 
-class Laser(object):
+class Laser(Serializable):
     def __init__(self,position=None):
+        super(Laser,self).__init__()
         self.position = position
         self.activated = True
         self.orientation = 0
 
-class Turret(object):
+class Turret(Serializable):
     def __init__(self):
         self.activated = True
         self.orientation = 0
@@ -67,12 +69,12 @@ class HangingTurret(Turret):
         self.length = length
         self.angle = angle
 
-class Rectangle(object):
+class Rectangle(Serializable):
     def __init__(self, width=None, height=None):
         self.width = width
         self.height = height
 
-class Box(object):
+class Box(Serializable):
     def __init__(self, position=None, width=None, height=None):
         self.position = position
         self.width = width

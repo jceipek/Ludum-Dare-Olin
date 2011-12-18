@@ -1,23 +1,25 @@
 import room
 import json
+from serializable import Serializable
 
 class RoomDeSerializer(json.JSONDecoder):
     def __init__(self):
         super(RoomDeSerializer, self).__init__(object_hook=self.object_callback)
 
     def object_callback(self,o):
-        newObj = eval('Room.' + o["__jsonclass__"] + '()')
+        newObj = eval('room.' + o["__jsonclass__"] + '()')
 
         for key in o:
             if key == "__jsonclass__":
                 continue
+            print key,o[key]
             newObj.__setattr__(key,o[key])
 
         return newObj
 
 class RoomSerializer(json.JSONEncoder):
     def encode(self,o):
-        if not isinstance(o, Room.Room):
+        if not isinstance(o, room.Room):
             raise TypeError("This serializer only serializes rooms.")
 
         # Add json class hinting
@@ -28,16 +30,20 @@ class RoomSerializer(json.JSONEncoder):
         return output
 
     def default(self, o):
-        summary = vars(o)
-        summary["__jsonclass__"] = o.__class__.__name__
-        return summary
-
+        if isinstance(o,Serializable):
+            summary = vars(o)
+            summary["__jsonclass__"] = o.__class__.__name__
+            return summary
+        else:
+            return None
+            
 if __name__ == "__main__":
-    room = room.Room(10,10)
+    gameroom = room.Room(10,10)
     rs = RoomSerializer()
-    room.lasers.append(Room.Laser((10,10)))
-    room.lasers.append(Room.Laser((10,10)))
-    serialized = rs.encode(room)
+    gameroom.lasers.append(room.Laser((10,10)))
+    gameroom.lasers.append(room.Laser((10,10)))
+    gameroom.boxes.append(room.Box((10,10),30,30))
+    serialized = rs.encode(gameroom)
     print serialized
     print "Serialization complete\n\n\n\n"
     rds = RoomDeSerializer()
