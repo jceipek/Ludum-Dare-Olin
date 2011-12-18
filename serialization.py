@@ -1,4 +1,4 @@
-import Room
+import room
 import json
 
 class RoomDeSerializer(json.JSONDecoder):

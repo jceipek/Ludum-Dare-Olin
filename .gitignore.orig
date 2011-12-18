@@ -1,0 +1,8 @@
+<<<<<<< HEAD
+#Ignore Visual Studio files
+*.sln
+*.pyproj
+*.pyc
+=======
+.DS_Store
+>>>>>>> 7c359f48875558c4e5e31741728feeedbea060d5
