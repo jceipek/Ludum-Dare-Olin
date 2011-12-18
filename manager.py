@@ -60,7 +60,7 @@ class Vect(object):
 
 class Dimension(object):
     base_units = ('m', 'kg', 's')
-    alt_units = {'px': (1 / PIXELS_PER_METER, 'm')}
+    alt_units = {'px': (1 / 40.0, 'm')}
     def __init__(self, value=None, units=None, unitstr=None):
         if unitstr != None:
             value, sp, unitstr = unitstr.partition(' ')
@@ -96,13 +96,14 @@ class Dimension(object):
         return dict
 
     def Canonicalize(self):
+        new_di = {}
         for unit in self.units:
             if unit in self.alt_units.keys():
                 factor, target = self.alt_units[unit]
                 exp = self.units[unit]
                 self.value *= math.pow(factor, exp)
-                del self.units[unit]
-                self.units[target] = exp
+                new_di[target] = exp
+        self.units = new_di
 
     def ConvertTo(self, target):
         newself = Dimension(value=self.value, units=self.CopyDict())
@@ -293,19 +294,17 @@ def main():
 
     clock = pygame.time.Clock()
     
-    screen_width = Dimension(value=SCREEN_REAL_WIDTH, units={'m': 1})
-    screen_height = Dimension(value=SCREEN_REAL_HEIGHT, units={'m': 1})
+    screen_width = SCREEN_REAL_WIDTH * METER
+    screen_height = SCREEN_REAL_HEIGHT * METER
     w = World(Vect(screen_width, screen_height), GRAVITY)
     vp = ViewPort()
     
-    meter = Dimension(value=1.0, units={'m': 1})
-    
-    groundRectPos = Vect(screen_width / 2.0, 0.5 * meter)
-    groundRectSize = Vect(screen_width, 1.0 * meter)
+    groundRectPos = Vect(screen_width / 2.0, 0.5 * METER)
+    groundRectSize = Vect(screen_width, 1.0 * METER)
     groundRect = Rect(w, groundRectPos, groundRectSize, 0)
 
-    rect1 = Rect(w, Vect(9.0 * meter, 9.0 * meter), Vect(meter, meter), 1)
-    rect2 = Rect(w, Vect(10.0 * meter, 18.0 * meter), Vect(meter * 2, meter), 1)
+    rect1 = Rect(w, Vect(9.0 * METER, 9.0 * METER), Vect(METER, METER), 1)
+    rect2 = Rect(w, Vect(10.0 * METER, 18.0 * METER), Vect(METER * 2, METER), 1)
 
     while True:
         tstep = clock.tick(30)
