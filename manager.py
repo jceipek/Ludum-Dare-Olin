@@ -6,9 +6,6 @@ import pygame
 from pygame.locals import *
 from Box2D import *
 
-class Body(object):
-    pass
-
 class Vect(object):
     def __init__(self, x, y, units):
         self.x = x
@@ -35,6 +32,7 @@ class World(b2World):
 
     def ToMeters(self, vect):
         return Vect()
+
 
 def main():
     return 0
