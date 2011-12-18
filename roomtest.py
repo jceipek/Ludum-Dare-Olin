@@ -12,7 +12,7 @@ widgetClasses = (rm.Box,rm.HangingTurret)
 class ImageToolbox:
     def __init__(self):
         self.surface = pygame.Surface((WIDGET_TOOLBAR_WIDTH, SCREEN_PIXEL_HEIGHT))
-        self.surface.fill((0,0,0))
+        self.surface.fill((100,100,100))
         self.images = list()
         self.hitboxes = list()
         
@@ -22,8 +22,7 @@ class ImageToolbox:
 
         for cls in widgetClasses:
             obj = cls(position=None)
-            self.surface.blit(obj.sprite,(horiz_padding,vert_padding))
-            vert_position += vert_padding
+            self.surface.blit(obj.sprite,(horiz_padding,vert_position))
 
             top = vert_position;
             bottom = top + obj.sprite.get_height()
@@ -34,6 +33,8 @@ class ImageToolbox:
 
             self.images.append(obj)
             self.hitboxes.append(hitbox)
+
+            vert_position = bottom + vert_padding
 
         self.surface = self.surface.convert()
 
