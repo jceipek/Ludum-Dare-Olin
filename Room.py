@@ -1,4 +1,3 @@
-import os
 from manager import *
 
 class Room(object):
@@ -11,7 +10,7 @@ class Room(object):
     '''
 
     # Creates an empty room
-    def __init__(self,width,height):
+    def __init__(self,width=0,height=0):
         self.width = width
         self.height = height
         self.windows = list()
@@ -45,7 +44,7 @@ class Door(object):
         self.distanceFromBottom = distanceFromBottom
 
 class Laser(object):
-    def __init__(self,position):
+    def __init__(self,position=None):
         self.position = position
         self.activated = True
         self.orientation = 0
