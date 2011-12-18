@@ -26,35 +26,19 @@ import dimension as dim
 
 def main():
     pygame.init()
+    clock = pygame.time.Clock()
     screen = pygame.display.set_mode((SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT))
     
     background = pygame.Surface(screen.get_size())
     background = background.convert()
     background.fill((0, 0, 0))
 
-    screen.blit(background, (0, 0))
-
-    clock = pygame.time.Clock()
-
     screen_width = dim.Dimension(value=SCREEN_REAL_WIDTH, units={'m': 1})
     screen_height = dim.Dimension(value=SCREEN_REAL_HEIGHT, units={'m': 1})
     w = mgr.World(dim.Vect(screen_width, screen_height), GRAVITY)
 
     room = rm.Room(SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT)
-    room.platforms.append(rm.StaticPlatform(w, dim.Vect(0.0 * METER, 3.0 * METER), dim.Vect(8.0*METER,1.0*METER)))
-
-    #groundBodyDef = b2BodyDef()
-    #groundBodyDef.position = (5, 1)
-    #groundBody = w.CreateBody(groundBodyDef)
-    #groundShapeDef = b2PolygonDef()
-    #groundShapeDef.SetAsBox(5.0, 0.5)
-    #groundBody.CreateShape(groundShapeDef)
-
-    #ground = pygame.Surface((SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT/10))
-    #ground = ground.convert()
-    #ground.fill((255, 0, 255))
-    #screen.blit(ground, (0, SCREEN_PIXEL_HEIGHT - SCREEN_PIXEL_HEIGHT/10))
-    #pygame.display.flip()
+    room.platforms.append(rm.StaticPlatform(w, dim.Vect(8.0 * METER, 3.0 * METER), dim.Vect(8.0*METER,1.0*METER)))
 
     spaceman = rm.Spaceman(w, dim.Vect(9.0 * METER, 9.0 * METER))
     spaceman.add()
@@ -71,7 +55,7 @@ def main():
         spaceman.motionCheck()
 
         screen.blit(background, (0, 0))
-        screen.blit(ground, (0, 480 - 480/10))
+        #screen.blit(ground, (0, 480 - 480/10))
 
         w.Step(tstep / 1000.0, 10, 8)
         #posx, posy = spaceman.getPosition()
