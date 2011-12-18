@@ -10,7 +10,7 @@ class Room(object):
     '''
 
     # Creates an empty room
-    def __init__(self,width=0,height=0):
+    def __init__(self,width=None,height=None):
         self.width = width
         self.height = height
         self.windows = list()
@@ -28,8 +28,8 @@ class Polygon(object):
     Defines a polygon with an arbitrary number of points.
     '''
 
-    def __init__(self, *points):
-        self.Points = tuple(points)
+    def __init__(self, points=None):
+        self.Points = points
 
     def VertexCount(self):
         return len(self.Points)
@@ -38,7 +38,7 @@ class Window(Polygon):
     pass
 
 class Door(object):
-    def __init__(self, height, distanceFromBottom):
+    def __init__(self, height=None, distanceFromBottom=None):
         self.height = height
         self.onLeft = True
         self.distanceFromBottom = distanceFromBottom
@@ -55,24 +55,24 @@ class Turret(object):
         self.orientation = 0
 
 class StaticTurret(Turret):
-    def __init__(self,position):
+    def __init__(self,position=None):
         super(StaticTurret,self).__init__()
         self.position = position
 
 class HangingTurret(Turret):
-    def __init__(self,position,length,angle):
+    def __init__(self,position=None,length=None,angle=None):
         super(HangingTurret,self).__init__()
         self.position = position
         self.length = length
         self.angle = angle
 
 class Rectangle(object):
-    def __init__(self, width, height):
+    def __init__(self, width=None, height=None):
         self.width = width
         self.height = height
 
 class Box(object):
-    def __init__(self, position, width, height):
+    def __init__(self, position=None, width=None, height=None):
         self.position = position
         self.width = width
         self.height = height
@@ -99,6 +99,6 @@ class Box(object):
     
 
 class StaticPlatform(Rectangle):
-    def __init__(self, bottomLeftCorner, width, height):
+    def __init__(self, bottomLeftCorner=None, width=None, height=None):
         super(Rectangle,self).__init__(width,height)
         self.BottomLeftCorner = bottomLeftCorner
