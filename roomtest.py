@@ -7,7 +7,7 @@ import dimension as dim
 
 WIDGET_TOOLBAR_WIDTH = 200
 
-widgetClasses = (rm.Box,)
+widgetClasses = (rm.Box,rm.HangingTurret)
 
 class ImageToolbox:
     def __init__(self):
@@ -21,7 +21,7 @@ class ImageToolbox:
         vert_position = 10; #px
 
         for cls in widgetClasses:
-            obj = cls(pos=None)
+            obj = cls(position=None)
             self.surface.blit(obj.sprite,(horiz_padding,vert_padding))
             vert_position += vert_padding
 
@@ -69,7 +69,7 @@ class LevelDesigner:
         self.toolbox = ImageToolbox()
         self.surface.blit(self.toolbox.surface,(SCREEN_PIXEL_WIDTH,0))
 
-        box = rm.Box(pos=dim.Vect(dim.Dimension(unitstr="1.0 m"),dim.Dimension(unitstr="1.0 m")))
+        box = rm.Box(position=dim.Vect(dim.Dimension(unitstr="1.0 m"),dim.Dimension(unitstr="1.0 m")))
         box.blitToInitialPosition(self.surface)
         self.room.boxes.append(box)
 

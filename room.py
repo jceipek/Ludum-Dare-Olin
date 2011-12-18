@@ -127,14 +127,16 @@ class HangingTurret(Turret):
         self.length = length
         self.angle = angle
 
+        self.sprite = ImageHandler()["turret"]
+
 class Rectangle(Serializable):
     def __init__(self, width=None, height=None):
         self.width = width
         self.height = height
 
 class Box(Serializable,RenderableObject):
-    def __init__(self, world=None, pos=None):
-        RenderableObject.__init__(self, world, pos, BOX_SIZE)
+    def __init__(self, world=None, position=None):
+        RenderableObject.__init__(self, world, position, BOX_SIZE)
 
         self.sprite = ImageHandler()["crate"]
  
