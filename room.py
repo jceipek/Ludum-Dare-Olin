@@ -1,4 +1,5 @@
 from manager import *
+import os
 
 class Room(object):
     '''
