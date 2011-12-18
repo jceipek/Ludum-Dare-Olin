@@ -1,14 +1,17 @@
 import pygame
 import os
 
-IMAGES_TO_LOAD = ("crate.png",
-                  "door.png",
-                  "floorTurret.png",
-                  "laserBottom.png",
-                  "laserTop.png",
-                  "newcrate.png",
-                  "simplePlatform.png",
-                  "turret.png")
+IMAGES_TO_LOAD = {"crate"         :("","crate.png"),
+                  "door"          :("","door.png"),
+                  "floorTurret"   :("","floorTurret.png"),
+                  "laserBottom"   :("","laserBottom.png"),
+                  "laserTop"      :("","laserTop.png"),
+                  "newcrate"      :("","newcrate.png"),
+                  "simplePlatform":("","simplePlatform.png"),
+                  "turret"        :("","turret.png"),
+                  "walkingRight"  :("astronaut", "walkingRight.png"),
+                  "walkingLeft"   :("astronaut", "walkingLeft.png")
+                  }
 
 class ImageHandler(dict):
     #implement a singleton pattern here...
@@ -20,8 +23,10 @@ class ImageHandler(dict):
         return cls._instance
 
     def __init__(self):
-        for name in IMAGES_TO_LOAD:
-            img = pygame.image.load(os.path.join(name))
+        for name in IMAGES_TO_LOAD.keys():
+            folder = IMAGES_TO_LOAD[name][0]
+            file = IMAGES_TO_LOAD[name][1]
+            img = pygame.image.load(os.path.join(folder, file))
             img = img.convert()
             self[name] = img
 

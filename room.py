@@ -4,48 +4,44 @@ import os
 from images import ImageHandler
 import manager as mgr
 
+pixel = mgr.Dimension(value=1.0, units={'px': 1})
+SPACEMAN_SIZE = mgr.Vect(80*pixel,90*pixel)
+BOX_SIZE = mgr.Vect(76*pixel,78*pixel)
+
 class RenderableObject(object):
-    def __init__(self, world, pos, size, density, **kwargs):
+    def __init__(self, world, pos, size, **kwargs):
         self.sprite = None #Sprite loading is done in subclass
 
-        world.drawables.append(self)
+        #world.drawables.append(self)
+        self.world = world
         self.vp = mgr.ViewPort()
         
         self.size = size
-        self.pos = pos
+        self.position = pos
+        self.kwargs = kwargs
 
-    def add(self,w):
-        self.prepPhysics(w)
-        self.prepGraphics()
+    def add(self):
+        self.prepPhysics(self.world)
 
     def prepPhysics(self,w):
         bodyDef = b2BodyDef()
-        bodyDef.position = pos.ConvertTo(Dimension(unitstr="1.0 m")).Strip() #pos is a Vect
-        bodyDef.fixedRotation = kwargs.get("fixedRotation", False)
+        bodyDef.position = self.position.ConvertTo(Dimension(unitstr="1.0 m")).Strip() #position is a Vect
+        bodyDef.fixedRotation = self.kwargs.get("fixedRotation", False)
         bodyDef.linearDamping = 0.15
-        self.body = world.CreateBody(bodyDef)
+        self.body = self.world.CreateBody(bodyDef)
 
         shapeDef = b2PolygonDef()
-        shapeDef.SetAsBox(*(size / 2.0).ConvertTo(
+        shapeDef.SetAsBox(*(self.size / 2.0).ConvertTo(
             Dimension(unitstr="1.0 m")).Strip())
-        shapeDef.density = density
+        shapeDef.density = self.kwargs.get("density", DENSITY)
         shapeDef.linearDamping = AIR_RESISTANCE
         shapeDef.friction = FRICTION
         
         self.body.CreateShape(shapeDef)
         self.body.SetMassFromShapes()
 
-    def prepGraphics(self):
-        self.obj = self.sprite
-        #@Belland: is there any reason  to reblit here? I've changed this and self.obj should be eliminated
-        '''
-        self.obj = pygame.Surface((self.width, self.height))
-        self.obj = self.obj.convert()
-        self.obj.blit(self.sprite, (0, 0))
-        '''
-
     def blitToScreen(self,screen):
-        screen.blit(self.sprite,self.position.pixelsTuple())
+        screen.blit(self.sprite,self.vp.ScreenCoords(self.position).Strip())
 
     def getRealMeasurements(self):
         width = self.sprite.get_width() / PIXELS_PER_METER
@@ -125,22 +121,53 @@ class Rectangle(Serializable):
         self.height = height
 
 class Box(Serializable,RenderableObject):
-    def __init__(self, realPosition=(0,0)):
-        self.position = mgr.Vect(realPosition[0],realPosition[1],"meters")
-        self.body = None
+    def __init__(self, world, pos):
+        RenderableObject.__init__(self, world, pos, BOX_SIZE)
+
         self.sprite = ImageHandler()["crate.png"]
-        self.size = self.getRealMeasurements() #TODO: update w/ Kiefer's size thing
-
-        #Load image
-    def getPosition(self):
-        # Use self.realSize from now on
-
-        #FIXME Box has a size use that, world has a size, use that. basically 
-        #this entire function needs to be rewritten.
-        return ( (10 - self.body.position.x) * (640/10) + 640/20, (10 - self.body.position.y) * (480/10) + 480/20 )
  
 
 class StaticPlatform(Rectangle):
     def __init__(self, bottomLeftCorner=None, width=None, height=None):
         super(Rectangle,self).__init__(width,height)
         self.BottomLeftCorner = bottomLeftCorner
+
+
+class Spaceman(RenderableObject):
+    def __init__(self, world, pos):
+        RenderableObject.__init__(self, world, pos, SPACEMAN_SIZE)
+
+        self.IMG_COUNT = 30
+
+        self.sprWalkR = ImageHandler()["walkingRight"]
+        self.sprWalkL = ImageHandler()["walkingLeft"]
+
+        inPixels = SPACEMAN_SIZE.ConvertTo(Dimension(value=1.0, units={'px': 1})).Strip()
+        self.sprite = pygame.Surface(inPixels)
+        self.sprite = self.sprite.convert()
+        self.sprite.blit(self.sprWalkR, (0, 0))
+
+        self.curVel = None
+    def updateImg(self, background, loopcount):
+        if abs(self.body.GetLinearVelocity().x) >= 0.2:
+            self.sprite.blit(background, (0, 0))
+            if self.body.GetLinearVelocity().x > 0: #Moving Left
+                frameNo = loopcount % self.IMG_COUNT
+                self.sprite.blit(self.sprWalkL, 
+                              (-self.IMG_W * (frameNo), 0))
+            else:
+                self.sprite.blit(self.sprWalkR, 
+                              (-self.IMG_W * (frameNo), 0))
+    def motionCheck(self):
+        self.curVel = self.body.GetLinearVelocity()
+    def tryMove(self, x, y):
+        if x < 0 and self.curVel.x > -MAX_WALK_SPEED: #Not going too fast Right
+            if self.curVel.x+x/(FPS*self.body.GetMass()) > -MAX_WALK_SPEED: #You can accelerate all the way asked
+                self.body.ApplyForce(b2Vec2(x,0), self.body.GetWorldCenter())
+            else: #You can only accelerate to the max walk speed
+                self.body.ApplyForce(b2Vec2(FPS*(-MAX_WALK_SPEED-self.curVel.x)*self.body.GetMass(),0), self.body.GetWorldCenter())
+        elif x > 0 and self.curVel.x < MAX_WALK_SPEED: #Not going too fast Left
+            if self.curVel.x+x/(FPS*self.body.GetMass()) < MAX_WALK_SPEED: #You can accelerate all the way asked
+                self.body.ApplyForce(b2Vec2(x,0), self.body.GetWorldCenter())
+            else: #You can only accelerate to the max walk speed
+                self.body.ApplyForce(b2Vec2(FPS*(MAX_WALK_SPEED-self.curVel.x)*self.body.GetMass(),0), self.body.GetWorldCenter())

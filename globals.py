@@ -8,5 +8,6 @@ GRAVITY = (0,-10) # [m s^-2]
 AIR_RESISTANCE = 0.1 
 FRICTION = 0.2
 FPS = 60 # [s^-1]
+DENSITY = 0.4
 
 MAX_WALK_SPEED = 1 # [m s^-1]

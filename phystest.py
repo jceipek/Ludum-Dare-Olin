@@ -7,7 +7,7 @@ import pygame
 from globals import *
 from pygame.locals import *
 from Box2D import *
-from manager import *
+import manager as mgr
 import room as rm
 
 #class myContactListener(b2ContactListener):
@@ -22,61 +22,13 @@ import room as rm
 #    def PostSolve(self, contact, impulse):
 #        pass
 
-class Spaceman(object):
-    def __init__(self, body, obj, background):
-        self.body = body
-        self.obj = obj
-        self.sprWalkR = pygame.image.load(os.path.join('astronaut','walkingRight.png'))
-        self.sprWalkR.convert()
-        self.sprWalkL = pygame.transform.flip(self.sprWalkR, True, False)
-        self.obj.blit(background, (0, 0))
-        self.obj.blit(self.sprWalkR, (0, 0))
-        self.IMG_COUNT = 30
-        self.IMG_W = 80
-
-        self.curVel = None
-    def getPosition(self):
-        '''
-        Returns the position, in screen coordinates of the lower left hand 
-        corner.
-        '''
-        left_side = (10 - self.body.position.x) * (640 / 10) + 640 / 20
-        bottom_side = (10 - self.body.position.y) * (480 / 10) + 480 / 20
-        return (left_side, bottom_side)
-    def updateImg(self, background, loopcount):
-        if abs(self.body.GetLinearVelocity().x) >= 0.2:
-            self.obj.blit(background, (0, 0))
-            if self.body.GetLinearVelocity().x > 0: #Moving Left
-                frame_no = self.IMG_COUNT - loopcount % self.IMG_COUNT - 1
-                self.obj.blit(self.sprWalkL, 
-                              (-self.IMG_W * (frame_no), 0))
-            else:
-                self.obj.blit(self.sprWalkR, 
-                              (-self.IMG_W * (loopcount % self.IMG_COUNT), 0))
-    def motionCheck(self):
-        self.curVel = self.body.GetLinearVelocity()
-    def tryMove(self, x, y):
-        #MAY NOT NEED THIS LINE
-        if x < 0 and self.curVel.x > -MAX_WALK_SPEED: #Not going too fast Right
-            if self.curVel.x+x/(FPS*self.body.GetMass()) > -MAX_WALK_SPEED: #You can accelerate all the way asked
-                self.body.ApplyForce(b2Vec2(x,0), self.body.GetWorldCenter())
-            else: #You can only accelerate to the max walk speed
-                self.body.ApplyForce(b2Vec2(FPS*(-MAX_WALK_SPEED-self.curVel.x)*self.body.GetMass(),0), self.body.GetWorldCenter())
-        elif x > 0 and self.curVel.x < MAX_WALK_SPEED: #Not going too fast Right
-            if self.curVel.x+x/(FPS*self.body.GetMass()) < MAX_WALK_SPEED: #You can accelerate all the way asked
-                self.body.ApplyForce(b2Vec2(x,0), self.body.GetWorldCenter())
-            else: #You can only accelerate to the max walk speed
-                self.body.ApplyForce(b2Vec2(FPS*(MAX_WALK_SPEED-self.curVel.x)*self.body.GetMass(),0), self.body.GetWorldCenter())
-        
-
-
 
 def main():
     pygame.init()
     screen = pygame.display.set_mode((640, 480))
 
     room = rm.Room(640,480)
-    room.boxes.append(rm.Box((5,5)))
+    #room.boxes.append(rm.Box((5,5)))
     
     background = pygame.Surface(screen.get_size())
     background = background.convert()
@@ -86,7 +38,9 @@ def main():
 
     clock = pygame.time.Clock()
 
-    w = World(Vect(SCREEN_REAL_WIDTH, SCREEN_REAL_HEIGHT, "meters"), GRAVITY)
+    screen_width = mgr.Dimension(value=SCREEN_REAL_WIDTH, units={'m': 1})
+    screen_height = mgr.Dimension(value=SCREEN_REAL_HEIGHT, units={'m': 1})
+    w = w = mgr.World(mgr.Vect(screen_width, screen_height), GRAVITY)
     groundBodyDef = b2BodyDef()
     groundBodyDef.position = (5, 1)
     groundBody = w.CreateBody(groundBodyDef)
@@ -123,10 +77,12 @@ def main():
     obj = obj.convert()
     obj.fill((255, 0, 0))
 
-    spaceman = Spaceman(body, obj, background)
+    meter = mgr.Dimension(value=1.0, units={'m': 1})
+    spaceman = rm.Spaceman(w, mgr.Vect(meter, meter))
+    spaceman.add()
 
     for object in room.GetAllObjects():
-        object.add(w)
+        object.add()
 
 
     loopcount = 0
@@ -136,17 +92,19 @@ def main():
 
         spaceman.motionCheck()
 
-        screen.blit(background, (0, 0))
-        screen.blit(ground, (0, 480 - 480/10))
+        #screen.blit(background, (0, 0))
+        #screen.blit(ground, (0, 480 - 480/10))
 
         w.Step(tstep / 1000.0, 10, 8)
-        posx, posy = spaceman.getPosition()
+        #posx, posy = spaceman.getPosition()
         #posx = (10 - body.position.x) * (640/10) + 640/20
         #posy = (10 - body.position.y) * (480/10) + 480/20
         #obj.blit(background, (0, 0))
         spaceman.updateImg(background, loopcount)
         #obj.blit(spaceman.spritesheet, (-IMG_W * (loopcount % IMG_COUNT), 0))
-        screen.blit(obj, (posx, posy))
+        #screen.blit(obj, (posx, posy))
+
+        spaceman.blitToScreen(screen)
 
         for object in room.GetAllObjects():
             screen.blit(object.obj, object.getPosition())
