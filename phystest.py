@@ -9,6 +9,7 @@ from pygame.locals import *
 from Box2D import *
 import manager as mgr
 import room as rm
+import dimension as dim
 
 #class myContactListener(b2ContactListener):
 #    def __init__(self):
@@ -38,9 +39,10 @@ def main():
 
     clock = pygame.time.Clock()
 
-    screen_width = mgr.Dimension(value=SCREEN_REAL_WIDTH, units={'m': 1})
-    screen_height = mgr.Dimension(value=SCREEN_REAL_HEIGHT, units={'m': 1})
-    w = w = mgr.World(mgr.Vect(screen_width, screen_height), GRAVITY)
+    screen_width = dim.Dimension(value=SCREEN_REAL_WIDTH, units={'m': 1})
+    screen_height = dim.Dimension(value=SCREEN_REAL_HEIGHT, units={'m': 1})
+    w = w = mgr.World(dim.Vect(screen_width, screen_height), GRAVITY)
+
     groundBodyDef = b2BodyDef()
     groundBodyDef.position = (5, 1)
     groundBody = w.CreateBody(groundBodyDef)
@@ -77,7 +79,7 @@ def main():
     obj = obj.convert()
     obj.fill((255, 0, 0))
 
-    spaceman = rm.Spaceman(w, mgr.Vect(9.0 * METER, 9.0 * METER))
+    spaceman = rm.Spaceman(w, dim.Vect(9.0 * METER, 9.0 * METER))
     spaceman.add()
 
     for object in room.GetAllObjects():
