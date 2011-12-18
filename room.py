@@ -121,10 +121,10 @@ class Rectangle(Serializable):
         self.height = height
 
 class Box(Serializable,RenderableObject):
-    def __init__(self, world, pos):
+    def __init__(self, world=None, pos=pixel):
         RenderableObject.__init__(self, world, pos, BOX_SIZE)
 
-        self.sprite = ImageHandler()["crate.png"]
+        self.sprite = ImageHandler()["crate"]
  
 
 class StaticPlatform(Rectangle):
@@ -142,8 +142,8 @@ class Spaceman(RenderableObject):
         self.sprWalkR = ImageHandler()["walkingRight"]
         self.sprWalkL = ImageHandler()["walkingLeft"]
 
-        inPixels = SPACEMAN_SIZE.ConvertTo(Dimension(value=1.0, units={'px': 1})).Strip()
-        self.sprite = pygame.Surface(inPixels)
+        self.inPixels = SPACEMAN_SIZE.ConvertTo(Dimension(value=1.0, units={'px': 1})).Strip()
+        self.sprite = pygame.Surface(self.inPixels)
         self.sprite = self.sprite.convert()
         self.sprite.blit(self.sprWalkR, (0, 0))
 
@@ -151,13 +151,14 @@ class Spaceman(RenderableObject):
     def updateImg(self, background, loopcount):
         if abs(self.body.GetLinearVelocity().x) >= 0.2:
             self.sprite.blit(background, (0, 0))
+            
+            frameNo = loopcount % self.IMG_COUNT
             if self.body.GetLinearVelocity().x > 0: #Moving Left
-                frameNo = loopcount % self.IMG_COUNT
                 self.sprite.blit(self.sprWalkL, 
-                              (-self.IMG_W * (frameNo), 0))
+                              (-self.inPixels[0] * (frameNo), 0))  #Traverse the width of the image
             else:
                 self.sprite.blit(self.sprWalkR, 
-                              (-self.IMG_W * (frameNo), 0))
+                              (-self.inPixels[0] * (frameNo), 0))
     def motionCheck(self):
         self.curVel = self.body.GetLinearVelocity()
     def tryMove(self, x, y):
