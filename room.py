@@ -121,10 +121,10 @@ class Rectangle(Serializable):
         self.height = height
 
 class Box(Serializable,RenderableObject):
-    def __init__(self, world, pos):
+    def __init__(self, world=None, pos=pixel):
         RenderableObject.__init__(self, world, pos, BOX_SIZE)
 
-        self.sprite = ImageHandler()["crate.png"]
+        self.sprite = ImageHandler()["crate"]
  
 
 class StaticPlatform(Rectangle):

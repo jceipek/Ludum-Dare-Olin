@@ -2,6 +2,7 @@ from globals import *
 import pygame
 from pygame.locals import *
 import room as rm
+import manager as mgr
 
 WIDGET_TOOLBAR_WIDTH = 200
 
@@ -12,7 +13,7 @@ class LevelDesigner:
         surface = pygame.display.set_mode((SCREEN_PIXEL_WIDTH + WIDGET_TOOLBAR_WIDTH,SCREEN_PIXEL_HEIGHT))
         room = rm.Room(SCREEN_REAL_WIDTH,SCREEN_REAL_HEIGHT)
 
-        box = rm.Box(realPosition=(0,0))
+        box = rm.Box(pos=mgr.Vect(mgr.Dimension(unitstr="1.0 m"),mgr.Dimension(unitstr="1.0 m")))
         box.blitToScreen(surface)
         
         print box.size
