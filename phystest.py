@@ -8,7 +8,7 @@ from globals import *
 from pygame.locals import *
 from Box2D import *
 from manager import *
-import room
+import room as rm
 
 #class myContactListener(b2ContactListener):
 #    def __init__(self):
@@ -26,7 +26,7 @@ class Spaceman(object):
     def __init__(self, body, obj, background):
         self.body = body
         self.obj = obj
-        self.sprWalkR = pygame.image.load(os.path.join('astronaut','walking.png'))
+        self.sprWalkR = pygame.image.load(os.path.join('astronaut','walkingRight.png'))
         self.sprWalkR.convert()
         self.sprWalkL = pygame.transform.flip(self.sprWalkR, True, False)
         self.obj.blit(background, (0, 0))
@@ -75,8 +75,8 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((640, 480))
 
-    room = Room.Room(640,480)
-    room.boxes.append(Room.Box((5,5), 76, 78))
+    room = rm.Room(640,480)
+    room.boxes.append(rm.Box((5,5), 76, 78))
     
     background = pygame.Surface(screen.get_size())
     background = background.convert()
@@ -86,7 +86,7 @@ def main():
 
     clock = pygame.time.Clock()
 
-    w = World(Vect(SCREEN_REAL_WIDTH, SCREEN_REAL_HEIGHT, "meters"), Vect(SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT, "pixels"), GRAVITY)
+    w = World(Vect(SCREEN_REAL_WIDTH, SCREEN_REAL_HEIGHT, "meters"), GRAVITY)
     groundBodyDef = b2BodyDef()
     groundBodyDef.position = (5, 1)
     groundBody = w.CreateBody(groundBodyDef)

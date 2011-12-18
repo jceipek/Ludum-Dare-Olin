@@ -1,4 +1,4 @@
-import Room
+import room
 import json
 
 class RoomDeSerializer(json.JSONDecoder):
@@ -33,7 +33,7 @@ class RoomSerializer(json.JSONEncoder):
         return summary
 
 if __name__ == "__main__":
-    room = Room.Room(10,10)
+    room = room.Room(10,10)
     rs = RoomSerializer()
     room.lasers.append(Room.Laser((10,10)))
     room.lasers.append(Room.Laser((10,10)))
