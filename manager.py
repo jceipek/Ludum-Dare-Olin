@@ -6,6 +6,8 @@ import pygame
 from pygame.locals import *
 from Box2D import *
 
+from globals import *
+
 class Vect(object):
     def __init__(self, x, y, units):
         self.x = x
@@ -18,15 +20,12 @@ class Vect(object):
         return Vect(self.x + other.x, self.y + other.y, self.units)
 
 class World(b2World):
-    def __init__(self, size_pixels, size_meters, gravity):
-        self.size_pixels = size_pixels
-        self.size_meters = size_meters
-        self.ppm = Vect(size_pixels.x / size_meters.x, 
-                        size_pixels.y / size_meters.y, "p/m")
+    def __init__(self, size, gravity):
+        self.size = size # [m]
         self.bodies = []
         world = b2AABB()
         world.lowerBound = (0, 0)
-        world.upperBound = (self.size_meters.x, self.size_meters.y)
+        world.upperBound = (self.size.x, self.size.y)
         doSleep = True
         super(World, self).__init__(world, gravity, doSleep)
 
