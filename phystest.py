@@ -15,13 +15,70 @@ import dimension as dim
 #    def __init__(self):
 #        b2ContactListener.__init__(self)
 #    def BeginContact(self, contact):
-#        pass
+#        print contact.GetFixtureA().GetBody().GetUserData()
+#        if contact.GetFixtureA().GetBody().GetUserData() == "spaceman" and contact.GetFixtureB().GetBody().GetUserData() == "staticPlatform":
+#            print "thunk"
+#        print contact
 #    def EndContact(self, contact):
-#        pass
+#        print "hey"
 #    def PreSolve(self, contact, oldManifold):
 #        pass
 #    def PostSolve(self, contact, impulse):
 #        pass
+
+class myContactListener(b2ContactListener):
+    """
+    Handles all of the contact states passed in from Box2D.
+
+    """
+    test = []
+    def __init__(self):
+        super(myContactListener, self).__init__()
+
+    def handleCall(self, state, point):
+        print state
+        if not self.test: return
+
+        cp          = myContactPoint()
+        cp.shape1   = point.shape1
+        cp.shape2   = point.shape2
+        cp.position = point.position.copy()
+        cp.normal   = point.normal.copy()
+        cp.id       = point.id
+        cp.state    = state
+        self.test.points.append(cp)
+
+    def Add(self, point):
+        self.handleCall(myContactTypes.contactAdded, point)
+
+    def Persist(self, point):
+        self.handleCall(myContactTypes.contactPersisted, point)
+
+    def Remove(self, point):
+        self.handleCall(myContactTypes.contactRemoved, point)
+
+class myContactPoint:
+    """
+    Structure holding the necessary information for a contact point.
+    All of the information is copied from the contact listener callbacks.
+    """
+    shape1 = None
+    shape2 = None
+    normal = None
+    position = None
+    velocity = None
+    id  = None
+    state = 0
+
+class myContactTypes:
+    """
+    Acts as an enum, holding the types necessary for contacts:
+    Added, persisted, and removed
+    """
+    contactUnknown = 0
+    contactAdded = 1
+    contactPersisted = 2
+    contactRemoved = 3
 
 
 def main():
@@ -36,6 +93,9 @@ def main():
     screen_width = dim.Dimension(value=SCREEN_REAL_WIDTH, units={'m': 1})
     screen_height = dim.Dimension(value=SCREEN_REAL_HEIGHT, units={'m': 1})
     w = mgr.World(dim.Vect(screen_width, screen_height), GRAVITY)
+    w.listener = myContactListener() #I hate bugs. 
+    w.SetContactListener(w.listener)
+    w.listener.test = w
 
     room = rm.Room(SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT)
     room.platforms.append(rm.StaticPlatform(w, dim.Vect(8.0 * METER, 3.0 * METER), dim.Vect(8.0*METER,1.0*METER)))
@@ -51,6 +111,7 @@ def main():
     while True:
         loopcount += 1
         tstep = clock.tick(30)
+        w.points=[]
 
         spaceman.motionCheck()
 
@@ -64,6 +125,11 @@ def main():
         for object in room.GetAllObjects():
             object.blitToScreen(screen)
 
+        collision_pairs = [(p.shape1.GetBody(), p.shape2.GetBody()) for p in w.points]
+        print ""
+        for body1, body2 in collision_pairs:
+            print body1.GetUserData(), body2.GetUserData()
+
         for event in pygame.event.get():
             if event.type == QUIT:
                 return
@@ -71,7 +137,7 @@ def main():
                 if event.key == K_ESCAPE:
                     return
                 if event.key == K_UP:
-                    spaceman.body.ApplyForce(b2Vec2(0,100),spaceman.body.GetWorldCenter())
+                    spaceman.body.ApplyForce(b2Vec2(0,500),spaceman.body.GetWorldCenter())
                 if event.key == K_g:
                     w.gravity=(0,0)
         keysPressed = pygame.key.get_pressed()

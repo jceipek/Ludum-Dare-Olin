@@ -41,8 +41,10 @@ class World(b2World):
         world = b2AABB()
         world.lowerBound = (0, 0)
         world.upperBound = size.ConvertTo(METER).Strip()
-        doSleep = True
+        doSleep = False
         super(World, self).__init__(world, gravity, doSleep)
+        self.points=[]
+        
 
 
 class Rect(object):
