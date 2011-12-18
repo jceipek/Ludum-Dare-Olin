@@ -1,8 +1,6 @@
 import room
 import json
-
-class Serializable(object):
-    pass
+from serializable import Serializable
 
 class RoomDeSerializer(json.JSONDecoder):
     def __init__(self):
@@ -32,14 +30,6 @@ class RoomSerializer(json.JSONEncoder):
         return output
 
     def default(self, o):
-        print "-------------------------------------"
-        print type(o),issubclass(o.__class__,Serializable)
-        print o
-        print Serializable, type(Serializable)
-        print isinstance(o,Serializable)
-
-        print super(type(o)),Serializable
-
         if isinstance(o,Serializable):
             summary = vars(o)
             summary["__jsonclass__"] = o.__class__.__name__
@@ -52,6 +42,7 @@ if __name__ == "__main__":
     rs = RoomSerializer()
     gameroom.lasers.append(room.Laser((10,10)))
     gameroom.lasers.append(room.Laser((10,10)))
+    gameroom.boxes.append(room.Box((10,10),30,30))
     serialized = rs.encode(gameroom)
     print serialized
     print "Serialization complete\n\n\n\n"

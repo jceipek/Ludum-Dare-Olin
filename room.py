@@ -1,5 +1,5 @@
 from manager import *
-from serialization import Serializable
+from serializable import Serializable
 import os
 
 class Room(Serializable):
