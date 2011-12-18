@@ -6,7 +6,6 @@ import pygame
 import math
 from pygame.locals import *
 from Box2D import *
-
 from globals import *
 
 class Vect(object):
@@ -21,20 +20,28 @@ class Vect(object):
         return Vect(self.x + other.x, self.y + other.y, self.units)
 
     def meters(self):
-        if units = "meters":
+        if self.units == "meters":
             return self
         else:
             x = self.x / PIXELS_PER_METER
-            y = (768 - self.y) / PIXELS_PER_METER
+            y = (SCREEN_PIXEL_HEIGHT - self.y) / PIXELS_PER_METER
             return Vect(x, y, "meters")
 
+    def metersTuple(self):
+        vec = self.meters()
+        return (vec.x,vec.y)
+
     def pixels(self):
-        if units = "pixels":
+        if self.units == "pixels":
             return self
         else:
             x = self.x * PIXELS_PER_METER
-            y = SCREEN_PIXEL_SIZE - (self.y * PIXELS_PER_METER)
+            y = SCREEN_PIXEL_HEIGHT - (self.y * PIXELS_PER_METER)
             return Vect(x, y, "pixels")
+
+    def pixelsTuple(self):
+        vec = self.pixels()
+        return (vec.x,vec.y)
 
 class World(b2World):
     def __init__(self, size, gravity):

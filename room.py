@@ -2,11 +2,12 @@ from manager import *
 from serializable import Serializable
 import os
 from images import ImageHandler
+import manager as mgr
 
 class RenderableObject(object):
     def __init__(self):
         self.sprite = None #Sprite loading is done in superclass
-        self.position = (0,0)
+        self.position = mgr.Vect(0,0,"meters")
 
     def add(self,w):
         self.prepPhysics(w)
@@ -14,11 +15,11 @@ class RenderableObject(object):
 
     def prepPhysics(self,w):
         bodyDef = b2BodyDef()
-        bodyDef.position = self.position
+        bodyDef.position = self.realPosition
         bodyDef.linearDamping = 0.2
         self.body = w.CreateBody(bodyDef)
         shapeDef = b2PolygonDef()
-        shapeDef.SetAsBox(self.width, self.height)
+        shapeDef.SetAsBox(self.realSize[0], self.realSize[1])
         shapeDef.density = 0.4
         shapeDef.friction = 0.1
         self.body.CreateShape(shapeDef)
@@ -34,7 +35,12 @@ class RenderableObject(object):
         '''
 
     def blitToScreen(self,screen):
-        screen.blit(self.sprite,self.position)
+        screen.blit(self.sprite,self.position.pixelsTuple())
+
+    def getRealMeasurements(self):
+        width = self.sprite.get_width() / PIXELS_PER_METER
+        height = self.sprite.get_height() / PIXELS_PER_METER
+        return (width,height)
 
 class Room(Serializable):
     '''
@@ -109,14 +115,16 @@ class Rectangle(Serializable):
         self.height = height
 
 class Box(Serializable,RenderableObject):
-    def __init__(self, position=(0,0), width=10, height=10):
-        self.position = position
-        self.width = width
-        self.height = height
+    def __init__(self, realPosition=(0,0)):
+        self.position = mgr.Vect(realPosition[0],realPosition[1],"meters")
         self.body = None
         self.sprite = ImageHandler()["crate.png"]
+        self.size = self.getRealMeasurements() #TODO: update w/ Kiefer's size thing
+
         #Load image
     def getPosition(self):
+        # Use self.realSize from now on
+
         #FIXME Box has a size use that, world has a size, use that. basically 
         #this entire function needs to be rewritten.
         return ( (10 - self.body.position.x) * (640/10) + 640/20, (10 - self.body.position.y) * (480/10) + 480/20 )
