@@ -41,7 +41,7 @@ def main():
     w = mgr.World(dim.Vect(screen_width, screen_height), GRAVITY)
 
     room = rm.Room(SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT)
-    room.platforms.append(rm.StaticPlatform(w, ))
+    room.platforms.append(rm.StaticPlatform(w, dim.Vect(0.0 * METER, 3.0 * METER), dim.Vect(8.0*METER,1.0*METER)))
 
     #groundBodyDef = b2BodyDef()
     #groundBodyDef.position = (5, 1)

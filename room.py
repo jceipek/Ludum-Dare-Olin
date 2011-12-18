@@ -5,9 +5,8 @@ from images import ImageHandler
 import manager as mgr
 import dimension as dim
 
-pixel = dim.Dimension(value=1.0, units={'px': 1})
-SPACEMAN_SIZE = dim.Vect(80*pixel,90*pixel)
-BOX_SIZE = dim.Vect(76*pixel,78*pixel)
+SPACEMAN_SIZE = dim.Vect(80*PIXEL,90*PIXEL)
+BOX_SIZE = dim.Vect(76*PIXEL,78*PIXEL)
 
 class RenderableObject(object):
     def __init__(self, world, pos, size, **kwargs):
@@ -18,7 +17,7 @@ class RenderableObject(object):
         self.vp = mgr.ViewPort()
         
         self.size = size
-        self.position = pos
+        self.initPosition = pos
         self.kwargs = kwargs
 
     def add(self):
@@ -26,7 +25,7 @@ class RenderableObject(object):
 
     def prepPhysics(self,w):
         bodyDef = b2BodyDef()
-        bodyDef.position = self.position.ConvertTo(Dimension(unitstr="1.0 m")).Strip() #position is a Vect
+        bodyDef.position = self.initPosition.ConvertTo(Dimension(unitstr="1.0 m")).Strip() #initPosition is a Vect
         bodyDef.fixedRotation = self.kwargs.get("fixedRotation", False)
         bodyDef.linearDamping = 0.15
         self.body = self.world.CreateBody(bodyDef)
@@ -125,7 +124,7 @@ class Rectangle(Serializable):
         self.height = height
 
 class Box(Serializable,RenderableObject):
-    def __init__(self, world=None, pos=pixel):
+    def __init__(self, world=None, pos=None):
         RenderableObject.__init__(self, world, pos, BOX_SIZE)
 
         self.sprite = ImageHandler()["crate"]
@@ -133,7 +132,7 @@ class Box(Serializable,RenderableObject):
 
 class StaticPlatform(RenderableObject):
     def __init__(self, world, pos, size):
-        RenderableObject.__init__(self, world, pos, (width,height), density=0)
+        RenderableObject.__init__(self, world, pos, size, density=0)
         self.BottomLeftCorner = bottomLeftCorner
 
     def posVect(self):
