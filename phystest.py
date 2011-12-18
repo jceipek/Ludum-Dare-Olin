@@ -8,7 +8,7 @@ from globals import *
 from pygame.locals import *
 from Box2D import *
 from manager import *
-import Room
+import room
 
 #class myContactListener(b2ContactListener):
 #    def __init__(self):
@@ -36,14 +36,23 @@ class Spaceman(object):
 
         self.curVel = None
     def getPosition(self):
-        return ( (10 - self.body.position.x) * (640/10) + 640/20, (10 - self.body.position.y) * (480/10) + 480/20 )
+        '''
+        Returns the position, in screen coordinates of the lower left hand 
+        corner.
+        '''
+        left_side = (10 - self.body.position.x) * (640 / 10) + 640 / 20
+        bottom_side = (10 - self.body.position.y) * (480 / 10) + 480 / 20
+        return (left_side, bottom_side)
     def updateImg(self, background, loopcount):
-        if abs(self.body.GetLinearVelocity().x) >= .2:
+        if abs(self.body.GetLinearVelocity().x) >= 0.2:
             self.obj.blit(background, (0, 0))
             if self.body.GetLinearVelocity().x > 0: #Moving Left
-                self.obj.blit(self.sprWalkL, (-self.IMG_W * (self.IMG_COUNT - loopcount % self.IMG_COUNT - 1), 0))
+                frame_no = self.IMG_COUNT - loopcount % self.IMG_COUNT - 1
+                self.obj.blit(self.sprWalkL, 
+                              (-self.IMG_W * (frame_no), 0))
             else:
-                self.obj.blit(self.sprWalkR, (-self.IMG_W * (loopcount % self.IMG_COUNT), 0))
+                self.obj.blit(self.sprWalkR, 
+                              (-self.IMG_W * (loopcount % self.IMG_COUNT), 0))
     def motionCheck(self):
         self.curVel = self.body.GetLinearVelocity()
     def tryMove(self, x, y):

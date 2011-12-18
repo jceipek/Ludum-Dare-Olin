@@ -95,8 +95,10 @@ class Box(object):
         self.obj = self.obj.convert()
         self.obj.blit(self.sprite, (0, 0))
     def getPosition(self):
+        #FIXME Box has a size use that, world has a size, use that. basically 
+        #this entire function needs to be rewritten.
         return ( (10 - self.body.position.x) * (640/10) + 640/20, (10 - self.body.position.y) * (480/10) + 480/20 )
-    
+ 
 
 class StaticPlatform(Rectangle):
     def __init__(self, bottomLeftCorner, width, height):
