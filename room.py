@@ -2,6 +2,26 @@ from manager import *
 from serializable import Serializable
 import os
 
+class RenderableObject(object):
+    def __init__(self):
+        self.sprite = None
+
+    def add(self,w):
+        bodyDef = b2BodyDef()
+        bodyDef.position = self.position
+        bodyDef.linearDamping = 0.2
+        self.body = w.CreateBody(bodyDef)
+        shapeDef = b2PolygonDef()
+        shapeDef.SetAsBox(self.width, self.height)
+        shapeDef.density = 0.4
+        shapeDef.friction = 0.1
+        self.body.CreateShape(shapeDef)
+        self.body.SetMassFromShapes()
+
+        self.obj = pygame.Surface((self.width, self.height))
+        self.obj = self.obj.convert()
+        self.obj.blit(self.sprite, (0, 0))
+
 class Room(Serializable):
     '''
     Defines a room within the dungeon.
@@ -74,29 +94,14 @@ class Rectangle(Serializable):
         self.width = width
         self.height = height
 
-class Box(Serializable):
-    def __init__(self, position=None, width=None, height=None):
+class Box(Serializable,RenderableObject):
+    def __init__(self, position=(0,0), width=10, height=10):
         self.position = position
         self.width = width
         self.height = height
         self.body = None
         self.sprite = pygame.image.load(os.path.join('crate.png'))
         #Load image
-    def add(self, w):
-        bodyDef = b2BodyDef()
-        bodyDef.position = self.position
-        bodyDef.linearDamping = 0.2
-        self.body = w.CreateBody(bodyDef)
-        shapeDef = b2PolygonDef()
-        shapeDef.SetAsBox(self.width, self.height)
-        shapeDef.density = 0.4
-        shapeDef.friction = 0.1
-        self.body.CreateShape(shapeDef)
-        self.body.SetMassFromShapes()
-
-        self.obj = pygame.Surface((self.width, self.height))
-        self.obj = self.obj.convert()
-        self.obj.blit(self.sprite, (0, 0))
     def getPosition(self):
         #FIXME Box has a size use that, world has a size, use that. basically 
         #this entire function needs to be rewritten.
