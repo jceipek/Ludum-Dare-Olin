@@ -77,8 +77,7 @@ def main():
     obj = obj.convert()
     obj.fill((255, 0, 0))
 
-    meter = mgr.Dimension(value=1.0, units={'m': 1})
-    spaceman = rm.Spaceman(w, mgr.Vect(9.0 * meter, 9.0 * meter))
+    spaceman = rm.Spaceman(w, mgr.Vect(9.0 * METER, 9.0 * METER))
     spaceman.add()
 
     for object in room.GetAllObjects():

@@ -41,8 +41,7 @@ class RenderableObject(object):
         self.body.SetMassFromShapes()
 
     def blitToScreen(self,screen):
-        meter = mgr.Dimension(value=1.0, units={'m': 1})
-        screen.blit(self.sprite,self.vp.ScreenCoords(mgr.Vect(meter*self.body.position.x, meter*self.body.position.y)).Strip())
+        screen.blit(self.sprite,self.vp.ScreenCoords(mgr.Vect(METER*self.body.position.x, METER*self.body.position.y)).Strip())
 
     def getRealMeasurements(self):
         width = self.sprite.get_width() / PIXELS_PER_METER
@@ -128,10 +127,18 @@ class Box(Serializable,RenderableObject):
         self.sprite = ImageHandler()["crate"]
  
 
-class StaticPlatform(Rectangle):
-    def __init__(self, bottomLeftCorner=None, width=None, height=None):
-        super(Rectangle,self).__init__(width,height)
+class StaticPlatform(RenderableObject):
+    def __init__(self, world, pos, size):
+        RenderableObject.__init__(self, world, pos, (width,height))
         self.BottomLeftCorner = bottomLeftCorner
+        self.density
+
+    def blitToScreen(self, screen):
+        corners = self.GetCorners()
+        for i in range(len(corners) + 1):
+            pos_start = self.vp.ScreenCoords(corners[i - 2]).Strip()
+            pos_end = self.vp.ScreenCoords(corners[i - 1]).Strip()
+            pygame.draw.line(screen, (255, 255, 255), pos_start, pos_end, 2)
 
 
 class Spaceman(RenderableObject):
