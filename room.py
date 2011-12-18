@@ -141,7 +141,6 @@ class Box(Serializable,RenderableObject):
 class StaticPlatform(RenderableObject):
     def __init__(self, world, pos, size):
         RenderableObject.__init__(self, world, pos, size, density=0)
-        self.BottomLeftCorner = bottomLeftCorner
 
     def posVect(self):
         xr = self.body.position.x
