@@ -3,10 +3,11 @@ from serializable import Serializable
 import os
 from images import ImageHandler
 import manager as mgr
+import dimension as dim
 
-pixel = mgr.Dimension(value=1.0, units={'px': 1})
-SPACEMAN_SIZE = mgr.Vect(80*pixel,90*pixel)
-BOX_SIZE = mgr.Vect(76*pixel,78*pixel)
+pixel = dim.Dimension(value=1.0, units={'px': 1})
+SPACEMAN_SIZE = dim.Vect(80*pixel,90*pixel)
+BOX_SIZE = dim.Vect(76*pixel,78*pixel)
 
 class RenderableObject(object):
     def __init__(self, world, pos, size, **kwargs):
@@ -41,7 +42,7 @@ class RenderableObject(object):
         self.body.SetMassFromShapes()
 
     def blitToScreen(self,screen):
-        screen.blit(self.sprite,self.vp.ScreenCoords(mgr.Vect(METER*self.body.position.x, METER*self.body.position.y)).Strip())
+        screen.blit(self.sprite,self.vp.ScreenCoords(dim.Vect(METER*self.body.position.x, METER*self.body.position.y)).Strip())
 
     def getRealMeasurements(self):
         width = self.sprite.get_width() / PIXELS_PER_METER
@@ -129,9 +130,8 @@ class Box(Serializable,RenderableObject):
 
 class StaticPlatform(RenderableObject):
     def __init__(self, world, pos, size):
-        RenderableObject.__init__(self, world, pos, (width,height))
+        RenderableObject.__init__(self, world, pos, (width,height), density=0)
         self.BottomLeftCorner = bottomLeftCorner
-        self.density
 
     def blitToScreen(self, screen):
         corners = self.GetCorners()
