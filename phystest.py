@@ -50,7 +50,7 @@ def main():
 
     ground = pygame.Surface((SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT/10))
     ground = ground.convert()
-    ground.fill((255, 255, 255))
+    ground.fill((255, 0, 255))
     screen.blit(ground, (0, SCREEN_PIXEL_HEIGHT - SCREEN_PIXEL_HEIGHT/10))
     pygame.display.flip()
 
@@ -92,8 +92,8 @@ def main():
 
         spaceman.motionCheck()
 
-        #screen.blit(background, (0, 0))
-        #screen.blit(ground, (0, 480 - 480/10))
+        screen.blit(background, (0, 0))
+        screen.blit(ground, (0, 480 - 480/10))
 
         w.Step(tstep / 1000.0, 10, 8)
         #posx, posy = spaceman.getPosition()
@@ -122,9 +122,9 @@ def main():
                     w.gravity=(0,0)
         keysPressed = pygame.key.get_pressed()
         if keysPressed[K_RIGHT]:
-            spaceman.tryMove(-10, 0)
+            spaceman.tryMove(10, 0)
         if keysPressed[K_LEFT]:
-            spaceman.tryMove(10,0)
+            spaceman.tryMove(-10,0)
 
         pygame.display.flip()
     return 0
