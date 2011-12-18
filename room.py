@@ -10,10 +10,18 @@ class RenderableObject(object):
 
         world.drawables.append(self)
         self.vp = mgr.ViewPort()
+        
+        self.size = size
+        self.pos = pos
 
+    def add(self,w):
+        self.prepPhysics(w)
+        self.prepGraphics()
+
+    def prepPhysics(self,w):
         bodyDef = b2BodyDef()
         bodyDef.position = pos.ConvertTo(Dimension(unitstr="1.0 m")).Strip() #pos is a Vect
-        bodyDef.fixedRotation = kwargs.
+        bodyDef.fixedRotation = kwargs.get("fixedRotation", False)
         bodyDef.linearDamping = 0.15
         self.body = world.CreateBody(bodyDef)
 
@@ -24,24 +32,6 @@ class RenderableObject(object):
         shapeDef.linearDamping = AIR_RESISTANCE
         shapeDef.friction = FRICTION
         
-        self.body.CreateShape(shapeDef)
-        self.body.SetMassFromShapes()
-        self.size = size
-        self.pos = pos
-
-    def add(self,w):
-        self.prepPhysics(w)
-        self.prepGraphics()
-
-    def prepPhysics(self,w):
-        bodyDef = b2BodyDef()
-        bodyDef.position = self.position.metersTuple()
-        bodyDef.linearDamping = 0.2
-        self.body = w.CreateBody(bodyDef)
-        shapeDef = b2PolygonDef()
-        shapeDef.SetAsBox(self.size[0], self.size[1])
-        shapeDef.density = 0.4
-        shapeDef.friction = 0.1
         self.body.CreateShape(shapeDef)
         self.body.SetMassFromShapes()
 
