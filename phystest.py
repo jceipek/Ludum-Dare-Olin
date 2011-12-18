@@ -76,7 +76,7 @@ def main():
     screen = pygame.display.set_mode((640, 480))
 
     room = rm.Room(640,480)
-    room.boxes.append(rm.Box((5,5), 76, 78))
+    room.boxes.append(rm.Box((5,5)))
     
     background = pygame.Surface(screen.get_size())
     background = background.convert()

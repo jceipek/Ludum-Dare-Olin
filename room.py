@@ -1,6 +1,46 @@
 from manager import *
 from serializable import Serializable
 import os
+from images import ImageHandler
+import manager as mgr
+
+class RenderableObject(object):
+    def __init__(self):
+        self.sprite = None #Sprite loading is done in superclass
+        self.position = mgr.Vect(0,0,"meters")
+
+    def add(self,w):
+        self.prepPhysics(w)
+        self.prepGraphics()
+
+    def prepPhysics(self,w):
+        bodyDef = b2BodyDef()
+        bodyDef.position = self.realPosition
+        bodyDef.linearDamping = 0.2
+        self.body = w.CreateBody(bodyDef)
+        shapeDef = b2PolygonDef()
+        shapeDef.SetAsBox(self.realSize[0], self.realSize[1])
+        shapeDef.density = 0.4
+        shapeDef.friction = 0.1
+        self.body.CreateShape(shapeDef)
+        self.body.SetMassFromShapes()
+
+    def prepGraphics(self):
+        self.obj = self.sprite
+        #@Belland: is there any reason  to reblit here? I've changed this and self.obj should be eliminated
+        '''
+        self.obj = pygame.Surface((self.width, self.height))
+        self.obj = self.obj.convert()
+        self.obj.blit(self.sprite, (0, 0))
+        '''
+
+    def blitToScreen(self,screen):
+        screen.blit(self.sprite,self.position.pixelsTuple())
+
+    def getRealMeasurements(self):
+        width = self.sprite.get_width() / PIXELS_PER_METER
+        height = self.sprite.get_height() / PIXELS_PER_METER
+        return (width,height)
 
 class Room(Serializable):
     '''
@@ -74,30 +114,17 @@ class Rectangle(Serializable):
         self.width = width
         self.height = height
 
-class Box(Serializable):
-    def __init__(self, position=None, width=None, height=None):
-        self.position = position
-        self.width = width
-        self.height = height
+class Box(Serializable,RenderableObject):
+    def __init__(self, realPosition=(0,0)):
+        self.position = mgr.Vect(realPosition[0],realPosition[1],"meters")
         self.body = None
-        self.sprite = pygame.image.load(os.path.join('crate.png'))
-        #Load image
-    def add(self, w):
-        bodyDef = b2BodyDef()
-        bodyDef.position = self.position
-        bodyDef.linearDamping = 0.2
-        self.body = w.CreateBody(bodyDef)
-        shapeDef = b2PolygonDef()
-        shapeDef.SetAsBox(self.width, self.height)
-        shapeDef.density = 0.4
-        shapeDef.friction = 0.1
-        self.body.CreateShape(shapeDef)
-        self.body.SetMassFromShapes()
+        self.sprite = ImageHandler()["crate.png"]
+        self.size = self.getRealMeasurements() #TODO: update w/ Kiefer's size thing
 
-        self.obj = pygame.Surface((self.width, self.height))
-        self.obj = self.obj.convert()
-        self.obj.blit(self.sprite, (0, 0))
+        #Load image
     def getPosition(self):
+        # Use self.realSize from now on
+
         #FIXME Box has a size use that, world has a size, use that. basically 
         #this entire function needs to be rewritten.
         return ( (10 - self.body.position.x) * (640/10) + 640/20, (10 - self.body.position.y) * (480/10) + 480/20 )
