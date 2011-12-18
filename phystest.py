@@ -55,17 +55,10 @@ def main():
         spaceman.motionCheck()
 
         screen.blit(background, (0, 0))
-        #screen.blit(ground, (0, 480 - 480/10))
 
         w.Step(tstep / 1000.0, 10, 8)
-        #posx, posy = spaceman.getPosition()
-        #posx = (10 - body.position.x) * (640/10) + 640/20
-        #posy = (10 - body.position.y) * (480/10) + 480/20
-        #obj.blit(background, (0, 0))
-        spaceman.updateImg(background, loopcount)
-        #obj.blit(spaceman.spritesheet, (-IMG_W * (loopcount % IMG_COUNT), 0))
-        #screen.blit(obj, (posx, posy))
 
+        spaceman.updateImg(background, loopcount)
         spaceman.blitToScreen(screen)
 
         for object in room.GetAllObjects():
@@ -78,7 +71,7 @@ def main():
                 if event.key == K_ESCAPE:
                     return
                 if event.key == K_UP:
-                    body.ApplyForce(b2Vec2(0,100),body.GetWorldCenter())
+                    spaceman.body.ApplyForce(b2Vec2(0,100),spaceman.body.GetWorldCenter())
                 if event.key == K_g:
                     w.gravity=(0,0)
         keysPressed = pygame.key.get_pressed()

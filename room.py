@@ -50,7 +50,6 @@ class RenderableObject(object):
         Blits to the initial position for this object
         Used by the level designer
         '''
-        print self.initPosition.ConvertTo(PIXEL).Strip()
         screen.blit(self.sprite,self.vp.ScreenCoords(self.initPosition).Strip())
 
     def getSize(self):
@@ -128,14 +127,16 @@ class HangingTurret(Turret):
         self.length = length
         self.angle = angle
 
+        self.sprite = ImageHandler()["turret"]
+
 class Rectangle(Serializable):
     def __init__(self, width=None, height=None):
         self.width = width
         self.height = height
 
 class Box(Serializable,RenderableObject):
-    def __init__(self, world=None, pos=None):
-        RenderableObject.__init__(self, world, pos, BOX_SIZE)
+    def __init__(self, world=None, position=None):
+        RenderableObject.__init__(self, world, position, BOX_SIZE)
 
         self.sprite = ImageHandler()["crate"]
  
@@ -200,7 +201,6 @@ class Spaceman(RenderableObject):
                               (-self.inPixels[0] * (frameNo), 0))
     def motionCheck(self):
         self.curVel = self.body.GetLinearVelocity()
-        print self.curVel
     def tryMove(self, x, y):
         if x < 0 and self.curVel.x > -MAX_WALK_SPEED: #Not going too fast Left
             if self.curVel.x+x/(FPS*self.body.GetMass()) > -MAX_WALK_SPEED: #You can accelerate all the way asked

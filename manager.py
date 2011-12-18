@@ -19,12 +19,14 @@ class ViewPort(object):
         return cls._instance
     
     def __init__(self):
+        print "Creating ViewPort Singleton"
         x_offset = 0 * METER
         y_offset = SCREEN_REAL_HEIGHT * METER
         self.originDelta = dimension.Vect(x_offset, y_offset)
 
     def ScreenCoords(self, physxCoords):
         physxCoords = physxCoords.ConvertTo(METER)
+        self.originDelta = self.originDelta.ConvertTo(METER)
         px = physxCoords.x
         py = physxCoords.y
         dx = self.originDelta.x
@@ -33,6 +35,21 @@ class ViewPort(object):
         y = dy - py
         screenCoords = dimension.Vect(x, y)
         return screenCoords.ConvertTo(PIXEL)
+    
+    def PhysxCoords(self, screenCoords):
+        screenCoords = screenCoords.ConvertTo(METER)
+        print "--------------------------"
+        print self.originDelta
+        self.originDelta = self.originDelta.ConvertTo(METER)
+        print self.originDelta
+        sx = screenCoords.x
+        sy = screenCoords.y
+        dx = self.originDelta.x
+        dy = self.originDelta.y
+        px = sx + dx
+        py = dy - sy
+        physxcoords = dimension.Vect(px,py)
+        return physxcoords
 
 
 class World(b2World):
