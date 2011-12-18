@@ -43,6 +43,14 @@ class RenderableObject(object):
     def blitToScreen(self,screen):
         screen.blit(self.sprite,self.vp.ScreenCoords(dim.Vect(METER*self.body.position.x, METER*self.body.position.y)).Strip())
 
+    def blitToInitialPosition(self,screen):
+        '''
+        Blits to the initial position for this object
+        Used by the level designer
+        '''
+        print self.initPosition.ConvertTo(PIXEL).Strip()
+        screen.blit(self.sprite,self.vp.ScreenCoords(self.initPosition).Strip())
+
     def getSize(self):
         if self.sprite == None:
             return None
