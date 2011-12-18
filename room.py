@@ -44,10 +44,13 @@ class RenderableObject(object):
     def blitToScreen(self,screen):
         screen.blit(self.sprite,self.vp.ScreenCoords(dim.Vect(METER*self.body.position.x, METER*self.body.position.y)).Strip())
 
-    def getRealMeasurements(self):
-        width = self.sprite.get_width() / PIXELS_PER_METER
-        height = self.sprite.get_height() / PIXELS_PER_METER
-        return (width,height)
+    def getSize(self):
+        if self.sprite == None:
+            return None
+
+        width = self.sprite.get_width()
+        height = self.sprite.get_height()
+        return mgr.Vect(mgr.Dimension(value=width,units="px"),mgr.Dimension(value=height,units="px"))
 
 class Room(Serializable):
     '''

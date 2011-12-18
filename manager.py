@@ -5,6 +5,7 @@ import sys
 import pygame
 from pygame.locals import *
 from Box2D import *
+import dimension
 
 from globals import *
 
@@ -17,20 +18,20 @@ class ViewPort(object):
         return cls._instance
     
     def __init__(self):
-        x_offset = Dimension(unitstr='0 m')
-        y_offset = Dimension(value=SCREEN_REAL_HEIGHT, units={"m": 1})
-        self.originDelta = Vect(x_offset, y_offset)
+        x_offset = 0 * METER
+        y_offset = SCREEN_REAL_HEIGHT * METER
+        self.originDelta = dimension.Vect(x_offset, y_offset)
 
     def ScreenCoords(self, physxCoords):
-        physxCoords = physxCoords.ConvertTo(Dimension(value=1.0, units={'m': 1}))
+        physxCoords = physxCoords.ConvertTo(METER)
         px = physxCoords.x
         py = physxCoords.y
         dx = self.originDelta.x
         dy = self.originDelta.y
         x = px - dx
         y = dy - py
-        screenCoords = Vect(x, y)
-        return screenCoords.ConvertTo(Dimension(value=1.0, units={'px': 1}))
+        screenCoords = dimension.Vect(x, y)
+        return screenCoords.ConvertTo(PIXEL)
 
 
 class World(b2World):
@@ -39,7 +40,7 @@ class World(b2World):
         self.drawables = []
         world = b2AABB()
         world.lowerBound = (0, 0)
-        world.upperBound = size.ConvertTo(Dimension(unitstr="1.0 m")).Strip()
+        world.upperBound = size.ConvertTo(METER).Strip()
         doSleep = True
         super(World, self).__init__(world, gravity, doSleep)
 
@@ -47,14 +48,13 @@ class World(b2World):
 class Rect(object):
     def __init__(self, world, pos, size, density):
         bodyDef = b2BodyDef()
-        bodyDef.position = pos.ConvertTo(Dimension(unitstr="1.0 m")).Strip()
+        bodyDef.position = pos.ConvertTo(METER).Strip()
         self.body = world.CreateBody(bodyDef)
         world.drawables.append(self)
         self.vp = ViewPort()
 
         shapeDef = b2PolygonDef()
-        shapeDef.SetAsBox(*(size / 2.0).ConvertTo(
-            Dimension(unitstr="1.0 m")).Strip())
+        shapeDef.SetAsBox(*(size / 2.0).ConvertTo(METER).Strip())
         shapeDef.density = density
         shapeDef.linearDamping = AIR_RESISTANCE
         shapeDef.friction = FRICTION
@@ -68,9 +68,9 @@ class Rect(object):
     def posVect(self):
         xr = self.body.position.x
         yr = self.body.position.y
-        x = Dimension(value=xr, units={'m': 1})
-        y = Dimension(value=yr, units={'m': 1})
-        return Vect(x, y)
+        x = xr * METER
+        y = yr * METER
+        return dimension.Vect(x, y)
 
     def GetCorners(self):
         a = self.size/2.0
@@ -104,15 +104,17 @@ def main():
     
     screen_width = SCREEN_REAL_WIDTH * METER
     screen_height = SCREEN_REAL_HEIGHT * METER
-    w = World(Vect(screen_width, screen_height), GRAVITY)
+    w = World(dimension.Vect(screen_width, screen_height), GRAVITY)
     vp = ViewPort()
     
-    groundRectPos = Vect(screen_width / 2.0, 0.5 * METER)
-    groundRectSize = Vect(screen_width, 1.0 * METER)
+    groundRectPos = dimension.Vect(screen_width / 2.0, 0.5 * METER)
+    groundRectSize = dimension.Vect(screen_width, 1.0 * METER)
     groundRect = Rect(w, groundRectPos, groundRectSize, 0)
 
-    rect1 = Rect(w, Vect(9.0 * METER, 9.0 * METER), Vect(METER, METER), 1)
-    rect2 = Rect(w, Vect(10.0 * METER, 18.0 * METER), Vect(METER * 2, METER), 1)
+    rect1 = Rect(w, dimension.Vect(9.0 * METER, 9.0 * METER), 
+                 dimension.Vect(METER, METER), 1)
+    rect2 = Rect(w, dimension.Vect(10.0 * METER, 18.0 * METER), 
+                 dimension.Vect(METER * 2, METER), 1)
 
     while True:
         tstep = clock.tick(30)
