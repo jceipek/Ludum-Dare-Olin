@@ -4,9 +4,13 @@ import os
 
 class RenderableObject(object):
     def __init__(self):
-        self.sprite = None
+        self.sprite = None #Sprite loading is done in superclass
 
     def add(self,w):
+        self.prepPhysics(w)
+        self.prepGraphics()
+
+    def prepPhysics(self,w):
         bodyDef = b2BodyDef()
         bodyDef.position = self.position
         bodyDef.linearDamping = 0.2
@@ -18,6 +22,7 @@ class RenderableObject(object):
         self.body.CreateShape(shapeDef)
         self.body.SetMassFromShapes()
 
+    def prepGraphics(self):
         self.obj = pygame.Surface((self.width, self.height))
         self.obj = self.obj.convert()
         self.obj.blit(self.sprite, (0, 0))
