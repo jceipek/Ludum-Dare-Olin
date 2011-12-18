@@ -1,3 +1,5 @@
+.DS_Store
+
 #Ignore Visual Studio files
 *.sln
 *.pyproj
