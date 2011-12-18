@@ -5,9 +5,29 @@ from images import ImageHandler
 import manager as mgr
 
 class RenderableObject(object):
-    def __init__(self):
-        self.sprite = None #Sprite loading is done in superclass
-        self.position = mgr.Vect(0,0,"meters")
+    def __init__(self, world, pos, size, density, **kwargs):
+        self.sprite = None #Sprite loading is done in subclass
+
+        world.drawables.append(self)
+        self.vp = mgr.ViewPort()
+
+        bodyDef = b2BodyDef()
+        bodyDef.position = pos.ConvertTo(Dimension(unitstr="1.0 m")).Strip() #pos is a Vect
+        bodyDef.fixedRotation = kwargs.
+        bodyDef.linearDamping = 0.15
+        self.body = world.CreateBody(bodyDef)
+
+        shapeDef = b2PolygonDef()
+        shapeDef.SetAsBox(*(size / 2.0).ConvertTo(
+            Dimension(unitstr="1.0 m")).Strip())
+        shapeDef.density = density
+        shapeDef.linearDamping = AIR_RESISTANCE
+        shapeDef.friction = FRICTION
+        
+        self.body.CreateShape(shapeDef)
+        self.body.SetMassFromShapes()
+        self.size = size
+        self.pos = pos
 
     def add(self,w):
         self.prepPhysics(w)
