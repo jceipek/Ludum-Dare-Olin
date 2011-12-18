@@ -27,9 +27,6 @@ import dimension as dim
 def main():
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT))
-
-    room = rm.Room(SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT)
-    #room.boxes.append(rm.Box((5,5)))
     
     background = pygame.Surface(screen.get_size())
     background = background.convert()
@@ -41,43 +38,23 @@ def main():
 
     screen_width = dim.Dimension(value=SCREEN_REAL_WIDTH, units={'m': 1})
     screen_height = dim.Dimension(value=SCREEN_REAL_HEIGHT, units={'m': 1})
-    w = w = mgr.World(dim.Vect(screen_width, screen_height), GRAVITY)
+    w = mgr.World(dim.Vect(screen_width, screen_height), GRAVITY)
 
-    groundBodyDef = b2BodyDef()
-    groundBodyDef.position = (5, 1)
-    groundBody = w.CreateBody(groundBodyDef)
-    groundShapeDef = b2PolygonDef()
-    groundShapeDef.SetAsBox(5.0, 0.5)
-    groundBody.CreateShape(groundShapeDef)
+    room = rm.Room(SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT)
+    room.platforms.append(rm.StaticPlatform(w, ))
 
-    ground = pygame.Surface((SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT/10))
-    ground = ground.convert()
-    ground.fill((255, 0, 255))
-    screen.blit(ground, (0, SCREEN_PIXEL_HEIGHT - SCREEN_PIXEL_HEIGHT/10))
-    pygame.display.flip()
+    #groundBodyDef = b2BodyDef()
+    #groundBodyDef.position = (5, 1)
+    #groundBody = w.CreateBody(groundBodyDef)
+    #groundShapeDef = b2PolygonDef()
+    #groundShapeDef.SetAsBox(5.0, 0.5)
+    #groundBody.CreateShape(groundShapeDef)
 
-    bodyDef = b2BodyDef()
-    bodyDef.position = (5, 10)
-    bodyDef.fixedRotation = True
-    bodyDef.linearDamping = 0.2
-    body = w.CreateBody(bodyDef)
-    shapeDef = b2PolygonDef()
-    shapeDef.SetAsBox(1, 1)
-    shapeDef.density = 0.1
-    shapeDef.friction = 0.1
-    body.CreateShape(shapeDef)
-    body.SetMassFromShapes()
-
-    IMG_COUNT = 30
-    IMG_W = 80
-    IMG_H = 80
-    background = pygame.Surface(screen.get_size())
-    background = background.convert()
-    background.fill((255, 255, 255))
-
-    obj = pygame.Surface((IMG_W, IMG_H))
-    obj = obj.convert()
-    obj.fill((255, 0, 0))
+    #ground = pygame.Surface((SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT/10))
+    #ground = ground.convert()
+    #ground.fill((255, 0, 255))
+    #screen.blit(ground, (0, SCREEN_PIXEL_HEIGHT - SCREEN_PIXEL_HEIGHT/10))
+    #pygame.display.flip()
 
     spaceman = rm.Spaceman(w, dim.Vect(9.0 * METER, 9.0 * METER))
     spaceman.add()
@@ -108,8 +85,7 @@ def main():
         spaceman.blitToScreen(screen)
 
         for object in room.GetAllObjects():
-            screen.blit(object.obj, object.getPosition())
-            print object.getPosition()
+            object.blitToScreen(screen)
 
         for event in pygame.event.get():
             if event.type == QUIT:

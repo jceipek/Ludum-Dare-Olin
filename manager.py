@@ -85,7 +85,7 @@ class Rect(object):
             corners[i] = corners[i] + deltaP
         return corners
 
-    def draw(self, surface):
+    def blitToScreen(self, surface):
         corners = self.GetCorners()
         for i in range(len(corners) + 1):
             pos_start = self.vp.ScreenCoords(corners[i - 2]).Strip()

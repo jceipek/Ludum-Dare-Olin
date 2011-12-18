@@ -136,6 +136,26 @@ class StaticPlatform(RenderableObject):
         RenderableObject.__init__(self, world, pos, (width,height), density=0)
         self.BottomLeftCorner = bottomLeftCorner
 
+    def posVect(self):
+        xr = self.body.position.x
+        yr = self.body.position.y
+        x = xr * METER
+        y = yr * METER
+        return dimension.Vect(x, y)
+
+    def GetCorners(self):
+        a = self.size/2.0
+        #print a
+        b = a.MirrorH()
+        c = b.MirrorV()
+        d = c.MirrorH()
+        deltaP = self.posVect()
+        corners = [a, b, c, d]
+        for i in range(len(corners)):
+            corners[i].Rotate(self.body.angle)
+            corners[i] = corners[i] + deltaP
+        return corners
+
     def blitToScreen(self, screen):
         corners = self.GetCorners()
         for i in range(len(corners) + 1):
