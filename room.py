@@ -5,8 +5,8 @@ from images import ImageHandler
 import manager as mgr
 import dimension as dim
 
-SPACEMAN_SIZE = dim.Vect(80*PIXEL,90*PIXEL)
-BOX_SIZE = dim.Vect(76*PIXEL,78*PIXEL)
+SPACEMAN_SIZE = dim.Vect(80*PIXEL,90*PIXEL).ConvertTo(METER)
+BOX_SIZE = dim.Vect(76*PIXEL,78*PIXEL).ConvertTo(METER)
 
 class RenderableObject(object):
     def __init__(self, world, pos, size, **kwargs):
@@ -41,7 +41,9 @@ class RenderableObject(object):
         self.body.SetMassFromShapes()
 
     def blitToScreen(self,screen):
-        screen.blit(self.sprite,self.vp.ScreenCoords(dim.Vect(METER*self.body.position.x, METER*self.body.position.y)).Strip())
+        bodyPos = dim.Vect(METER*self.body.position.x, METER*self.body.position.y)
+        drawPos = bodyPos + (1.0/2.0) * self.size.MirrorH()
+        screen.blit(self.sprite, self.vp.ScreenCoords(drawPos).Strip())
 
     def blitToInitialPosition(self,screen):
         '''
@@ -197,7 +199,6 @@ class Spaceman(RenderableObject):
                               (-self.inPixels[0] * (frameNo), 0))
     def motionCheck(self):
         self.curVel = self.body.GetLinearVelocity()
-        print self.curVel
     def tryMove(self, x, y):
         if x < 0 and self.curVel.x > -MAX_WALK_SPEED: #Not going too fast Left
             if self.curVel.x+x/(FPS*self.body.GetMass()) > -MAX_WALK_SPEED: #You can accelerate all the way asked
