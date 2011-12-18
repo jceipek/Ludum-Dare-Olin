@@ -25,9 +25,9 @@ import room as rm
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((640, 480))
+    screen = pygame.display.set_mode((SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT))
 
-    room = rm.Room(640,480)
+    room = rm.Room(SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT)
     #room.boxes.append(rm.Box((5,5)))
     
     background = pygame.Surface(screen.get_size())
@@ -48,10 +48,10 @@ def main():
     groundShapeDef.SetAsBox(5.0, 0.5)
     groundBody.CreateShape(groundShapeDef)
 
-    ground = pygame.Surface((640, 480/10))
+    ground = pygame.Surface((SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT/10))
     ground = ground.convert()
     ground.fill((255, 255, 255))
-    screen.blit(ground, (0, 480 - 480/10))
+    screen.blit(ground, (0, SCREEN_PIXEL_HEIGHT - SCREEN_PIXEL_HEIGHT/10))
     pygame.display.flip()
 
     bodyDef = b2BodyDef()
@@ -78,7 +78,7 @@ def main():
     obj.fill((255, 0, 0))
 
     meter = mgr.Dimension(value=1.0, units={'m': 1})
-    spaceman = rm.Spaceman(w, mgr.Vect(meter, meter))
+    spaceman = rm.Spaceman(w, mgr.Vect(9.0 * meter, 9.0 * meter))
     spaceman.add()
 
     for object in room.GetAllObjects():
