@@ -22,46 +22,6 @@ import Room
 #    def PostSolve(self, contact, impulse):
 #        pass
 
-def box2d_example():
-    world = b2AABB()
-    world.lowerBound = (-100, -100)
-    world.upperBound = (100, 100)
-    gravity = (0, -10)
-    doSleep = True
-    world = b2World(world, gravity, doSleep)
-
-    groundBodyDef = b2BodyDef()
-    groundBodyDef.position = (0, -10)
-    groundBody = world.CreateBody(groundBodyDef)
-    groundShapeDef = b2PolygonDef()
-    groundShapeDef.SetAsBox(50, 10)
-    groundBody.CreateShape(groundShapeDef)
-
-    bodyDef = b2BodyDef()
-    bodyDef.position = (0, 4)
-    body = world.CreateBody(bodyDef)
-
-    shapeDef = b2PolygonDef()
-    shapeDef.SetAsBox(1, 1)
-    shapeDef.density = 1
-    shapeDef.friction = 0.3
-    body.CreateShape(shapeDef)
-    body.SetMassFromShapes()
-
-    timestep = 1.0 / 60.0
-    velocityIterations = 10
-    positionIterations = 8
-
-    for i in range(60):
-        world.Step(timestep, velocityIterations, positionIterations)
-        print body.position, body.angle
-
-    world.gravity = (0, 10)
-    for i in range(60):
-        world.Step(timestep, velocityIterations, positionIterations)
-        print body.position, body.angle
-    return 0
-
 class Spaceman(object):
     def __init__(self, body, obj, background):
         self.body = body
@@ -78,8 +38,7 @@ class Spaceman(object):
     def getPosition(self):
         return ( (10 - self.body.position.x) * (640/10) + 640/20, (10 - self.body.position.y) * (480/10) + 480/20 )
     def updateImg(self, background, loopcount):
-        print self.body.GetLinearVelocity().x
-        if abs(self.body.GetLinearVelocity().x) >= 1:
+        if abs(self.body.GetLinearVelocity().x) >= .2:
             self.obj.blit(background, (0, 0))
             if self.body.GetLinearVelocity().x > 0: #Moving Left
                 self.obj.blit(self.sprWalkL, (-self.IMG_W * (self.IMG_COUNT - loopcount % self.IMG_COUNT - 1), 0))
@@ -87,21 +46,18 @@ class Spaceman(object):
                 self.obj.blit(self.sprWalkR, (-self.IMG_W * (loopcount % self.IMG_COUNT), 0))
     def motionCheck(self):
         self.curVel = self.body.GetLinearVelocity()
-
-        if 0.2 < abs(self.curVel.x) < 1:
-            #Try to slow body to stop with impulse
-            self.body.ApplyForce(b2Vec2(-(self.body.GetMass()*self.body.GetLinearVelocity().x*FPS/2),0),self.body.GetWorldCenter())
-            print "You're too slow!"
-    
     def tryMove(self, x, y):
         #MAY NOT NEED THIS LINE
-        if self.curVel.x > -MAX_WALK_SPEED: #Not going too fast Right
-            if self.curVel.x+x*self.body.GetMass() > -MAX_WALK_SPEED: #You can accelerate all the way asked
+        if x < 0 and self.curVel.x > -MAX_WALK_SPEED: #Not going too fast Right
+            if self.curVel.x+x/(FPS*self.body.GetMass()) > -MAX_WALK_SPEED: #You can accelerate all the way asked
                 self.body.ApplyForce(b2Vec2(x,0), self.body.GetWorldCenter())
-                print "normal move"
             else: #You can only accelerate to the max walk speed
-                self.body.ApplyForce(b2Vec2(-MAX_WALK_SPEED-self.curVel.x,0), self.body.GetWorldCenter())
-                print "maxed out move"
+                self.body.ApplyForce(b2Vec2(FPS*(-MAX_WALK_SPEED-self.curVel.x)*self.body.GetMass(),0), self.body.GetWorldCenter())
+        elif x > 0 and self.curVel.x < MAX_WALK_SPEED: #Not going too fast Right
+            if self.curVel.x+x/(FPS*self.body.GetMass()) < MAX_WALK_SPEED: #You can accelerate all the way asked
+                self.body.ApplyForce(b2Vec2(x,0), self.body.GetWorldCenter())
+            else: #You can only accelerate to the max walk speed
+                self.body.ApplyForce(b2Vec2(FPS*(MAX_WALK_SPEED-self.curVel.x)*self.body.GetMass(),0), self.body.GetWorldCenter())
         
 
 
@@ -111,7 +67,7 @@ def main():
     screen = pygame.display.set_mode((640, 480))
 
     room = Room.Room(640,480)
-    room.boxes.append(Room.Box((50,50), 20, 20))
+    room.boxes.append(Room.Box((5,5), 76, 78))
     
     background = pygame.Surface(screen.get_size())
     background = background.convert()
@@ -175,18 +131,17 @@ def main():
         screen.blit(ground, (0, 480 - 480/10))
 
         w.Step(tstep / 1000.0, 10, 8)
-        #print body.position
         posx, posy = spaceman.getPosition()
         #posx = (10 - body.position.x) * (640/10) + 640/20
         #posy = (10 - body.position.y) * (480/10) + 480/20
         #obj.blit(background, (0, 0))
         spaceman.updateImg(background, loopcount)
         #obj.blit(spaceman.spritesheet, (-IMG_W * (loopcount % IMG_COUNT), 0))
-        #print posx,posy
         screen.blit(obj, (posx, posy))
 
         for object in room.GetAllObjects():
             screen.blit(object.obj, object.getPosition())
+            print object.getPosition()
 
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -194,15 +149,15 @@ def main():
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     return
-                #if event.key == K_RIGHT:
-                #    spaceman.tryMove(-20,0)
-                if event.key == K_LEFT:
-                    body.ApplyForce(b2Vec2(20,0),body.GetWorldCenter())
                 if event.key == K_UP:
                     body.ApplyForce(b2Vec2(0,100),body.GetWorldCenter())
+                if event.key == K_g:
+                    w.gravity=(0,0)
         keysPressed = pygame.key.get_pressed()
         if keysPressed[K_RIGHT]:
             spaceman.tryMove(-10, 0)
+        if keysPressed[K_LEFT]:
+            spaceman.tryMove(10,0)
 
         pygame.display.flip()
     return 0

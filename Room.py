@@ -1,3 +1,4 @@
+import os
 from manager import *
 
 class Room(object):
@@ -77,6 +78,7 @@ class Box(object):
         self.width = width
         self.height = height
         self.body = None
+        self.sprite = pygame.image.load(os.path.join('crate.png'))
         #Load image
     def add(self, w):
         bodyDef = b2BodyDef()
@@ -92,6 +94,7 @@ class Box(object):
 
         self.obj = pygame.Surface((self.width, self.height))
         self.obj = self.obj.convert()
+        self.obj.blit(self.sprite, (0, 0))
     def getPosition(self):
         return ( (10 - self.body.position.x) * (640/10) + 640/20, (10 - self.body.position.y) * (480/10) + 480/20 )
     
