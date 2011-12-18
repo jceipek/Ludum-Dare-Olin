@@ -3,6 +3,7 @@
 
 import sys
 import pygame
+import math
 from pygame.locals import *
 from Box2D import *
 import dimension
@@ -93,6 +94,13 @@ class Rect(object):
             pygame.draw.line(surface, (255, 255, 255), pos_start, pos_end, 2)
 
 
+def kickMagnitude(tminus):
+    t = float(FRAMERATE - tminus) / float(FRAMERATE)
+    a = 2.0
+    b = 0.5
+    c = 0.33
+    return math.exp(-((t - b)**2) / (2 * c**2))
+
 def main():
     pygame.init()
     screen = pygame.display.set_mode((1024, 768))
@@ -111,13 +119,26 @@ def main():
     groundRectSize = dimension.Vect(screen_width, 1.0 * METER)
     groundRect = Rect(w, groundRectPos, groundRectSize, 0)
 
-    rect1 = Rect(w, dimension.Vect(9.0 * METER, 9.0 * METER), 
-                 dimension.Vect(METER, METER), 1)
-    rect2 = Rect(w, dimension.Vect(10.0 * METER, 18.0 * METER), 
-                 dimension.Vect(METER * 2, METER), 1)
-
+    rect1 = Rect(w, dimension.Vect(9.0 * METER, 2.0 * METER), 
+                 dimension.Vect(1 * METER, METER), 1)
+    #rect2 = Rect(w, dimension.Vect(9.0 * METER, 4.0 * METER), 
+    #             dimension.Vect(METER * 9.0, METER), 1)
+    #rect3 = Rect(w, dimension.Vect(5.5 * METER, 5.0 * METER),
+    #             dimension.Vect(METER * 0.2, METER * 0.2), 0.2)
+    #rect4 = Rect(w, dimension.Vect(METER * 13.0, 9.0 * METER), 
+    #             dimension.Vect(METER, METER), 1)
+    
+    kickcount = 0
     while True:
-        tstep = clock.tick(30)
+        tstep = clock.tick(FRAMERATE)
+        if kickcount > 0:
+            kick = kickd * kickMagnitude(kickcount)
+            gravity = dimension.Vect(0 * METER, -10 * METER) + kick
+            print gravity
+            w.gravity = gravity.Strip()
+            kickcount -= 1
+        else:
+            w.gravity = GRAVITY
         background.fill((0, 0, 0))
         for body in w.drawables:
             body.blitToScreen(background)
@@ -127,7 +148,22 @@ def main():
         for event in pygame.event.get():
             if event.type == QUIT:
                 return
-
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_j:
+                    kickcount = 1.0 * FRAMERATE
+                    kickd = dimension.Vect(-1 * METER, 0 * METER) * 3
+                if event.key == pygame.K_k:
+                    kickcount = 1.0 * FRAMERATE
+                    kickd = dimension.Vect(0 * METER, 1 * METER) * 10
+                if event.key == pygame.K_l:
+                    kickcount = 1.0 * FRAMERATE
+                    kickd = dimension.Vect(1 * METER, 0 * METER) * 3
+                if event.key == pygame.K_i:
+                    kickcount = 1.0 * FRAMERATE
+                    kickd = dimension.Vect(0 * METER, -1 * METER) * 10
+                if event.key == pygame.K_w:
+                    rect1.body.ApplyForce((0, 200), rect1.body.position)
 
 def unittest():
     x1 = Dimension(unitstr='160 px')
