@@ -5,7 +5,7 @@ import sys
 import math
 import fractions
 import numbers
-import serializable
+from serializable import Serializable
 
 class Vect(Serializable):
     def __init__(self, x, y):
