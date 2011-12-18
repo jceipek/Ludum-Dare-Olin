@@ -41,7 +41,8 @@ class RenderableObject(object):
         self.body.SetMassFromShapes()
 
     def blitToScreen(self,screen):
-        screen.blit(self.sprite,self.vp.ScreenCoords(self.position).Strip())
+        meter = mgr.Dimension(value=1.0, units={'m': 1})
+        screen.blit(self.sprite,self.vp.ScreenCoords(mgr.Vect(meter*self.body.position.x, meter*self.body.position.y)).Strip())
 
     def getSize(self):
         if self.sprite == None:
@@ -156,21 +157,22 @@ class Spaceman(RenderableObject):
             self.sprite.blit(background, (0, 0))
             
             frameNo = loopcount % self.IMG_COUNT
-            if self.body.GetLinearVelocity().x > 0: #Moving Left
-                self.sprite.blit(self.sprWalkL, 
+            if self.body.GetLinearVelocity().x > 0: #Moving Right
+                self.sprite.blit(self.sprWalkR, 
                               (-self.inPixels[0] * (frameNo), 0))  #Traverse the width of the image
             else:
-                self.sprite.blit(self.sprWalkR, 
+                self.sprite.blit(self.sprWalkL, 
                               (-self.inPixels[0] * (frameNo), 0))
     def motionCheck(self):
         self.curVel = self.body.GetLinearVelocity()
+        print self.curVel
     def tryMove(self, x, y):
-        if x < 0 and self.curVel.x > -MAX_WALK_SPEED: #Not going too fast Right
+        if x < 0 and self.curVel.x > -MAX_WALK_SPEED: #Not going too fast Left
             if self.curVel.x+x/(FPS*self.body.GetMass()) > -MAX_WALK_SPEED: #You can accelerate all the way asked
                 self.body.ApplyForce(b2Vec2(x,0), self.body.GetWorldCenter())
             else: #You can only accelerate to the max walk speed
                 self.body.ApplyForce(b2Vec2(FPS*(-MAX_WALK_SPEED-self.curVel.x)*self.body.GetMass(),0), self.body.GetWorldCenter())
-        elif x > 0 and self.curVel.x < MAX_WALK_SPEED: #Not going too fast Left
+        elif x > 0 and self.curVel.x < MAX_WALK_SPEED: #Not going too fast Right
             if self.curVel.x+x/(FPS*self.body.GetMass()) < MAX_WALK_SPEED: #You can accelerate all the way asked
                 self.body.ApplyForce(b2Vec2(x,0), self.body.GetWorldCenter())
             else: #You can only accelerate to the max walk speed
