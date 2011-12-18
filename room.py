@@ -1,12 +1,18 @@
 from manager import *
 from serializable import Serializable
 import os
+from images import ImageHandler
 
 class RenderableObject(object):
     def __init__(self):
-        self.sprite = None
+        self.sprite = None #Sprite loading is done in superclass
+        self.position = (0,0)
 
     def add(self,w):
+        self.prepPhysics(w)
+        self.prepGraphics()
+
+    def prepPhysics(self,w):
         bodyDef = b2BodyDef()
         bodyDef.position = self.position
         bodyDef.linearDamping = 0.2
@@ -18,9 +24,17 @@ class RenderableObject(object):
         self.body.CreateShape(shapeDef)
         self.body.SetMassFromShapes()
 
+    def prepGraphics(self):
+        self.obj = self.sprite
+        #@Belland: is there any reason  to reblit here? I've changed this and self.obj should be eliminated
+        '''
         self.obj = pygame.Surface((self.width, self.height))
         self.obj = self.obj.convert()
         self.obj.blit(self.sprite, (0, 0))
+        '''
+
+    def blitToScreen(self,screen):
+        screen.blit(self.sprite,self.position)
 
 class Room(Serializable):
     '''
@@ -100,7 +114,7 @@ class Box(Serializable,RenderableObject):
         self.width = width
         self.height = height
         self.body = None
-        self.sprite = pygame.image.load(os.path.join('crate.png'))
+        self.sprite = ImageHandler()["crate.png"]
         #Load image
     def getPosition(self):
         #FIXME Box has a size use that, world has a size, use that. basically 
