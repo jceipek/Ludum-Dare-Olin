@@ -200,7 +200,6 @@ class Spaceman(RenderableObject):
                               (-self.inPixels[0] * (frameNo), 0))
     def motionCheck(self):
         self.curVel = self.body.GetLinearVelocity()
-        print self.curVel
     def tryMove(self, x, y):
         if x < 0 and self.curVel.x > -MAX_WALK_SPEED: #Not going too fast Left
             if self.curVel.x+x/(FPS*self.body.GetMass()) > -MAX_WALK_SPEED: #You can accelerate all the way asked

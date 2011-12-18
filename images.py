@@ -27,7 +27,7 @@ class ImageHandler(dict):
             folder = IMAGES_TO_LOAD[name][0]
             file = IMAGES_TO_LOAD[name][1]
             img = pygame.image.load(os.path.join(folder, file))
-            img = img.convert()
+            img = img.convert_alpha()
             self[name] = img
 
 
