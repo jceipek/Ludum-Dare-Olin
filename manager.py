@@ -120,7 +120,7 @@ def main():
         tstep = clock.tick(30)
         background.fill((0, 0, 0))
         for body in w.drawables:
-            body.draw(background)
+            body.blitToScreen(background)
         screen.blit(background, (0, 0))
         pygame.display.flip()
         w.Step(tstep / 1000.0, 10, 8)
