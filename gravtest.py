@@ -28,6 +28,7 @@ groundShapeDef.SetAsBox(50, 10)
 
 groundBody.CreateShape(groundShapeDef)
 
+
 for i in range(100):
     bodyDef = b2BodyDef()
     bodyDef.position = (i*1.01, 100)
@@ -39,6 +40,8 @@ for i in range(100):
     shapeDef.friction = 0.3
     body.CreateShape(shapeDef)
     body.SetMassFromShapes()
+
+print body
 
 timeStep = 1.0 / 600.0
 
