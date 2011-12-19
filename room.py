@@ -22,7 +22,10 @@ class RenderableObject(pygame.sprite.DirtySprite):
         self.initPosition = pos
         self.kwargs = kwargs
 
-        initPos = self.initPosition.ConvertTo(PIXEL).Strip()
+        if self.initPosition:
+            initPos = self.initPosition.ConvertTo(PIXEL).Strip()
+        else:
+            initPos = (0,0)
         imageWidth = self.image.get_width()
         imageHeight = self.image.get_height()
 
@@ -63,21 +66,21 @@ class RenderableObject(pygame.sprite.DirtySprite):
         '''
         bodyPos = dim.Vect(METER*self.body.position.x, METER*self.body.position.y)
         drawPos = bodyPos + (1.0/2.0) * self.size.MirrorH()
-        screen.blit(self.sprite, self.vp.ScreenCoords(drawPos).Strip())
+        screen.blit(self.image, self.vp.ScreenCoords(drawPos).Strip())
 
     def blitToInitialPosition(self,screen):
         '''
         Blits to the initial position for this object
         Used by the level designer
         '''
-        screen.blit(self.sprite,self.vp.ScreenCoords(self.initPosition).Strip())
+        screen.blit(self.image,self.vp.ScreenCoords(self.initPosition).Strip())
 
     def getSize(self):
-        if self.sprite == None:
+        if self.image == None:
             return None
 
-        width = self.sprite.get_width()
-        height = self.sprite.get_height()
+        width = self.image.get_width()
+        height = self.image.get_height()
         return mgr.Vect(mgr.Dimension(value=width,units="px"),mgr.Dimension(value=height,units="px"))
 
 

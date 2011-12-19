@@ -79,7 +79,7 @@ class LevelDesigner:
 
         self.selectedItem = None
 
-        print box.size
+        print box.rect
 
     def main(self):
         
