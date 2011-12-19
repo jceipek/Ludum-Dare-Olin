@@ -11,7 +11,6 @@ import dimension
 from globals import *
 
 class ViewPort(object):
-    #implement a singleton pattern here...
     _instance = None
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
@@ -61,9 +60,8 @@ class World(b2World):
         self.points=[]
         
 
-
 class Rect(object):
-    def __init__(self, world, pos, size, density):
+    def __init__(self, world, pos, size, density, groupIndex=0):
         bodyDef = b2BodyDef()
         bodyDef.position = pos.ConvertTo(METER).Strip()
         self.body = world.CreateBody(bodyDef)
@@ -76,8 +74,9 @@ class Rect(object):
         shapeDef.linearDamping = AIR_RESISTANCE
         shapeDef.friction = FRICTION
         shapeDef.restitution = 0.3
+        shapeDef.filter.groupIndex = groupIndex
         
-        self.body.CreateShape(shapeDef)
+        self.shape = self.body.CreateShape(shapeDef)
         self.body.SetMassFromShapes()
         
         self.size = size
@@ -118,6 +117,64 @@ def kickMagnitude(tminus):
     c = 0.33
     return math.exp(-((t - b)**2) / (2 * c**2))
 
+class ChainBody(object):
+    def __init__(self, bodies):
+        self.bodies = bodies
+
+    def WakeUp(self):
+        for body in self.bodies:
+            body.WakeUp()
+
+class Chain(object):
+    def __init__(self, world, startpos, length, anchor):
+        #world.drawables.append(self)
+        resolution = 10
+        width = 0.1 * METER
+        self.vp = ViewPort()
+        self.shapes = []
+        self.bodies = []
+        self.rects = []
+        self.pins = []
+        
+        unit = dimension.Vect(0 * METER, -length / float(resolution))
+        prevBody = anchor
+        for i in range(resolution):
+            anchor0 = startpos + (unit * i)
+            anchor1 = anchor0 + unit
+            center = (anchor0 + anchor1) / 2.0
+            size = dimension.Vect(width, -unit.y + 2 * width)
+            #bodyDef = b2BodyDef()
+            #bodyDef.position = center.Strip()
+            #body = world.CreateBody(bodyDef)
+            #shapeDef = b2PolygonDef()
+            #shapeDef.SetAsBox((width/2).Strip(), (size/2).Strip())
+            #shapeDef.density = 1
+            #shapeDef.linearDamping = AIR_RESISTANCE
+            #shape = body.CreateShape(shapeDef)
+            #self.shapes.append(shape)
+            #self.bodies.append(body)
+            rect = Rect(world, center, size, 1, groupIndex=-1)
+            world.drawables.append(rect)
+            self.rects.append(rect)
+            body = rect.body
+            self.bodies.append(body)
+            self.pins.append(anchor0)
+
+            jointDef = b2RevoluteJointDef()
+            jointDef.Initialize(prevBody, body, anchor0.Strip())
+            print anchor0
+            world.CreateJoint(jointDef)
+            prevBody = body
+
+    def blitToScreen(self, surface):
+        #for i in range(len(self.pins)):
+        #    pos_start = self.vp.ScreenCoords(self.pins[i - 1]).Strip()
+        #    pos_end = self.vp.ScreenCoords(self.pins[i]).Strip()
+        #    pygame.draw.line(surface, (255, 255, 255), pos_start, pos_end, 2)
+        for pin in self.pins:
+            pos = self.vp.ScreenCoords(pin).Strip()
+            surface.set_at(pos, (255, 0, 0))
+
 def main():
     pygame.init()
     screen = pygame.display.set_mode((1024, 768))
@@ -136,14 +193,26 @@ def main():
     groundRectSize = dimension.Vect(screen_width, 1.0 * METER)
     groundRect = Rect(w, groundRectPos, groundRectSize, 0)
 
-    rect1 = Rect(w, dimension.Vect(9.0 * METER, 2.0 * METER), 
-                 dimension.Vect(1 * METER, METER), 1)
-    rect2 = Rect(w, dimension.Vect(9.0 * METER, 4.0 * METER), 
-                 dimension.Vect(METER * 9.0, METER), 1)
-    rect3 = Rect(w, dimension.Vect(5.5 * METER, 5.0 * METER),
-                 dimension.Vect(METER * 0.2, METER * 0.2), 0.2)
-    rect4 = Rect(w, dimension.Vect(METER * 13.0, 9.0 * METER), 
-                 dimension.Vect(METER, METER), 1)
+    ceilingRectPos = dimension.Vect(screen_width / 2.0, screen_height - 0.5 *
+                                    METER)
+    ceilingRectSize = dimension.Vect(screen_width, 1.0 * METER)
+    ceilingRect = Rect(w, ceilingRectPos, ceilingRectSize, 0)
+    
+    ch = Chain(w, ceilingRectPos, 10 * METER, ceilingRect.body)
+    
+    rect1pos = dimension.Vect(12.8 * METER, 8.7 * METER)
+    rect1 = Rect(w, dimension.Vect(12.8 * METER, 8.7 * METER), 
+                 dimension.Vect(1 * METER, METER), 1, groupIndex=-1)
+    jointDef = b2RevoluteJointDef()
+    jointDef.Initialize(ch.bodies[-1], rect1.body, rect1pos.Strip())
+    w.CreateJoint(jointDef)
+    #rect2 = Rect(w, dimension.Vect(9.0 * METER, 4.0 * METER), 
+    #             dimension.Vect(METER * 9.0, METER), 1)
+    #rect3 = Rect(w, dimension.Vect(5.5 * METER, 5.0 * METER),
+    #             dimension.Vect(METER * 0.2, METER * 0.2), 0.2)
+    #rect4 = Rect(w, dimension.Vect(METER * 13.0, 9.0 * METER), 
+    #             dimension.Vect(METER, METER), 1)
+
     
     kickcount = 0
     while True:
@@ -164,7 +233,7 @@ def main():
             body.blitToScreen(background)
         screen.blit(background, (0, 0))
         pygame.display.flip()
-        w.Step(tstep / 1000.0, 10, 8)
+        w.Step(tstep / (1000.0), 10, 8)
         for event in pygame.event.get():
             if event.type == QUIT:
                 return

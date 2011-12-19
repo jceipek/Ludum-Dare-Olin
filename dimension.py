@@ -51,6 +51,9 @@ class Vect(Serializable):
     def MirrorV(self):
         return Vect(self.x, -self.y)
 
+    #def Norm(self):
+    #    return (self.x ** 2 + self.y ** 2) ** fraction(1, 2)
+
     def __str__(self):
         return '<%s, %s>' % (self.x, self.y)
 
