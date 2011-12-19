@@ -49,7 +49,6 @@ class RenderableObject(pygame.sprite.DirtySprite):
             
         if self.hasPhysics:
             if newPhysicalPosition != self.physicalPosition:
-                self.dirty = 1
                 self.physicalPosition = newPhysicalPosition
 
     def __setPhysicalPosition(self,value):
