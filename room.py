@@ -131,7 +131,6 @@ class HangingTurret(Turret):
         self.length = length
         self.angle = angle
 
-        self.sprite = ImageHandler()["turret"]
 
 class Rectangle(Serializable):
     def __init__(self, width=None, height=None):
@@ -141,9 +140,6 @@ class Rectangle(Serializable):
 class Box(Serializable,RenderableObject):
     def __init__(self, world=None, position=None):
         RenderableObject.__init__(self, world, position, BOX_SIZE)
-
-        self.sprite = ImageHandler()["crate"]
- 
 
 class StaticPlatform(RenderableObject):
     def __init__(self, world, pos, size):
@@ -186,23 +182,24 @@ class Spaceman(RenderableObject):
         self.sprWalkR = ImageHandler()["walkingRight"]
         self.sprWalkL = ImageHandler()["walkingLeft"]
 
+        # TODO: Figure out how to fix this
         self.inPixels = SPACEMAN_SIZE.ConvertTo(Dimension(value=1.0, units={'px': 1})).Strip()
-        self.sprite = pygame.Surface(self.inPixels)
-        self.sprite = self.sprite.convert()
-        self.sprite.blit(self.sprWalkR, (0, 0))
+        self.image = pygame.Surface(self.inPixels)
+        self.image = self.image.convert_alpha()
+        self.image.blit(self.sprWalkR, (0, 0))
 
         self.curVel = None
         self.touchingGround = 0
     def updateImg(self, background, loopcount):
         if abs(self.body.GetLinearVelocity().x) >= 0.2:
-            self.sprite.blit(background, (0, 0))
+            self.image.blit(background, (0, 0))
             
             frameNo = loopcount % self.IMG_COUNT
             if self.body.GetLinearVelocity().x > 0: #Moving Right
-                self.sprite.blit(self.sprWalkR, 
+                self.image.blit(self.sprWalkR, 
                               (-self.inPixels[0] * (frameNo), 0))  #Traverse the width of the image
             else:
-                self.sprite.blit(self.sprWalkL, 
+                self.image.blit(self.sprWalkL, 
                               (-self.inPixels[0] * (frameNo), 0))
     def motionCheck(self):
         self.curVel = self.body.GetLinearVelocity()

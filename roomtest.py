@@ -26,12 +26,12 @@ class ImageToolbox:
         # Loads all images and blits them to the appropriate surface
         for cls in widgetClasses:
             obj = cls(position=None)
-            self.surface.blit(obj.sprite,(horiz_padding,vert_position))
+            self.surface.blit(obj.image,(horiz_padding,vert_position))
 
             top = vert_position;
-            bottom = top + obj.sprite.get_height()
+            bottom = top + obj.image.get_height()
             left = horiz_padding + SCREEN_PIXEL_WIDTH
-            right = left + obj.sprite.get_width()
+            right = left + obj.image.get_width()
 
             hitbox = PixelHitbox(top,bottom,left,right)
 
@@ -119,7 +119,7 @@ class LevelDesigner:
             self.surface.blit(self.toolbox.surface,(SCREEN_PIXEL_WIDTH,0))
 
             if self.selectedItem:
-                self.surface.blit(self.selectedItem.sprite,pygame.mouse.get_pos())
+                self.surface.blit(self.selectedItem.image,pygame.mouse.get_pos())
             pygame.display.flip()
 
     def handleClick(self,pos):
@@ -134,7 +134,7 @@ class LevelDesigner:
             
             physxCoord = mgr.ViewPort().PhysxCoords(pos)
             newObj = copy.deepcopy(self.selectedItem)
-            newObj.sprite = self.selectedItem.sprite # Copy pointer to sprite
+            newObj.image = self.selectedItem.image # Copy pointer to sprite
             newObj.initPosition = physxCoord
 
             self.room.boxes.append(newObj)
