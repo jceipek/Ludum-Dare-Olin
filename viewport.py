@@ -10,13 +10,32 @@ class Viewport(object):
             cls._instance = super(Viewport,cls).__new__(cls,*args,**kwargs)
             self = cls._instance
             self.pixelVect = Vect(0,0)
+            self.levelHeight = None
+            self.hasMoved = False
 
         return cls._instance
 
-    def convertPixelsToPhysicalCoords(pixelCoords):
-        physX = (pixelCoords[0]+self.pixelVect.x)/PIXELS_PER_METER
-        physY = (SCREEN_PIXEL_HEIGHT-pixelCoords[1]-self.pixelVect.y)/PIXELS_PER_METER
-        return dimension.Vect(physX,physY)
-    '''
-    def convertPhysicalToPixelCoords(physicalCoords):
-        pixX = (physicalCoords[0]'''
+    def convertPixelsToPhysicalCoords(self,pixelCoords):
+        physX = (pixelCoords[0] + self.pixelVect.x) / PIXELS_PER_METER
+        physY = (PIXELS_PER_METER * self.levelHeight - pixelCoords[1] - self.pixelVect.y) / PIXELS_PER_METER 
+        return Vect(physX,physY)
+    
+    def convertPhysicalToPixelCoords(self,physicalCoords):
+        pixX = physicalCoords[0]*PIXELS_PER_METER - self.pixelVect.x
+        pixY = PIXELS_PER_METER * self.levelHeight - self.pixelVect.y - physicalCoords[1] * PIXELS_PER_METER
+        return Vect(pixX,pixY)
+
+    def move(self,vect):
+        self.pixelVect += vect
+        self.hasMoved = True
+
+if __name__ == "__main__":
+    vp = Viewport()
+    vp.levelHeight = 60
+    vp.pixelVect += Vect(30*PIXELS_PER_METER,30*PIXELS_PER_METER)
+    test = Vect(30,30)
+    a = vp.convertPhysicalToPixelCoords(test)
+    test2 = vp.convertPixelsToPhysicalCoords(a)
+    print "Test: ",test
+    print "a:    ",a
+    print "Test2:",test2
