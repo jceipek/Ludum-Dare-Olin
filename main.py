@@ -42,16 +42,17 @@ class Game:
             self.running = False
         elif event.key == pygame.K_UP:
             print "Hit Up"
-            vp.move((0,50))
+            self.activeLevel.moveCharacter()
+            #vp.move((0,50))
         elif event.key == pygame.K_DOWN:
             print "Hit Down"
-            vp.move((0,-50))
+            #vp.move((0,-50))
         elif event.key == pygame.K_RIGHT:
             print "Hit Right"
-            vp.move((-50,0))
+            #vp.move((-50,0))
         elif event.key == pygame.K_LEFT:
             print "Hit Left"
-            vp.move((50,0))
+            #vp.move((50,0))
 
     def loadLevel(self,filename=None):
         self.activeLevel = Level(filename)

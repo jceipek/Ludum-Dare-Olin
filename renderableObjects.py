@@ -127,3 +127,36 @@ class Spaceman(RenderableObject):
 
         self.hasPhysics = True
         self._buildPhysics(width=sprite_width,height=sprite_height,canRotate=False,isStatic=False)
+
+        
+    def update(self):
+        '''
+        Overrides Sprite update
+        '''
+        if Viewport().hasMoved:
+            self.rect.center = Viewport().convertPhysicalToPixelCoords(self.__physicalPosition)
+            self.dirty = 1
+            
+        if self.hasPhysics:
+            newPhysicalPosition = Vect(self.body.position.x,self.body.position.y)
+            if newPhysicalPosition != self.physicalPosition:
+                self.physicalPosition = newPhysicalPosition
+
+    def tryMove(self, x, y):
+        print "foobar"
+        print self.physicalPosition
+
+        self.body.ApplyForce(Box2D.b2Vec2(600,0),self.body.GetWorldCenter())
+
+        return
+        self.curVel = self.body.GetLinearVelocity()
+        if x < 0 and self.curVel.x > -MAX_WALK_SPEED: #Not going too fast Left
+            if self.curVel.x+x/(FPS*self.body.GetMass()) > -MAX_WALK_SPEED: #You can accelerate all the way asked
+                self.body.ApplyForce(Box2D.b2Vec2(x,0), self.body.GetWorldCenter())
+            else: #You can only accelerate to the max walk speed
+                self.body.ApplyForce(Box2D.b2Vec2(FPS*(-MAX_WALK_SPEED-self.curVel.x)*self.body.GetMass(),0), self.body.GetWorldCenter())
+        elif x > 0 and self.curVel.x < MAX_WALK_SPEED: #Not going too fast Right
+            if self.curVel.x+x/(FPS*self.body.GetMass()) < MAX_WALK_SPEED: #You can accelerate all the way asked
+                self.body.ApplyForce(Box2D.b2Vec2(x,0), self.body.GetWorldCenter())
+            else: #You can only accelerate to the max walk speed
+                self.body.ApplyForce(Box2D.b2Vec2(FPS*(MAX_WALK_SPEED-self.curVel.x)*self.body.GetMass(),0), self.body.GetWorldCenter())

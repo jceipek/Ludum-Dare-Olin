@@ -59,9 +59,9 @@ class Level(object):
         platform.add(self.allObjects)
         self.allObjects.change_layer(platform,Level.FIXED)
         
-        spaceman = ro.Spaceman((10,10),self.physicsWorld)
-        spaceman.add(self.allObjects)
-        self.allObjects.change_layer(spaceman, Level.DYNAMIC)
+        self.spaceman = ro.Spaceman((10,10),self.physicsWorld)
+        self.spaceman.add(self.allObjects)
+        self.allObjects.change_layer(self.spaceman, Level.DYNAMIC)
         
     def update(self):
         '''
@@ -69,6 +69,7 @@ class Level(object):
         '''
         self.physicsWorld.Step(2.0/60,10,8)
         self.allObjects.update()
+        print self.spaceman.physicalPosition
 
     def render(self,surface):
         '''
@@ -81,3 +82,6 @@ class Level(object):
             size = self.physicalSize * PIXELS_PER_METER
             debugRect = pygame.Rect(upperLeftCorner,size)
             pygame.draw.rect(surface,(255,0,0),debugRect,1)
+
+    def moveCharacter(self,right=True):
+        self.spaceman.tryMove(600,0)
