@@ -21,26 +21,28 @@ class RenderableObject(pygame.sprite.DirtySprite):
 
         self.physicsWorld = physicsWorld
         self.hasPhysics = hasPhysics
-
         if self.hasPhysics:
-            bodyDef = Box2D.b2BodyDef()
-            bodyDef.position = (self.physicalPosition[0],self.physicalPosition[1])
-            bodyDef.fixedRotation = not canRotate
-            bodyDef.linearDamping = 0.15
-            self.body = self.physicsWorld.CreateBody(bodyDef)
-            #self.body.SetUserData(self)
+            self._buildPhysics(width,height,canRotate,isStatic)
 
-            shapeDef = Box2D.b2PolygonDef()
-            shapeDef.SetAsBox(width / 2.0 /  PIXELS_PER_METER, height / 2.0 / PIXELS_PER_METER)
-            if isStatic:
-                shapeDef.density = 0
-            else:
-                shapeDef.density = DENSITY
-            shapeDef.linearDamping = AIR_RESISTANCE
-            shapeDef.friction = FRICTION
+    def _buildPhysics(self,width,height,canRotate,isStatic):
+        bodyDef = Box2D.b2BodyDef()
+        bodyDef.position = (self.physicalPosition[0],self.physicalPosition[1])
+        bodyDef.fixedRotation = not canRotate
+        bodyDef.linearDamping = 0.15
+        self.body = self.physicsWorld.CreateBody(bodyDef)
+        #self.body.SetUserData(self)
+
+        shapeDef = Box2D.b2PolygonDef()
+        shapeDef.SetAsBox(width / 2.0 /  PIXELS_PER_METER, height / 2.0 / PIXELS_PER_METER)
+        if isStatic:
+            shapeDef.density = 0
+        else:
+            shapeDef.density = DENSITY
+        shapeDef.linearDamping = AIR_RESISTANCE
+        shapeDef.friction = FRICTION
         
-            self.body.CreateShape(shapeDef)
-            self.body.SetMassFromShapes()
+        self.body.CreateShape(shapeDef)
+        self.body.SetMassFromShapes()
 
     def update(self):
         '''
@@ -84,4 +86,44 @@ class RoomBg(RenderableObject):
 
 class Platform(RenderableObject):
     def __init__(self,position,physicsWorld,imageName="simplePlatform"):
-        RenderableObject.__init__(self,position,physicsWorld,imageName,hasPhysics=True,isStatic=True)
+        RenderableObject.__init__(self,position,physicsWorld,imageName,hasPhysics=True,isStatic=True,canRotate=False)
+
+class Spaceman(RenderableObject):
+    def __init__(self,position,physicsWorld):
+        pygame.sprite.DirtySprite.__init__(self)
+        self.spriteSheetRight = ImageHandler()["walkingRight"] # Returns a pygame surface
+        self.spriteSheetLeft = ImageHandler()["walkingLeft"] # Returns a pygame surface
+        
+        sprite_height = 90
+        sprite_width = 80
+
+        self.rect = pygame.Rect(0,0,sprite_width,sprite_height)
+
+        if not isinstance(position, Vect):
+            physicalPosition = Vect(*position)
+        self.physicalPosition = position
+
+        self.physicsWorld = physicsWorld
+
+        self.spritesRight = list()
+        self.spritesLeft  = list()
+
+        for i in xrange(self.spriteSheetRight.get_width() // sprite_width):
+            newSprite = pygame.Surface((sprite_width,sprite_height),pygame.SRCALPHA,32)
+            area = pygame.Rect(i*sprite_width,0,sprite_width,sprite_height)
+            newSprite.blit(self.spriteSheetRight, (0,0), area)
+            newSprite.convert()
+            self.spritesRight.append(newSprite)
+
+        for i in xrange(self.spriteSheetLeft.get_width() // sprite_width):
+            newSprite = pygame.Surface((sprite_width,sprite_height),pygame.SRCALPHA,32)
+            area = pygame.Rect(i*sprite_width,0,sprite_width,sprite_height)
+            newSprite.blit(self.spriteSheetLeft, (0,0), area)
+            newSprite.convert()
+            self.spritesLeft.append(newSprite)
+
+        self.spriteIndex = 0
+        self.image = self.spritesRight[self.spriteIndex]
+
+        self.hasPhysics = True
+        self._buildPhysics(width=sprite_width,height=sprite_height,canRotate=False,isStatic=False)

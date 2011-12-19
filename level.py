@@ -46,20 +46,23 @@ class Level(object):
         roombg.add(self.allObjects)
         self.allObjects.change_layer(roombg,Level.ROOM_BG)
 
+        '''
         box = ro.Crate((10,10),self.physicsWorld)
         box.add(self.allObjects)
         self.allObjects.change_layer(box,Level.DYNAMIC)
         box = ro.Crate((10,15),self.physicsWorld)
         box.add(self.allObjects)
         self.allObjects.change_layer(box,Level.DYNAMIC)
+        '''
 
         platform = ro.Platform((10,5),self.physicsWorld)
         platform.add(self.allObjects)
         self.allObjects.change_layer(platform,Level.FIXED)
-
-        print "Physical position: ",box.physicalPosition
-        print "Rect: ",box.rect.center
-
+        
+        spaceman = ro.Spaceman((10,10),self.physicsWorld)
+        spaceman.add(self.allObjects)
+        self.allObjects.change_layer(spaceman, Level.DYNAMIC)
+        
     def update(self):
         '''
         Handles logic for a game step
