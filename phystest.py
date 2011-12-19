@@ -22,7 +22,7 @@ class myContactListener(b2ContactListener):
         super(myContactListener, self).__init__()
 
     def handleCall(self, state, point):
-        print state
+        #print state
         if not self.test: return
 
         cp          = myContactPoint()
@@ -125,6 +125,12 @@ def main():
         
         for object in room.GetAllObjects():
             object.blitToScreen(screen)
+
+        body_pairs = [(p.shape1.GetBody(), p.shape2.GetBody()) for p in w.points]
+        print 'start'
+        for body1, body2 in body_pairs:
+            print body1.GetUserData(), body2.GetUserData()
+        print 'end'
 
         for event in pygame.event.get():
             if event.type == QUIT:
