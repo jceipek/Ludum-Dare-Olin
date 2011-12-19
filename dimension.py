@@ -3,6 +3,8 @@
 
 import math
 
+SIGMA = 0.00001
+
 class Vect(object):
     '''
     A generic vector object
@@ -53,4 +55,4 @@ class Vect(object):
         return '<%s, %s>' % (self.x, self.y)
 
     def __eq__(self, other):
-        return self.x == other[0] and self.y == other[1]
+        return self.x-other[0] <= SIGMA and self.y-other[1] <= SIGMA
