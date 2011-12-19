@@ -110,6 +110,8 @@ class Dimension(Serializable):
         return Dimension(value=value, units=target.units)
 
     def Strip(self):
+        if self.units == {'px':1}:
+            return int(self.value)
         return float(self.value)
 
     def CheckUnits(self, other):

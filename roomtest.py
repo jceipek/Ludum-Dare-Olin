@@ -4,6 +4,7 @@ from pygame.locals import *
 import room as rm
 import manager as mgr
 import dimension as dim
+import copy
 
 WIDGET_TOOLBAR_WIDTH = 200
 
@@ -71,11 +72,12 @@ class LevelDesigner:
         self.surface.blit(background,(0,0))
 
         self.toolbox = ImageToolbox()
-        self.surface.blit(self.toolbox.surface,(SCREEN_PIXEL_WIDTH,0))
 
         box = rm.Box(position=dim.Vect(dim.Dimension(unitstr="1.0 m"),dim.Dimension(unitstr="1.0 m")))
         box.blitToInitialPosition(self.surface)
         self.room.boxes.append(box)
+
+        self.selectedItem = None
 
         print box.size
 
@@ -113,16 +115,31 @@ class LevelDesigner:
             self.surface.blit(self.background,(0,0))
             for item in self.room.GetAllObjects():
                 item.blitToInitialPosition(self.surface)
+
+            self.surface.blit(self.toolbox.surface,(SCREEN_PIXEL_WIDTH,0))
+
+            if self.selectedItem:
+                self.surface.blit(self.selectedItem.sprite,pygame.mouse.get_pos())
             pygame.display.flip()
 
     def handleClick(self,pos):
         print "Mouse Clicked at ", pos
         if self.clickInToolbox(pos):
-            print "Found object: ",self.toolbox.FindClickedObject(pos)
+            if not self.selectedItem:
+                self.selectedItem = self.toolbox.FindClickedObject(pos)
+                print "Found object: ",self.selectedItem
 
         else:
             pos = dim.Vect(PIXEL * pos[0], PIXEL * pos[1])
-            print "Physical Coordinates: ",mgr.ViewPort().PhysxCoords(pos)
+            
+            physxCoord = mgr.ViewPort().PhysxCoords(pos)
+            newObj = copy.deepcopy(self.selectedItem)
+            newObj.sprite = self.selectedItem.sprite # Copy pointer to sprite
+            newObj.initPosition = physxCoord
+
+            self.room.boxes.append(newObj)
+
+            self.selectedItem = None
 
     def clickInToolbox(self,pos):
         return pos[0] > SCREEN_PIXEL_WIDTH
