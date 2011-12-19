@@ -111,7 +111,6 @@ class LevelDesigner:
                         vp.originDelta = vp.originDelta - dim.Vect(movement,zero)
                 elif event.type == MOUSEBUTTONDOWN:
                     self.handleClick(event.pos)
-
                 
             self.surface.blit(self.background,(0,0))
             for item in self.room.GetAllObjects():
@@ -145,6 +144,7 @@ class LevelDesigner:
                 physxCoord = mgr.ViewPort().PhysxCoords(pos)
                 # We want to place the object
                 self.selectedItem.initPosition = physxCoord            
+                self.selectedItem.update()
                 self.selectedItem.update()
                 if not self.selectedItem in self.room.boxes:
                     self.room.boxes.append(self.selectedItem)

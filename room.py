@@ -22,19 +22,32 @@ class RenderableObject(pygame.sprite.DirtySprite):
         self.vp = mgr.ViewPort()
         
         self.kieferSize = size
-        self.initPosition = pos
+        self.__initPosition = pos
         self.kwargs = kwargs
 
-        if self.initPosition:
-            initPos = self.initPosition.ConvertTo(PIXEL).Strip()
+        if self.__initPosition:
+            initPos = self.__initPosition.ConvertTo(PIXEL).Strip()
         else:
             initPos = (0,0)
         imageWidth = self.image.get_width()
         imageHeight = self.image.get_height()
 
         self.rect = pygame.Rect(initPos[0],initPos[1],imageWidth,imageHeight)
+        self.old_rect = None
+        self.lastDrawPosition = dim.Vect(PIXEL*-1,PIXEL*-1) 
+
+    def __get_initPosition(self):
+        return self.__initPosition
+
+    def __set_initPosition(self,value):
+        self.__initPosition = value
         self.old_rect = self.rect.copy()
-        self.lastDrawPosition = dim.Vect(PIXEL*0,PIXEL*0) 
+
+        initPos = self.__initPosition.ConvertTo(PIXEL).Strip()
+        self.rect.move_ip(*initPos)
+        
+
+    initPosition = property(__get_initPosition,__set_initPosition)
 
     def update(self,*args): # Override sprite update method
         # Do not blit here!!! Blitting happens with the sprite group!
