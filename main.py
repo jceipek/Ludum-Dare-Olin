@@ -43,20 +43,18 @@ class Game:
         if event.key == pygame.K_ESCAPE:
             self.running = False
         elif event.key == pygame.K_UP:
-            print "Hit Up"
             self.activeLevel.characterJump()
             #vp.move((0,50))
-        elif event.key == pygame.K_DOWN:
-            print "Hit Down"
-            #vp.move((0,-50))
-        elif event.key == pygame.K_RIGHT:
-            print "Hit Right"
-            #self.activeLevel.characterRight()            
-            #vp.move((-50,0))
-        elif event.key == pygame.K_LEFT:
-            print "Hit Left"
-            #self.activeLevel.characterLeft()                        
-            #vp.move((50,0))
+        elif event.key == pygame.K_w:
+            self.activeLevel.moveShip(0,5)
+        elif event.key == pygame.K_s:
+            self.activeLevel.moveShip(0,-5)
+        elif event.key == pygame.K_d:
+            self.activeLevel.moveShip(5,0)
+        elif event.key == pygame.K_a:
+            self.activeLevel.moveShip(-5,0)
+
+
 
     def handleKeyState(self,keys):
         if keys[pygame.K_RIGHT]:

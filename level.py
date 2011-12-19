@@ -101,6 +101,12 @@ class Level(object):
             self.spaceman.body.ApplyForce(Box2D.b2Vec2(0,600), self.spaceman.body.GetWorldCenter())
             self.spaceman.tryingToJump = True
             self.spaceman.spriteIndex = 0
+    def moveShip(self, x, y):
+        for object in self.allObjects:
+            try:
+                object.body.ApplyForce(Box2D.b2Vec2(-FPS*x*object.body.GetMass(),-FPS*y*object.body.GetMass()), object.body.GetWorldCenter())
+            except:
+                pass
 
 class fwContactTypes:
     """

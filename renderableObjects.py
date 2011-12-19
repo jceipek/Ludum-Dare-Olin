@@ -239,10 +239,13 @@ class Spaceman(RenderableObject):
             else: #You can only accelerate to the max walk speed
                 self.body.ApplyForce(Box2D.b2Vec2(FPS*(MAX_WALK_SPEED-self.curVel.x)*self.body.GetMass(),0), self.body.GetWorldCenter())
     
-    def tryStop(self):
+    def tryStop(self, horiz=True, vert=False):
         print "trying to stop"
         self.curVel = self.body.GetLinearVelocity()
-        self.body.ApplyForce(Box2D.b2Vec2(FPS*(-self.curVel.x)*self.body.GetMass(),FPS*(-self.curVel.y)*self.body.GetMass()), self.body.GetWorldCenter())
+        if horiz:
+            self.body.ApplyForce(Box2D.b2Vec2(FPS*(-self.curVel.x)*self.body.GetMass(),0), self.body.GetWorldCenter())
+        if vert:
+            self.body.ApplyForce(Box2D.b2Vec2(0,FPS*(-self.curVel.y)*self.body.GetMass()), self.body.GetWorldCenter())
     
     def isOnGround(self):
         return self.touchingGround>0
