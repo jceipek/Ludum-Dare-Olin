@@ -104,7 +104,6 @@ def main():
 
     global spaceman
     spaceman = rm.Spaceman(w, dim.Vect(9.0 * METER, 9.0 * METER))
-    spaceman.add()
     room.spawnPoints.append(spaceman)
 
     for object in room.GetAllObjects():
