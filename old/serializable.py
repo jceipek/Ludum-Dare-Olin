@@ -1,0 +1,2 @@
+class Serializable(object):
+    pass
