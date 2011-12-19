@@ -48,6 +48,7 @@ class RenderableObject(pygame.sprite.DirtySprite):
             self.dirty = 1
             
         if self.hasPhysics:
+            newPhysicalPosition = Vect(self.body.position.x,self.body.position.y)
             if newPhysicalPosition != self.physicalPosition:
                 self.physicalPosition = newPhysicalPosition
 
