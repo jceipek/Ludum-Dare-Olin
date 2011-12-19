@@ -18,4 +18,4 @@ FRICTION = 0.2
 FPS = 60 # [s^-1]
 DENSITY = 0.4
 
-MAX_WALK_SPEED = 1.5 # [m s^-1]
+FRAMERATE = 30 # [s^-1]
