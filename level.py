@@ -45,9 +45,9 @@ class Level(object):
         box = ro.Crate((10,10),self.physicsWorld)
         box.add(self.allObjects)
         self.allObjects.change_layer(box,Level.DYNAMIC)
-        box = ro.Crate((20,10),self.physicsWorld)
-        box.add(self.allObjects)
-        self.allObjects.change_layer(box,Level.DYNAMIC)
+        #box = ro.Crate((20,10),self.physicsWorld)
+        #box.add(self.allObjects)
+        #self.allObjects.change_layer(box,Level.DYNAMIC)
         print "Physical position: ",box.physicalPosition
         print "Rect: ",box.rect.center
 
@@ -55,6 +55,7 @@ class Level(object):
         '''
         Handles logic for a game step
         '''
+        self.physicsWorld.Step(1.0/60,10,8)
         self.allObjects.update()
 
     def render(self,surface):

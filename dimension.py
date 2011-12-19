@@ -57,5 +57,5 @@ class Vect(object):
     def __eq__(self, other):
         return self.x-other[0] <= SIGMA and self.y-other[1] <= SIGMA
 
-    def __neq__(self, other):
-        return self.x-other[0] >= SIGMA or self.y-other[1] >= SIGMA
+    def __ne__(self, other):
+        return not self.__eq__(other)
