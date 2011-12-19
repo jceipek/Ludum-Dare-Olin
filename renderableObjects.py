@@ -136,7 +136,7 @@ class Spaceman(RenderableObject):
         self.hasPhysics = True
         self._buildPhysics(width=sprite_width,height=sprite_height,canRotate=False,isStatic=False)
 
-        self.animstate = Spaceman.WALKING_RIGHT
+        self.animstate = Spaceman.STANDING_RIGHT
 
         
     def update(self, msSinceLast):
@@ -152,16 +152,29 @@ class Spaceman(RenderableObject):
             if newPhysicalPosition != self.physicalPosition:
                 self.physicalPosition = newPhysicalPosition
 
+
+        self.curVel = self.body.GetLinearVelocity()
+        if self.curVel[0] >= -1.0 and self.curVel[0] < 0.0:
+            self.animstate = Spaceman.STANDING_LEFT
+        elif self.curVel[0] <= 1.0 and self.curVel[0] > 0.0:
+            self.animstate = Spaceman.STANDING_RIGHT
+
+        self.spriteIndex += (msSinceLast/33.0)
         if self.animstate == Spaceman.WALKING_RIGHT:
-            self.spriteIndex += (msSinceLast/33.0)
             self.spriteIndex %= len(self.spritesRight)
             self.image = self.spritesRight[int(self.spriteIndex)]
+        elif self.animstate == Spaceman.WALKING_LEFT:
+            self.spriteIndex %= len(self.spritesLeft)
+            self.image = self.spritesLeft[int(self.spriteIndex)]           
 
     def tryMove(self, x, y):
-        #self.body.ApplyForce(Box2D.b2Vec2(600,0),self.body.GetWorldCenter())
+        if x > 0:
+            self.animstate = Spaceman.WALKING_RIGHT
+        elif x < 0:
+            self.animstate = Spaceman.WALKING_LEFT
 
-        #return
         self.curVel = self.body.GetLinearVelocity()
+        
         if x < 0 and self.curVel.x > -MAX_WALK_SPEED: #Not going too fast Left
             if self.curVel.x+x/(FPS*self.body.GetMass()) > -MAX_WALK_SPEED: #You can accelerate all the way asked
                 self.body.ApplyForce(Box2D.b2Vec2(x,0), self.body.GetWorldCenter())
