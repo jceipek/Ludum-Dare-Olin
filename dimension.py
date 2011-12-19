@@ -14,11 +14,11 @@ class Vect(object):
     def __add__(self, other):
         return Vect(self.x + other[0], self.y + other[1])
 
-    def __mul__(self, other):
-        return Vect(other * self.x, other * self.y)
+    def __mul__(self, num):
+        return Vect(num * self.x, num * self.y)
 
-    def __rmul__(self, other):
-        return Vect(self.x * other, self.y * other)
+    def __rmul__(self, num):
+        return Vect(self.x * num, self.y * num)
 
     def __div__(self, other):
         return Vect(self.x / other, self.y / other)
@@ -51,3 +51,6 @@ class Vect(object):
 
     def __str__(self):
         return '<%s, %s>' % (self.x, self.y)
+
+    def __eq__(self, other):
+        return self.x == other[0] and self.y == other[1]
