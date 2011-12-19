@@ -89,5 +89,10 @@ class Level(object):
             debugRect = pygame.Rect(upperLeftCorner,size)
             pygame.draw.rect(surface,(255,0,0),debugRect,1)
 
-    def moveCharacter(self,right=True):
+    def characterRight(self):
         self.spaceman.tryMove(600,0)
+    def characterLeft(self):
+        self.spaceman.tryMove(-600,0)
+    def characterJump(self):
+        self.spaceman.tryMove(0,600)
+
