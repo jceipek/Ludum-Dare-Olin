@@ -70,12 +70,12 @@ class Level(object):
         self.spaceman.add(self.allObjects)
         self.allObjects.change_layer(self.spaceman, Level.DYNAMIC)
         
-    def update(self):
+    def update(self, msSinceLast):
         '''
         Handles logic for a game step
         '''
         self.physicsWorld.Step(1.0/60,10,8)
-        self.allObjects.update()
+        self.allObjects.update(msSinceLast)
 
     def render(self,surface):
         '''

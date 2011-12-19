@@ -44,7 +44,7 @@ class RenderableObject(pygame.sprite.DirtySprite):
         self.body.CreateShape(shapeDef)
         self.body.SetMassFromShapes()
 
-    def update(self):
+    def update(self, msSinceLast):
         '''
         Overrides Sprite update
         '''
@@ -89,11 +89,19 @@ class Platform(RenderableObject):
         RenderableObject.__init__(self,position,physicsWorld,imageName,hasPhysics=True,isStatic=True,canRotate=False)
 
 class Spaceman(RenderableObject):
+
+    STANDING_RIGHT = 0
+    STANDING_LEFT = 1
+    WALKING_RIGHT = 2
+    WALKING_LEFT = 3
+
     def __init__(self,position,physicsWorld):
         pygame.sprite.DirtySprite.__init__(self)
         self.spriteSheetRight = ImageHandler()["walkingRight"] # Returns a pygame surface
         self.spriteSheetLeft = ImageHandler()["walkingLeft"] # Returns a pygame surface
-        
+       
+        self.curVel  = Vect(0,0)
+
         sprite_height = 90
         sprite_width = 80
 
@@ -122,14 +130,16 @@ class Spaceman(RenderableObject):
             newSprite.convert()
             self.spritesLeft.append(newSprite)
 
-        self.spriteIndex = 0
-        self.image = self.spritesRight[self.spriteIndex]
+        self.spriteIndex = 0.0
+        self.image = self.spritesRight[int(self.spriteIndex)]
 
         self.hasPhysics = True
         self._buildPhysics(width=sprite_width,height=sprite_height,canRotate=False,isStatic=False)
 
+        self.animstate = Spaceman.WALKING_RIGHT
+
         
-    def update(self):
+    def update(self, msSinceLast):
         '''
         Overrides Sprite update
         '''
@@ -141,6 +151,11 @@ class Spaceman(RenderableObject):
             newPhysicalPosition = Vect(self.body.position.x,self.body.position.y)
             if newPhysicalPosition != self.physicalPosition:
                 self.physicalPosition = newPhysicalPosition
+
+        if self.animstate == Spaceman.WALKING_RIGHT:
+            self.spriteIndex += (msSinceLast/33.0)
+            self.spriteIndex %= len(self.spritesRight)
+            self.image = self.spritesRight[int(self.spriteIndex)]
 
     def tryMove(self, x, y):
         #self.body.ApplyForce(Box2D.b2Vec2(600,0),self.body.GetWorldCenter())

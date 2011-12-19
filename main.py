@@ -16,10 +16,11 @@ class Game:
     def main(self):
 
         self.running = True
+        msSinceLast = 0
         while self.running:
             self.processEventLoop()
-            self.activeLevel.update()
-            self.clock.tick(FRAMERATE)
+            self.activeLevel.update(msSinceLast)
+            msSinceLast = self.clock.tick(FRAMERATE)
             self.activeLevel.render(self.surface)
             pygame.display.flip()
             Viewport().hasMoved = False
