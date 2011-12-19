@@ -10,14 +10,17 @@ class Game:
         pygame.init()
         self.surface = pygame.display.set_mode((SCREEN_PIXEL_WIDTH,SCREEN_PIXEL_HEIGHT))
         self.loadLevel("roombg")
-        self.activeLevel.drawDebug = True
+        #self.activeLevel.drawDebug = True
+        self.clock = pygame.time.Clock()
 
     def main(self):
 
         self.running = True
+        msSinceLast = 0
         while self.running:
             self.processEventLoop()
-            self.activeLevel.update()
+            self.activeLevel.update(msSinceLast)
+            msSinceLast = self.clock.tick(FRAMERATE)
             self.activeLevel.render(self.surface)
             pygame.display.flip()
             Viewport().hasMoved = False
@@ -40,16 +43,19 @@ class Game:
             self.running = False
         elif event.key == pygame.K_UP:
             print "Hit Up"
-            vp.move((0,50))
+            self.activeLevel.characterJump()
+            #vp.move((0,50))
         elif event.key == pygame.K_DOWN:
             print "Hit Down"
-            vp.move((0,-50))
+            #vp.move((0,-50))
         elif event.key == pygame.K_RIGHT:
             print "Hit Right"
-            vp.move((-50,0))
+            self.activeLevel.characterRight()            
+            #vp.move((-50,0))
         elif event.key == pygame.K_LEFT:
             print "Hit Left"
-            vp.move((50,0))
+            self.activeLevel.characterLeft()                        
+            #vp.move((50,0))
 
     def loadLevel(self,filename=None):
         self.activeLevel = Level(filename)
