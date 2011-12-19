@@ -8,7 +8,7 @@ import dimension as dim
 SPACEMAN_SIZE = dim.Vect(80*PIXEL,90*PIXEL).ConvertTo(METER)
 BOX_SIZE = dim.Vect(76*PIXEL,78*PIXEL).ConvertTo(METER)
 
-class RenderableObject(object):
+class RenderableObject(pygame.sprite.Sprite):
     def __init__(self, world, pos, size, **kwargs):
         self.sprite = None #Sprite loading is done in subclass
 
@@ -59,6 +59,9 @@ class RenderableObject(object):
         width = self.sprite.get_width()
         height = self.sprite.get_height()
         return mgr.Vect(mgr.Dimension(value=width,units="px"),mgr.Dimension(value=height,units="px"))
+
+    def __str__(self):
+        return self.__class__.__name__
 
 class Room(Serializable):
     '''
