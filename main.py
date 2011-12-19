@@ -30,14 +30,15 @@ class Game:
             if event.type == pygame.QUIT:
                 self.running = False
             elif event.type == pygame.KEYDOWN:
-                self.handleKey(event)
+                self.handleKeyDown(event)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self.handleClick(event)
+        self.handleKeyState(pygame.key.get_pressed())
 
     def handleClick(self,event):
         print "Mouse clicked at: ",event.pos
 
-    def handleKey(self,event):
+    def handleKeyDown(self,event):
         vp = Viewport()
         if event.key == pygame.K_ESCAPE:
             self.running = False
@@ -50,12 +51,18 @@ class Game:
             #vp.move((0,-50))
         elif event.key == pygame.K_RIGHT:
             print "Hit Right"
-            self.activeLevel.characterRight()            
+            #self.activeLevel.characterRight()            
             #vp.move((-50,0))
         elif event.key == pygame.K_LEFT:
             print "Hit Left"
-            self.activeLevel.characterLeft()                        
+            #self.activeLevel.characterLeft()                        
             #vp.move((50,0))
+
+    def handleKeyState(self,keys):
+        if keys[pygame.K_RIGHT]:
+            self.activeLevel.characterRight()
+        if keys[pygame.K_LEFT]:
+            self.activeLevel.characterLeft()
 
     def loadLevel(self,filename=None):
         self.activeLevel = Level(filename)

@@ -7,7 +7,7 @@ from dimension import Vect
 
 class RenderableObject(pygame.sprite.DirtySprite):
 
-    def __init__(self,physicalPosition,physicsWorld,imageName,hasPhysics=True,isStatic=False,canRotate=True):
+    def __init__(self,physicalPosition,physicsWorld,imageName,hasPhysics=True,isStatic=False,canRotate=True,userData=""):
         pygame.sprite.DirtySprite.__init__(self)
         self.image = ImageHandler()[imageName] # Returns a pygame surface
 
@@ -23,6 +23,7 @@ class RenderableObject(pygame.sprite.DirtySprite):
         self.hasPhysics = hasPhysics
         if self.hasPhysics:
             self._buildPhysics(width,height,canRotate,isStatic)
+            self.body.SetUserData(userData)
 
     def _buildPhysics(self,width,height,canRotate,isStatic):
         bodyDef = Box2D.b2BodyDef()
@@ -86,7 +87,7 @@ class RoomBg(RenderableObject):
 
 class Platform(RenderableObject):
     def __init__(self,position,physicsWorld,imageName="simplePlatform"):
-        RenderableObject.__init__(self,position,physicsWorld,imageName,hasPhysics=True,isStatic=True,canRotate=False)
+        RenderableObject.__init__(self,position,physicsWorld,imageName,hasPhysics=True,isStatic=True,canRotate=False,userData="platform")
 
 class Spaceman(RenderableObject):
 
@@ -100,7 +101,7 @@ class Spaceman(RenderableObject):
         self.spriteSheetRight = ImageHandler()["walkingRight"] # Returns a pygame surface
         self.spriteSheetLeft = ImageHandler()["walkingLeft"] # Returns a pygame surface
        
-        self.curVel  = Vect(0,0)
+        self.curVel  = (0,0)
 
         sprite_height = 90
         sprite_width = 80
@@ -115,6 +116,8 @@ class Spaceman(RenderableObject):
 
         self.spritesRight = list()
         self.spritesLeft  = list()
+        self.sprStandingRight = ImageHandler()["standingRight"]
+        self.sprStandingLeft = ImageHandler()["standingLeft"]
 
         for i in xrange(self.spriteSheetRight.get_width() // sprite_width):
             newSprite = pygame.Surface((sprite_width,sprite_height),pygame.SRCALPHA,32)
@@ -135,8 +138,11 @@ class Spaceman(RenderableObject):
 
         self.hasPhysics = True
         self._buildPhysics(width=sprite_width,height=sprite_height,canRotate=False,isStatic=False)
+        self.body.SetUserData("spaceman")
 
         self.animstate = Spaceman.STANDING_RIGHT
+
+        self.touchingGround = 0
 
         
     def update(self, msSinceLast):
@@ -153,7 +159,8 @@ class Spaceman(RenderableObject):
                 self.physicalPosition = newPhysicalPosition
 
 
-        self.curVel = self.body.GetLinearVelocity()
+        getVel = self.body.GetLinearVelocity()
+        self.curVel = (getVel.x, getVel.y)
         if self.curVel[0] >= -1.0 and self.curVel[0] < 0.0:
             self.animstate = Spaceman.STANDING_LEFT
         elif self.curVel[0] <= 1.0 and self.curVel[0] > 0.0:
@@ -161,11 +168,16 @@ class Spaceman(RenderableObject):
 
         self.spriteIndex += (msSinceLast/33.0)
         if self.animstate == Spaceman.WALKING_RIGHT:
-            self.spriteIndex %= len(self.spritesRight)
-            self.image = self.spritesRight[int(self.spriteIndex)]
+            if self.isOnGround():
+                self.spriteIndex %= len(self.spritesRight)
+                self.image = self.spritesRight[int(self.spriteIndex)]
+            else:
+                self.image = self.sprStandingRight
         elif self.animstate == Spaceman.WALKING_LEFT:
-            self.spriteIndex %= len(self.spritesLeft)
-            self.image = self.spritesLeft[int(self.spriteIndex)]           
+            if self.isOnGround():
+                self.spriteIndex %= len(self.spritesLeft)
+                self.image = self.spritesLeft[int(self.spriteIndex)]
+            else: self.image = self.sprStandingLeft
 
     def tryMove(self, x, y):
         if x > 0:
@@ -185,3 +197,19 @@ class Spaceman(RenderableObject):
                 self.body.ApplyForce(Box2D.b2Vec2(x,0), self.body.GetWorldCenter())
             else: #You can only accelerate to the max walk speed
                 self.body.ApplyForce(Box2D.b2Vec2(FPS*(MAX_WALK_SPEED-self.curVel.x)*self.body.GetMass(),0), self.body.GetWorldCenter())
+    
+    def isOnGround(self):
+        return self.touchingGround>0
+
+class TheSpaceman(Spaceman):
+    _instance = None
+    _init = None
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(TheSpaceman, cls).__new__(
+                                cls, *args, **kwargs)
+        return cls._instance
+    def __init__(self,position=None,physicsWorld=None):
+        if not TheSpaceman._init:
+            Spaceman.__init__(self,position,physicsWorld)
+            TheSpaceman._init = True

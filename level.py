@@ -31,7 +31,10 @@ class Level(object):
         world_bounds.upperBound = (self.physicalSize[0],self.physicalSize[1])
         doSleep = True
         self.physicsWorld = Box2D.b2World(world_bounds, GRAVITY, doSleep)
-
+        self.listener = MyListener()
+        self.listener.test = self
+        self.physicsWorld.SetContactListener(self.listener)
+        self.points=[]
 
         self.background = None
         #self.background = pygame.Surface((SCREEN_PIXEL_WIDTH,SCREEN_PIXEL_HEIGHT))
@@ -66,7 +69,7 @@ class Level(object):
             platform.add(self.allObjects)
             self.allObjects.change_layer(platform,Level.FIXED)        
 
-        self.spaceman = ro.Spaceman((10,10),self.physicsWorld)
+        self.spaceman = ro.TheSpaceman((10,10),self.physicsWorld)
         self.spaceman.add(self.allObjects)
         self.allObjects.change_layer(self.spaceman, Level.DYNAMIC)
         
@@ -94,5 +97,67 @@ class Level(object):
     def characterLeft(self):
         self.spaceman.tryMove(-600,0)
     def characterJump(self):
-        self.spaceman.tryMove(0,600)
+        if self.spaceman.isOnGround():
+            self.spaceman.body.ApplyForce(Box2D.b2Vec2(0,600), self.spaceman.body.GetWorldCenter())
 
+class fwContactTypes:
+    """
+    Acts as an enum, holding the types necessary for contacts:
+    Added, persisted, and removed
+    """
+    contactUnknown = 0
+    contactAdded = 1
+    contactPersisted = 2
+    contactRemoved = 3
+
+class fwContactPoint:
+    """
+    Structure holding the necessary information for a contact point.
+    All of the information is copied from the contact listener callbacks.
+    """
+    shape1 = None
+    shape2 = None
+    normal = None
+    position = None
+    velocity = None
+    id  = None
+    state = 0
+
+class MyListener(Box2D.b2ContactListener):
+    """
+    Handles all of the contact states passed in from Box2D.
+
+    """
+    test = None
+    def __init__(self):
+        super(MyListener, self).__init__()
+
+    def handleCall(self, state, point):
+        if not self.test: return
+
+        cp          = fwContactPoint()
+        cp.shape1   = point.shape1
+        cp.shape2   = point.shape2
+        cp.position = point.position.copy()
+        cp.normal   = point.normal.copy()
+        cp.id       = point.id
+        cp.state    = state
+        self.test.points.append(cp)
+        return cp
+
+    def Add(self, point):
+        cp = self.handleCall(fwContactTypes.contactAdded, point)
+        name1 = cp.shape1.GetBody().GetUserData()
+        name2 = cp.shape2.GetBody().GetUserData()
+        if (name1=="spaceman" and name2=="platform")or(name1=="platform" and name2=="spaceman"):
+            ro.TheSpaceman().touchingGround+=1
+
+    def Persist(self, point):
+        self.handleCall(fwContactTypes.contactPersisted, point)
+
+    def Remove(self, point):
+        cp = self.handleCall(fwContactTypes.contactRemoved, point)
+        name1 = cp.shape1.GetBody().GetUserData()
+        name2 = cp.shape2.GetBody().GetUserData()
+        if (name1=="spaceman" and name2=="platform")or(name1=="platform" and name2=="spaceman"):
+            ro.TheSpaceman().touchingGround-=1
