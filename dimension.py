@@ -8,7 +8,6 @@ class Vect(object):
     A generic vector object
     '''
     def __init__(self, x, y):
-        x+y
         self.x = x
         self.y = y
 
@@ -26,6 +25,16 @@ class Vect(object):
 
     def __sub__(self, other):
         return Vect(self.x - other.x, self.y - other.y)
+
+    def __len__(self):
+        return 2
+    
+    def __getitem__(self, value):
+        if value == 0:
+            return self.x
+        if value == 1:
+            return self.y
+        raise ValueError, "Index out of bounds for 2D vector: "+str(value)
 
     def Rotate(self, theta):
         x, y = self.x, self.y
