@@ -17,7 +17,7 @@ class RenderableObject(pygame.sprite.DirtySprite):
 
         if not isinstance(physicalPosition, Vect):
             physicalPosition = Vect(*physicalPosition)
-        self.physicalPosition = physicalPosition
+        self._setPhysicalPosition(physicalPosition)
 
         self.physicsWorld = physicsWorld
         self.hasPhysics = hasPhysics
@@ -28,7 +28,7 @@ class RenderableObject(pygame.sprite.DirtySprite):
         bodyDef = Box2D.b2BodyDef()
         bodyDef.position = (self.physicalPosition[0],self.physicalPosition[1])
         bodyDef.fixedRotation = not canRotate
-        bodyDef.linearDamping = 0.15
+        bodyDef.linearDamping = AIR_RESISTANCE
         self.body = self.physicsWorld.CreateBody(bodyDef)
         #self.body.SetUserData(self)
 
@@ -38,7 +38,6 @@ class RenderableObject(pygame.sprite.DirtySprite):
             shapeDef.density = 0
         else:
             shapeDef.density = DENSITY
-        shapeDef.linearDamping = AIR_RESISTANCE
         shapeDef.friction = FRICTION
         
         self.body.CreateShape(shapeDef)
@@ -48,33 +47,40 @@ class RenderableObject(pygame.sprite.DirtySprite):
         '''
         Overrides Sprite update
         '''
+
         if Viewport().hasMoved:
-            self.rect.center = Viewport().convertPhysicalToPixelCoords(self.__physicalPosition)
+            self.rect.center = Viewport().convertPhysicalToPixelCoords(self._physicalPosition)
             self.dirty = 1
             
         if self.hasPhysics:
+            print "Passing in:",self.body.position.x,self.body.position.y
             newPhysicalPosition = Vect(self.body.position.x,self.body.position.y)
             if newPhysicalPosition != self.physicalPosition:
-                self.physicalPosition = newPhysicalPosition
+                self._setPhysicalPosition(newPhysicalPosition)
 
-    def __setPhysicalPosition(self,value):
-        self.__physicalPosition = value
+    def _setPhysicalPosition(self,value):
+        try:
+            print "oldPos",self._physicalPosition,"New Pos: ",value    
+        except:
+            pass
+        self._physicalPosition = Vect(value[0],value[1])
+        
         self.rect.center = Viewport().convertPhysicalToPixelCoords(value)
         self.dirty = 1
 
-    def __getPhysicalPosition(self):
-        return self.__physicalPosition
+    def _getPhysicalPosition(self):
+        return self._physicalPosition
 
-    physicalPosition = property(__getPhysicalPosition,__setPhysicalPosition)
+    physicalPosition = property(_getPhysicalPosition,_setPhysicalPosition)
     
-    def __setPixelPosition(self,value):
+    def _setPixelPosition(self,value):
         self.rect.move_ip(*value)
-        self.__physicalPosition = Viewport().convertPixelsToPhysicalCoords(self.rect.center)
+        self._physicalPosition = Viewport().convertPixelsToPhysicalCoords(self.rect.center)
 
-    def __getPixelPosition(self):
+    def _getPixelPosition(self):
         return (self.rect.left,self.rect.top)
 
-    pixelPosition = property(__getPixelPosition,__setPixelPosition)
+    pixelPosition = property(_getPixelPosition,_setPixelPosition)
 
 class Crate(RenderableObject):
     def __init__(self,position,physicsWorld,imageName="crate"):
@@ -126,7 +132,7 @@ class Spaceman(RenderableObject):
         self.image = self.spritesRight[self.spriteIndex]
 
         self.hasPhysics = True
-        self._buildPhysics(width=sprite_width,height=sprite_height,canRotate=False,isStatic=False)
+        self._buildPhysics(width=sprite_width,height=sprite_height,canRotate=True,isStatic=False)
 
         
     def update(self):
@@ -146,7 +152,10 @@ class Spaceman(RenderableObject):
         print "foobar"
         print self.physicalPosition
 
-        self.body.ApplyForce(Box2D.b2Vec2(600,0),self.body.GetWorldCenter())
+        print "Get World Center",self.body.GetWorldCenter()
+
+        #self.body.ApplyForce(Box2D.b2Vec2(600,0),self.body.GetWorldCenter())
+        self.body.ApplyForce(Box2D.b2Vec2(600,0),Box2D.b2Vec2(self.physicalPosition[0],self.physicalPosition[1]))
 
         return
         self.curVel = self.body.GetLinearVelocity()

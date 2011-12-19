@@ -10,7 +10,7 @@ class Game:
         pygame.init()
         self.surface = pygame.display.set_mode((SCREEN_PIXEL_WIDTH,SCREEN_PIXEL_HEIGHT))
         self.loadLevel("roombg")
-        self.activeLevel.drawDebug = True
+        self.activeLevel.drawDebug = False#True
         self.clock = pygame.time.Clock()
 
     def main(self):
@@ -37,7 +37,7 @@ class Game:
         print "Mouse clicked at: ",event.pos
 
     def handleKey(self,event):
-        vp = Viewport()
+        #vp = Viewport()
         if event.key == pygame.K_ESCAPE:
             self.running = False
         elif event.key == pygame.K_UP:

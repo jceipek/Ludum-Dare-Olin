@@ -41,35 +41,37 @@ class Level(object):
         # such as physical size can be read before RenderableObjects
         # are created
 
-        roomCenter = self.physicalSize / 2.0
+        '''roomCenter = self.physicalSize / 2.0
         roombg = ro.RoomBg(roomCenter,self.physicsWorld)
         roombg.add(self.allObjects)
-        self.allObjects.change_layer(roombg,Level.ROOM_BG)
+        self.allObjects.change_layer(roombg,Level.ROOM_BG)'''
 
-        '''
-        box = ro.Crate((10,10),self.physicsWorld)
+        box = ro.Crate((15,10),self.physicsWorld)
         box.add(self.allObjects)
         self.allObjects.change_layer(box,Level.DYNAMIC)
-        box = ro.Crate((10,15),self.physicsWorld)
+        '''        box = ro.Crate((10,15),self.physicsWorld)
         box.add(self.allObjects)
-        self.allObjects.change_layer(box,Level.DYNAMIC)
-        '''
+        self.allObjects.change_layer(box,Level.DYNAMIC)'''
 
         platform = ro.Platform((10,5),self.physicsWorld)
         platform.add(self.allObjects)
         self.allObjects.change_layer(platform,Level.FIXED)
         
-        self.spaceman = ro.Spaceman((10,10),self.physicsWorld)
+        '''self.spaceman = ro.Spaceman((10,10),self.physicsWorld)
         self.spaceman.add(self.allObjects)
-        self.allObjects.change_layer(self.spaceman, Level.DYNAMIC)
+        self.allObjects.change_layer(self.spaceman, Level.DYNAMIC)'''
+
+        self.SILLY_box = box
         
     def update(self):
         '''
         Handles logic for a game step
         '''
-        self.physicsWorld.Step(2.0/60,10,8)
+        self.physicsWorld.Step(1.0/60.0,10,8)
         self.allObjects.update()
-        print self.spaceman.physicalPosition
+        #print self.spaceman.physicalPosition
+        print "Box Pos:",self.SILLY_box.physicalPosition, self.SILLY_box.body.GetWorldCenter(),"=>",self.SILLY_box.body.position.x,self.SILLY_box.body.position.y
+        #print "Box body: ",self.SILLY_box.body
 
     def render(self,surface):
         '''
@@ -84,4 +86,7 @@ class Level(object):
             pygame.draw.rect(surface,(255,0,0),debugRect,1)
 
     def moveCharacter(self,right=True):
-        self.spaceman.tryMove(600,0)
+        #self.spaceman.tryMove(60,0)
+        self.SILLY_box.body.ApplyForce(Box2D.b2Vec2(10.0,0), self.SILLY_box.body.GetWorldCenter())
+
+
