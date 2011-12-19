@@ -1,3 +1,5 @@
+from __future__ import division
+
 import pygame
 from globals import *
 from dimension import Vect
@@ -9,7 +11,7 @@ class Viewport(object):
         if not cls._instance:
             cls._instance = super(Viewport,cls).__new__(cls,*args,**kwargs)
             self = cls._instance
-            self.pixelVect = Vect(-100,-100)
+            self.pixelVect = Vect(0,0)
             self.levelHeight = None
             self.hasMoved = False
 
@@ -23,7 +25,7 @@ class Viewport(object):
     def convertPhysicalToPixelCoords(self,physicalCoords):
         pixX = physicalCoords[0]*PIXELS_PER_METER - self.pixelVect.x
         pixY = PIXELS_PER_METER * self.levelHeight - self.pixelVect.y - physicalCoords[1] * PIXELS_PER_METER
-        return Vect(pixX,pixY)
+        return Vect(int(pixX),int(pixY))
 
     def move(self,vect):
         self.pixelVect += vect

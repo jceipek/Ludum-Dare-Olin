@@ -43,3 +43,7 @@ class RenderableObject(pygame.sprite.DirtySprite):
 class Crate(RenderableObject):
     def __init__(self,position,imageName="crate"):
         RenderableObject.__init__(self,position,imageName)
+
+class RoomBg(RenderableObject):
+    def __init__(self,position,imageName="roombg"):
+        RenderableObject.__init__(self,position,imageName)

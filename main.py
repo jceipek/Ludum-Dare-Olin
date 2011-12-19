@@ -9,7 +9,7 @@ class Game:
     def __init__(self):
         pygame.init()
         self.surface = pygame.display.set_mode((SCREEN_PIXEL_WIDTH,SCREEN_PIXEL_HEIGHT))
-        self.loadLevel()
+        self.loadLevel("roombg")
         self.activeLevel.drawDebug = True
 
     def main(self):
