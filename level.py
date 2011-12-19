@@ -38,7 +38,7 @@ class Level(object):
         '''
         Handles logic for a game step
         '''
-        pass
+        self.allObjects.update()
 
     def render(self,surface):
         '''

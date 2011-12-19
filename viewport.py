@@ -9,7 +9,7 @@ class Viewport(object):
         if not cls._instance:
             cls._instance = super(Viewport,cls).__new__(cls,*args,**kwargs)
             self = cls._instance
-            self.pixelVect = Vect(0,0)
+            self.pixelVect = Vect(-100,-100)
             self.levelHeight = None
             self.hasMoved = False
 

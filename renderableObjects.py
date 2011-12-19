@@ -19,6 +19,7 @@ class RenderableObject(pygame.sprite.DirtySprite):
         Overrides Sprite update
         '''
         if Viewport().hasMoved:
+            self.rect.center = Viewport().convertPhysicalToPixelCoords(self.__physicalPosition)
             self.dirty = 1
 
     def __setPhysicalPosition(self,value):
