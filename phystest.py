@@ -3,6 +3,7 @@
 
 import sys
 import os
+import math
 import pygame
 from globals import *
 from pygame.locals import *
@@ -10,21 +11,6 @@ from Box2D import *
 import manager as mgr
 import room as rm
 import dimension as dim
-
-#class myContactListener(b2ContactListener):
-#    def __init__(self):
-#        b2ContactListener.__init__(self)
-#    def BeginContact(self, contact):
-#        print contact.GetFixtureA().GetBody().GetUserData()
-#        if contact.GetFixtureA().GetBody().GetUserData() == "spaceman" and contact.GetFixtureB().GetBody().GetUserData() == "staticPlatform":
-#            print "thunk"
-#        print contact
-#    def EndContact(self, contact):
-#        print "hey"
-#    def PreSolve(self, contact, oldManifold):
-#        pass
-#    def PostSolve(self, contact, impulse):
-#        pass
 
 class myContactListener(b2ContactListener):
     """
@@ -87,6 +73,12 @@ class myContactTypes:
     contactPersisted = 2
     contactRemoved = 3
 
+def kickMagnitude(tminus):
+    t = float(FRAMERATE - tminus) / float(FRAMERATE)
+    a = 2.0
+    b = 0.5
+    c = 0.33
+    return math.exp(-((t - b)**2) / (2 * c**2))
 
 def main():
     pygame.init()
@@ -110,15 +102,17 @@ def main():
     global spaceman
     spaceman = rm.Spaceman(w, dim.Vect(9.0 * METER, 9.0 * METER))
     spaceman.add()
+    room.spawnPoints.append(spaceman)
 
     for object in room.GetAllObjects():
         object.add()
 
 
     loopcount = 0
+    kickcount = 0
     while True:
         loopcount += 1
-        tstep = clock.tick(30)
+        tstep = clock.tick(FRAMERATE)
         w.points=[]
 
         spaceman.motionCheck()
@@ -128,8 +122,7 @@ def main():
         w.Step(tstep / 1000.0, 10, 8)
 
         spaceman.updateImg(background, loopcount)
-        spaceman.blitToScreen(screen)
-
+        
         for object in room.GetAllObjects():
             object.blitToScreen(screen)
 
@@ -141,14 +134,41 @@ def main():
                     return
                 if event.key == K_UP:
                     if spaceman.touchingGround >= 1:
-                        spaceman.body.ApplyForce(b2Vec2(0,500),spaceman.body.GetWorldCenter())
-                if event.key == K_g:
-                    w.gravity=(0,0)
+                        spaceman.body.ApplyForce(b2Vec2(0,500),
+                                                 spaceman.body.GetWorldCenter())
+                if event.key == pygame.K_j:
+                    if kickcount <= 0:
+                        kickcount = 1.0 * FRAMERATE
+                        kickd = dim.Vect(-1 * METER, 0 * METER) * 3
+                if event.key == pygame.K_k:
+                    if kickcount <= 0:
+                        kickcount = 1.0 * FRAMERATE
+                        kickd = dim.Vect(0 * METER, 1 * METER) * 15
+                if event.key == pygame.K_l:
+                    if kickcount <= 0:
+                        kickcount = 1.0 * FRAMERATE
+                        kickd = dim.Vect(1 * METER, 0 * METER) * 3
+                if event.key == pygame.K_i:
+                    if kickcount <= 0:
+                        kickcount = 1.0 * FRAMERATE
+                        kickd = dim.Vect(0 * METER, -1 * METER) * 15
         keysPressed = pygame.key.get_pressed()
         if keysPressed[K_RIGHT]:
             spaceman.tryMove(10, 0)
         if keysPressed[K_LEFT]:
             spaceman.tryMove(-10,0)
+
+        if kickcount > 1:
+            kick = kickd * kickMagnitude(kickcount)
+            gravity = dim.Vect(0 * METER, -10 * METER) + kick
+            # print gravity
+            w.gravity = gravity.Strip()
+            kickcount -= 1
+            for obj in room.GetAllObjects():
+                obj.body.WakeUp()
+        elif kickcount > 0:
+            w.gravity = GRAVITY
+            kickcount -= 1
 
         pygame.display.flip()
     return 0

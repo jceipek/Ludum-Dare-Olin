@@ -75,6 +75,7 @@ class Rect(object):
         shapeDef.density = density
         shapeDef.linearDamping = AIR_RESISTANCE
         shapeDef.friction = FRICTION
+        shapeDef.restitution = 0.3
         
         self.body.CreateShape(shapeDef)
         self.body.SetMassFromShapes()
@@ -137,24 +138,27 @@ def main():
 
     rect1 = Rect(w, dimension.Vect(9.0 * METER, 2.0 * METER), 
                  dimension.Vect(1 * METER, METER), 1)
-    #rect2 = Rect(w, dimension.Vect(9.0 * METER, 4.0 * METER), 
-    #             dimension.Vect(METER * 9.0, METER), 1)
-    #rect3 = Rect(w, dimension.Vect(5.5 * METER, 5.0 * METER),
-    #             dimension.Vect(METER * 0.2, METER * 0.2), 0.2)
-    #rect4 = Rect(w, dimension.Vect(METER * 13.0, 9.0 * METER), 
-    #             dimension.Vect(METER, METER), 1)
+    rect2 = Rect(w, dimension.Vect(9.0 * METER, 4.0 * METER), 
+                 dimension.Vect(METER * 9.0, METER), 1)
+    rect3 = Rect(w, dimension.Vect(5.5 * METER, 5.0 * METER),
+                 dimension.Vect(METER * 0.2, METER * 0.2), 0.2)
+    rect4 = Rect(w, dimension.Vect(METER * 13.0, 9.0 * METER), 
+                 dimension.Vect(METER, METER), 1)
     
     kickcount = 0
     while True:
         tstep = clock.tick(FRAMERATE)
-        if kickcount > 0:
+        if kickcount > 1:
             kick = kickd * kickMagnitude(kickcount)
             gravity = dimension.Vect(0 * METER, -10 * METER) + kick
-            print gravity
+            # print gravity
             w.gravity = gravity.Strip()
             kickcount -= 1
-        else:
+            for rect in w.drawables:
+                rect.body.WakeUp()
+        elif kickcount > 0:
             w.gravity = GRAVITY
+            kickcount -= 1
         background.fill((0, 0, 0))
         for body in w.drawables:
             body.blitToScreen(background)
@@ -171,15 +175,15 @@ def main():
                     kickd = dimension.Vect(-1 * METER, 0 * METER) * 3
                 if event.key == pygame.K_k:
                     kickcount = 1.0 * FRAMERATE
-                    kickd = dimension.Vect(0 * METER, 1 * METER) * 10
+                    kickd = dimension.Vect(0 * METER, 1 * METER) * 15
                 if event.key == pygame.K_l:
                     kickcount = 1.0 * FRAMERATE
                     kickd = dimension.Vect(1 * METER, 0 * METER) * 3
                 if event.key == pygame.K_i:
                     kickcount = 1.0 * FRAMERATE
-                    kickd = dimension.Vect(0 * METER, -1 * METER) * 10
+                    kickd = dimension.Vect(0 * METER, -1 * METER) * 15
                 if event.key == pygame.K_w:
-                    rect1.body.ApplyForce((0, 200), rect1.body.position)
+                    rect1.body.ApplyForce((0, 150), rect1.body.position)
 
 def unittest():
     x1 = Dimension(unitstr='160 px')
