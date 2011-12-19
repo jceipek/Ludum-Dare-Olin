@@ -11,6 +11,7 @@ class Game:
         self.surface = pygame.display.set_mode((SCREEN_PIXEL_WIDTH,SCREEN_PIXEL_HEIGHT))
         self.loadLevel("roombg")
         self.activeLevel.drawDebug = True
+        self.clock = pygame.time.Clock()
 
     def main(self):
 
@@ -18,6 +19,7 @@ class Game:
         while self.running:
             self.processEventLoop()
             self.activeLevel.update()
+            self.clock.tick(FRAMERATE)
             self.activeLevel.render(self.surface)
             pygame.display.flip()
             Viewport().hasMoved = False

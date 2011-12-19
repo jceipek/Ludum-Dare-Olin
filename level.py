@@ -32,6 +32,10 @@ class Level(object):
         doSleep = True
         self.physicsWorld = Box2D.b2World(world_bounds, GRAVITY, doSleep)
 
+        self.background = pygame.Surface((SCREEN_PIXEL_WIDTH,SCREEN_PIXEL_HEIGHT))
+        self.background.fill((0,0,0))
+        self.background = self.background.convert()
+
     def setup(self):
         # Separate setup function such that Level properties
         # such as physical size can be read before RenderableObjects
@@ -45,9 +49,14 @@ class Level(object):
         box = ro.Crate((10,10),self.physicsWorld)
         box.add(self.allObjects)
         self.allObjects.change_layer(box,Level.DYNAMIC)
-        #box = ro.Crate((20,10),self.physicsWorld)
-        #box.add(self.allObjects)
-        #self.allObjects.change_layer(box,Level.DYNAMIC)
+        box = ro.Crate((10,15),self.physicsWorld)
+        box.add(self.allObjects)
+        self.allObjects.change_layer(box,Level.DYNAMIC)
+
+        platform = ro.Platform((10,5),self.physicsWorld)
+        platform.add(self.allObjects)
+        self.allObjects.change_layer(platform,Level.FIXED)
+
         print "Physical position: ",box.physicalPosition
         print "Rect: ",box.rect.center
 
@@ -55,16 +64,14 @@ class Level(object):
         '''
         Handles logic for a game step
         '''
-        self.physicsWorld.Step(1.0/60,10,8)
+        self.physicsWorld.Step(2.0/60,10,8)
         self.allObjects.update()
 
     def render(self,surface):
         '''
         Renders a game step after the logic is complete
         '''
-        bg = surface.copy()
-        bg.fill((255,255,255))
-        self.allObjects.draw(surface,bg)
+        self.allObjects.draw(surface,self.background)
 
         if self.drawDebug:
             upperLeftCorner = Viewport().convertPhysicalToPixelCoords((0,self.physicalSize.y))
