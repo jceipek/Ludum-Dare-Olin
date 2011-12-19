@@ -11,6 +11,7 @@ class Viewport(object):
             self = cls._instance
             self.pixelVect = Vect(0,0)
             self.levelHeight = None
+            self.hasMoved = False
 
         return cls._instance
 
@@ -23,6 +24,10 @@ class Viewport(object):
         pixX = physicalCoords[0]*PIXELS_PER_METER - self.pixelVect.x
         pixY = PIXELS_PER_METER * self.levelHeight - self.pixelVect.y - physicalCoords[1] * PIXELS_PER_METER
         return Vect(pixX,pixY)
+
+    def move(self,vect):
+        self.pixelVect += vect
+        self.hasMoved = True
 
 if __name__ == "__main__":
     vp = Viewport()

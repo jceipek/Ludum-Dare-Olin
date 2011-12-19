@@ -1,5 +1,6 @@
 import pygame
 from images import ImageHandler
+from viewport import Viewport
 
 class RenderableObject(pygame.sprite.DirtySprite):
 
@@ -17,11 +18,12 @@ class RenderableObject(pygame.sprite.DirtySprite):
         '''
         Overrides Sprite update
         '''
-        pass
+        if Viewport().hasMoved:
+            self.dirty = 1
 
     def __setPhysicalPosition(self,value):
         self.__physicalPosition = value
-        #TODO: move pixel position
+        self.rect.center = Viewport().convertPhysicalToPixelCoords(value)
 
     def __getPhysicalPosition(self):
         return self.__physicalPosition
@@ -30,7 +32,7 @@ class RenderableObject(pygame.sprite.DirtySprite):
     
     def __setPixelPosition(self,value):
         self.rect.move_ip(*value)
-        # TODO: move physical position
+        self.__physicalPosition = Viewport().convertPixelsToPhysicalCoords(self.rect.center)
 
     def __getPixelPosition(self):
         return (self.rect.left,self.rect.top)
