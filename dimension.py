@@ -12,7 +12,7 @@ class Vect(object):
         self.y = y
 
     def __add__(self, other):
-        return Vect(self.x + other.x, self.y + other.y)
+        return Vect(self.x + other[0], self.y + other[1])
 
     def __mul__(self, other):
         return Vect(other * self.x, other * self.y)
@@ -24,7 +24,7 @@ class Vect(object):
         return Vect(self.x / other, self.y / other)
 
     def __sub__(self, other):
-        return Vect(self.x - other.x, self.y - other.y)
+        return Vect(self.x - other[0], self.y - other[1])
 
     def __len__(self):
         return 2
