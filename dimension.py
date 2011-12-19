@@ -59,10 +59,10 @@ class Vect(object):
         return '<%s, %s>' % (self.x, self.y)
 
     def __eq__(self, other):
-        return self.x-other[0] <= EPSILON and self.y-other[1] <= EPSILON
+        return abs(self.x-other[0]) <= EPSILON and abs(self.y-other[1]) <= EPSILON
 
     def __ne__(self, other):
-        return self.__eq__(other)
+        return abs(self.x-other[0]) > EPSILON or abs(self.y-other[1]) > EPSILON
 
 def vecttest():
     a = Vect(0, 0)
