@@ -143,12 +143,9 @@ class Spaceman(RenderableObject):
                 self.physicalPosition = newPhysicalPosition
 
     def tryMove(self, x, y):
-        print "foobar"
-        print self.physicalPosition
+        #self.body.ApplyForce(Box2D.b2Vec2(600,0),self.body.GetWorldCenter())
 
-        self.body.ApplyForce(Box2D.b2Vec2(600,0),self.body.GetWorldCenter())
-
-        return
+        #return
         self.curVel = self.body.GetLinearVelocity()
         if x < 0 and self.curVel.x > -MAX_WALK_SPEED: #Not going too fast Left
             if self.curVel.x+x/(FPS*self.body.GetMass()) > -MAX_WALK_SPEED: #You can accelerate all the way asked

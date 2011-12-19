@@ -32,9 +32,11 @@ class Level(object):
         doSleep = True
         self.physicsWorld = Box2D.b2World(world_bounds, GRAVITY, doSleep)
 
-        self.background = pygame.Surface((SCREEN_PIXEL_WIDTH,SCREEN_PIXEL_HEIGHT))
-        self.background.fill((0,0,0))
-        self.background = self.background.convert()
+
+        self.background = None
+        #self.background = pygame.Surface((SCREEN_PIXEL_WIDTH,SCREEN_PIXEL_HEIGHT))
+        #self.background.fill((0,0,0))
+        #self.background = self.background.convert()
 
     def setup(self):
         # Separate setup function such that Level properties
@@ -58,7 +60,12 @@ class Level(object):
         platform = ro.Platform((10,5),self.physicsWorld)
         platform.add(self.allObjects)
         self.allObjects.change_layer(platform,Level.FIXED)
-        
+
+        for x in xrange(2,25,4):
+            platform = ro.Platform((x, 1),self.physicsWorld)
+            platform.add(self.allObjects)
+            self.allObjects.change_layer(platform,Level.FIXED)        
+
         self.spaceman = ro.Spaceman((10,10),self.physicsWorld)
         self.spaceman.add(self.allObjects)
         self.allObjects.change_layer(self.spaceman, Level.DYNAMIC)
@@ -67,9 +74,8 @@ class Level(object):
         '''
         Handles logic for a game step
         '''
-        self.physicsWorld.Step(2.0/60,10,8)
+        self.physicsWorld.Step(1.0/60,10,8)
         self.allObjects.update()
-        print self.spaceman.physicalPosition
 
     def render(self,surface):
         '''

@@ -10,7 +10,7 @@ class Game:
         pygame.init()
         self.surface = pygame.display.set_mode((SCREEN_PIXEL_WIDTH,SCREEN_PIXEL_HEIGHT))
         self.loadLevel("roombg")
-        self.activeLevel.drawDebug = True
+        #self.activeLevel.drawDebug = True
         self.clock = pygame.time.Clock()
 
     def main(self):
