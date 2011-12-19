@@ -9,7 +9,7 @@ import copy
 WIDGET_TOOLBAR_WIDTH = 200
 
 # Specifies the widget classes we have
-widgetClasses = (rm.Box,rm.HangingTurret)
+widgetClasses = (rm.Box,)#,rm.HangingTurret)
 
 class ImageToolbox:
     def __init__(self):

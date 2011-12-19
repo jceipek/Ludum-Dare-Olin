@@ -8,17 +8,32 @@ import dimension as dim
 SPACEMAN_SIZE = dim.Vect(80*PIXEL,90*PIXEL).ConvertTo(METER)
 BOX_SIZE = dim.Vect(76*PIXEL,78*PIXEL).ConvertTo(METER)
 
-class RenderableObject(pygame.sprite.Sprite):
-    def __init__(self, world, pos, size, **kwargs):
-        self.sprite = None #Sprite loading is done in subclass
+class RenderableObject(pygame.sprite.DirtySprite):
+    def __init__(self, world, pos, size, spriteName, **kwargs):
+        pygame.sprite.DirtySprite.__init__(self)
+
+        self.image = ImageHandler()[spriteName]
 
         #world.drawables.append(self)
         self.world = world
         self.vp = mgr.ViewPort()
         
-        self.size = size
+        self.kieferSize = size
         self.initPosition = pos
         self.kwargs = kwargs
+
+        initPos = self.initPosition.ConvertTo(PIXEL).Strip()
+        imageWidth = self.image.get_width()
+        imageHeight = self.image.get_height()
+
+        self.rect = pygame.Rect(initPos[0],initPos[1],imageWidth,imageHeight)
+
+    def update(self,*args): # Override sprite update method
+        # Do not blit here!!!
+        bodyPos = dim.Vect(METER*self.body.position.x, METER*self.body.position.y)
+        drawPos = bodyPos + (1.0/2.0) * self.size.MirrorH()
+        rectangle = self.vp.ScreenCoords(drawPos).Strip()
+        size = self.getSize()
 
     def add(self):
         self.prepPhysics(self.world)
@@ -42,6 +57,10 @@ class RenderableObject(pygame.sprite.Sprite):
         self.body.SetMassFromShapes()
 
     def blitToScreen(self,screen):
+        '''
+        Left for compatibility 
+        XXX:Do not continue using this
+        '''
         bodyPos = dim.Vect(METER*self.body.position.x, METER*self.body.position.y)
         drawPos = bodyPos + (1.0/2.0) * self.size.MirrorH()
         screen.blit(self.sprite, self.vp.ScreenCoords(drawPos).Strip())
@@ -61,8 +80,6 @@ class RenderableObject(pygame.sprite.Sprite):
         height = self.sprite.get_height()
         return mgr.Vect(mgr.Dimension(value=width,units="px"),mgr.Dimension(value=height,units="px"))
 
-    def __str__(self):
-        return self.__class__.__name__
 
 class Room(Serializable):
     '''
@@ -139,8 +156,8 @@ class Rectangle(Serializable):
 
 class Box(Serializable,RenderableObject):
     def __init__(self, world=None, position=None):
-        RenderableObject.__init__(self, world, position, BOX_SIZE)
-
+        RenderableObject.__init__(self, world, position, BOX_SIZE, "crate")
+ 
 class StaticPlatform(RenderableObject):
     def __init__(self, world, pos, size):
         RenderableObject.__init__(self, world, pos, size, density=0, userData="staticPlatform")
