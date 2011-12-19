@@ -19,17 +19,15 @@ class ImageHandler(dict):
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
             cls._instance = super(ImageHandler,cls).__new__(cls,*args,**kwargs)
+            self = cls._instance
+            for name in IMAGES_TO_LOAD.keys():
+                folder = IMAGES_TO_LOAD[name][0]
+                file = IMAGES_TO_LOAD[name][1]
+                img = pygame.image.load(os.path.join(folder, file))
+                img = img.convert_alpha()
+                self[name] = img
 
         return cls._instance
-
-    def __init__(self):
-        for name in IMAGES_TO_LOAD.keys():
-            folder = IMAGES_TO_LOAD[name][0]
-            file = IMAGES_TO_LOAD[name][1]
-            img = pygame.image.load(os.path.join(folder, file))
-            img = img.convert_alpha()
-            self[name] = img
-
 
 if __name__ == "__main__":
 

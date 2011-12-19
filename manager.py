@@ -15,13 +15,13 @@ class ViewPort(object):
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
             cls._instance = super(ViewPort, cls).__new__(cls, *args, **kwargs)
+            self = cls._instance
+            print "Creating ViewPort Singleton"
+            x_offset = 0 * METER
+            y_offset = SCREEN_REAL_HEIGHT * METER
+            self.originDelta = dimension.Vect(x_offset, y_offset)
+
         return cls._instance
-    
-    def __init__(self):
-        print "Creating ViewPort Singleton"
-        x_offset = 0 * METER
-        y_offset = SCREEN_REAL_HEIGHT * METER
-        self.originDelta = dimension.Vect(x_offset, y_offset)
 
     def ScreenCoords(self, physxCoords):
         physxCoords = physxCoords.ConvertTo(METER)
@@ -37,10 +37,7 @@ class ViewPort(object):
     
     def PhysxCoords(self, screenCoords):
         screenCoords = screenCoords.ConvertTo(METER)
-        print "--------------------------"
-        print self.originDelta
         self.originDelta = self.originDelta.ConvertTo(METER)
-        print self.originDelta
         sx = screenCoords.x
         sy = screenCoords.y
         dx = self.originDelta.x
