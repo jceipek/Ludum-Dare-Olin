@@ -1,4 +1,11 @@
-PIXELS_PER_METER = 40
+from dimension import Dimension
+
+METER = Dimension(value=1.0, units={'m': 1})
+PIXEL = Dimension(value=1.0, units={'px': 1})
+
+PIXELS_PER_METER = (METER / PIXEL)
+PIXELS_PER_METER.Canonicalize()
+PIXELS_PER_METER = PIXELS_PER_METER.value
 
 SCREEN_PIXEL_WIDTH = 1024
 SCREEN_PIXEL_HEIGHT = 768
