@@ -10,7 +10,8 @@ IMAGES_TO_LOAD = {"crate"         :("","crate.png"),
                   "simplePlatform":("","simplePlatform.png"),
                   "turret"        :("","turret.png"),
                   "walkingRight"  :("astronaut", "walkingRight.png"),
-                  "walkingLeft"   :("astronaut", "walkingLeft.png")
+                  "walkingLeft"   :("astronaut", "walkingLeft.png"),
+                  "roombg"        :("","roombg.png")
                   }
 
 class ImageHandler(dict):

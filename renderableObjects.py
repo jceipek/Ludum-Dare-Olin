@@ -19,6 +19,7 @@ class RenderableObject(pygame.sprite.DirtySprite):
         Overrides Sprite update
         '''
         if Viewport().hasMoved:
+            self.rect.center = Viewport().convertPhysicalToPixelCoords(self.__physicalPosition)
             self.dirty = 1
 
     def __setPhysicalPosition(self,value):
@@ -41,4 +42,8 @@ class RenderableObject(pygame.sprite.DirtySprite):
 
 class Crate(RenderableObject):
     def __init__(self,position,imageName="crate"):
+        RenderableObject.__init__(self,position,imageName)
+
+class RoomBg(RenderableObject):
+    def __init__(self,position,imageName="roombg"):
         RenderableObject.__init__(self,position,imageName)
