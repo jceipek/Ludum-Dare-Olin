@@ -145,12 +145,13 @@ class LevelDesigner:
                 physxCoord = mgr.ViewPort().PhysxCoords(pos)
                 # We want to place the object
                 self.selectedItem.initPosition = physxCoord            
+                self.selectedItem.update()
                 if not self.selectedItem in self.room.boxes:
                     self.room.boxes.append(self.selectedItem)
                 self.selectedItem = None
             else:
                 # We want to select the object here
-                self.selectedItem = self.toolbox.findClickedObject(pos) #Oops, this only works for stuff in the toolbox...
+                self.selectedItem = self.findClickedObject(pos) #Oops, this only works for stuff in the toolbox...
                 print "Found object to move: ",self.selectedItem
 
     def clickInToolbox(self,pos):
@@ -158,7 +159,10 @@ class LevelDesigner:
 
     def findClickedObject(self, pos):
         for b in self.room.boxes:
-            pass
+            print b.rect.x,b.rect.y
+            if b.rect.collidepoint(pos):
+                return b
+        return None
         
 if (__name__ == "__main__"):
     LevelDesigner().main()
