@@ -115,6 +115,7 @@ class LevelDesigner:
             self.surface.blit(self.background,(0,0))
             for item in self.room.GetAllObjects():
                 item.blitToInitialPosition(self.surface)
+                
 
             self.surface.blit(self.toolbox.surface,(SCREEN_PIXEL_WIDTH,0))
 
@@ -143,8 +144,7 @@ class LevelDesigner:
                 pos = dim.Vect(PIXEL * pos[0], PIXEL * pos[1])
                 physxCoord = mgr.ViewPort().PhysxCoords(pos)
                 # We want to place the object
-                self.selectedItem.initPosition = physxCoord            
-                self.selectedItem.update()
+                self.selectedItem.initPosition = physxCoord
                 self.selectedItem.update()
                 if not self.selectedItem in self.room.boxes:
                     self.room.boxes.append(self.selectedItem)

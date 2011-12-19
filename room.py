@@ -41,7 +41,6 @@ class RenderableObject(pygame.sprite.DirtySprite):
 
     def __set_initPosition(self,value):
         self.__initPosition = value
-        self.old_rect = self.rect.copy()
 
         initPos = self.__initPosition.ConvertTo(PIXEL).Strip()
         self.rect.move_ip(*initPos)
@@ -57,7 +56,10 @@ class RenderableObject(pygame.sprite.DirtySprite):
         else:
             bodyPos = self.initPosition
         drawPos = bodyPos + (1.0/2.0) * self.kieferSize.MirrorH()
+        cornerPixelCoords = self.vp.ScreenCoords(drawPos).Strip()
+        self.rect.move_ip(*cornerPixelCoords)
 
+        '''
         # If the item has moved, set it as dirty
         if self.lastDrawPosition != drawPos:
             cornerPixelCoords = self.vp.ScreenCoords(drawPos).Strip()
@@ -74,6 +76,7 @@ class RenderableObject(pygame.sprite.DirtySprite):
 
             dirty = 1
             self.lastDrawPosition = drawPos
+            '''
 
     def add(self):
         self.prepPhysics(self.world)
@@ -110,7 +113,8 @@ class RenderableObject(pygame.sprite.DirtySprite):
         Blits to the initial position for this object
         Used by the level designer
         '''
-        screen.blit(self.image,self.vp.ScreenCoords(self.initPosition).Strip())
+        #screen.blit(self.image,self.vp.ScreenCoords(self.initPosition).Strip())
+        screen.blit(self.image,self.rect)
 
     def getSize(self):
         if self.image == None:
