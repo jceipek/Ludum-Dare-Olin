@@ -29,6 +29,7 @@ class RenderableObject(pygame.sprite.Sprite):
         bodyDef.fixedRotation = self.kwargs.get("fixedRotation", False)
         bodyDef.linearDamping = 0.15
         self.body = self.world.CreateBody(bodyDef)
+        self.body.SetUserData(self.kwargs.get("userData", "object"));
 
         shapeDef = b2PolygonDef()
         shapeDef.SetAsBox(*(self.size / 2.0).ConvertTo(
@@ -146,7 +147,7 @@ class Box(Serializable,RenderableObject):
 
 class StaticPlatform(RenderableObject):
     def __init__(self, world, pos, size):
-        RenderableObject.__init__(self, world, pos, size, density=0)
+        RenderableObject.__init__(self, world, pos, size, density=0, userData="staticPlatform")
 
     def posVect(self):
         xr = self.body.position.x
@@ -178,7 +179,7 @@ class StaticPlatform(RenderableObject):
 
 class Spaceman(RenderableObject):
     def __init__(self, world, pos):
-        RenderableObject.__init__(self, world, pos, SPACEMAN_SIZE)
+        RenderableObject.__init__(self, world, pos, SPACEMAN_SIZE, userData="spaceman")
 
         self.IMG_COUNT = 30
 
@@ -191,6 +192,7 @@ class Spaceman(RenderableObject):
         self.sprite.blit(self.sprWalkR, (0, 0))
 
         self.curVel = None
+        self.touchingGround = 0
     def updateImg(self, background, loopcount):
         if abs(self.body.GetLinearVelocity().x) >= 0.2:
             self.sprite.blit(background, (0, 0))

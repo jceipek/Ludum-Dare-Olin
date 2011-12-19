@@ -19,3 +19,4 @@ FPS = 60 # [s^-1]
 DENSITY = 0.4
 
 FRAMERATE = 30 # [s^-1]
+MAX_WALK_SPEED = 2.5 # [m s^-1]
