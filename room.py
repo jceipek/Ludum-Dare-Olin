@@ -8,17 +8,35 @@ import dimension as dim
 SPACEMAN_SIZE = dim.Vect(80*PIXEL,90*PIXEL).ConvertTo(METER)
 BOX_SIZE = dim.Vect(76*PIXEL,78*PIXEL).ConvertTo(METER)
 
-class RenderableObject(pygame.sprite.Sprite):
-    def __init__(self, world, pos, size, **kwargs):
-        self.sprite = None #Sprite loading is done in subclass
+class RenderableObject(pygame.sprite.DirtySprite):
+    def __init__(self, world, pos, size, spriteName, **kwargs):
+        pygame.sprite.DirtySprite.__init__(self)
+
+        self.image = ImageHandler()[spriteName]
 
         #world.drawables.append(self)
         self.world = world
         self.vp = mgr.ViewPort()
         
-        self.size = size
+        self.kieferSize = size
         self.initPosition = pos
         self.kwargs = kwargs
+
+        if self.initPosition:
+            initPos = self.initPosition.ConvertTo(PIXEL).Strip()
+        else:
+            initPos = (0,0)
+        imageWidth = self.image.get_width()
+        imageHeight = self.image.get_height()
+
+        self.rect = pygame.Rect(initPos[0],initPos[1],imageWidth,imageHeight)
+
+    def update(self,*args): # Override sprite update method
+        # Do not blit here!!!
+        bodyPos = dim.Vect(METER*self.body.position.x, METER*self.body.position.y)
+        drawPos = bodyPos + (1.0/2.0) * self.size.MirrorH()
+        rectangle = self.vp.ScreenCoords(drawPos).Strip()
+        size = self.getSize()
 
     def add(self):
         self.prepPhysics(self.world)
@@ -42,27 +60,29 @@ class RenderableObject(pygame.sprite.Sprite):
         self.body.SetMassFromShapes()
 
     def blitToScreen(self,screen):
+        '''
+        Left for compatibility 
+        XXX:Do not continue using this
+        '''
         bodyPos = dim.Vect(METER*self.body.position.x, METER*self.body.position.y)
         drawPos = bodyPos + (1.0/2.0) * self.size.MirrorH()
-        screen.blit(self.sprite, self.vp.ScreenCoords(drawPos).Strip())
+        screen.blit(self.image, self.vp.ScreenCoords(drawPos).Strip())
 
     def blitToInitialPosition(self,screen):
         '''
         Blits to the initial position for this object
         Used by the level designer
         '''
-        screen.blit(self.sprite,self.vp.ScreenCoords(self.initPosition).Strip())
+        screen.blit(self.image,self.vp.ScreenCoords(self.initPosition).Strip())
 
     def getSize(self):
-        if self.sprite == None:
+        if self.image == None:
             return None
 
-        width = self.sprite.get_width()
-        height = self.sprite.get_height()
+        width = self.image.get_width()
+        height = self.image.get_height()
         return mgr.Vect(mgr.Dimension(value=width,units="px"),mgr.Dimension(value=height,units="px"))
 
-    def __str__(self):
-        return self.__class__.__name__
 
 class Room(Serializable):
     '''
@@ -131,7 +151,6 @@ class HangingTurret(Turret):
         self.length = length
         self.angle = angle
 
-        self.sprite = ImageHandler()["turret"]
 
 class Rectangle(Serializable):
     def __init__(self, width=None, height=None):
@@ -140,11 +159,8 @@ class Rectangle(Serializable):
 
 class Box(Serializable,RenderableObject):
     def __init__(self, world=None, position=None):
-        RenderableObject.__init__(self, world, position, BOX_SIZE)
-
-        self.sprite = ImageHandler()["crate"]
+        RenderableObject.__init__(self, world, position, BOX_SIZE, "crate")
  
-
 class StaticPlatform(RenderableObject):
     def __init__(self, world, pos, size):
         RenderableObject.__init__(self, world, pos, size, density=0, userData="staticPlatform")
@@ -186,23 +202,24 @@ class Spaceman(RenderableObject):
         self.sprWalkR = ImageHandler()["walkingRight"]
         self.sprWalkL = ImageHandler()["walkingLeft"]
 
+        # TODO: Figure out how to fix this
         self.inPixels = SPACEMAN_SIZE.ConvertTo(Dimension(value=1.0, units={'px': 1})).Strip()
-        self.sprite = pygame.Surface(self.inPixels)
-        self.sprite = self.sprite.convert()
-        self.sprite.blit(self.sprWalkR, (0, 0))
+        self.image = pygame.Surface(self.inPixels)
+        self.image = self.image.convert_alpha()
+        self.image.blit(self.sprWalkR, (0, 0))
 
         self.curVel = None
         self.touchingGround = 0
     def updateImg(self, background, loopcount):
         if abs(self.body.GetLinearVelocity().x) >= 0.2:
-            self.sprite.blit(background, (0, 0))
+            self.image.blit(background, (0, 0))
             
             frameNo = loopcount % self.IMG_COUNT
             if self.body.GetLinearVelocity().x > 0: #Moving Right
-                self.sprite.blit(self.sprWalkR, 
+                self.image.blit(self.sprWalkR, 
                               (-self.inPixels[0] * (frameNo), 0))  #Traverse the width of the image
             else:
-                self.sprite.blit(self.sprWalkL, 
+                self.image.blit(self.sprWalkL, 
                               (-self.inPixels[0] * (frameNo), 0))
     def motionCheck(self):
         self.curVel = self.body.GetLinearVelocity()

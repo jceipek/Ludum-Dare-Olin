@@ -97,7 +97,10 @@ def main():
     w.listener.test = w
 
     room = rm.Room(SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT)
-    room.platforms.append(rm.StaticPlatform(w, dim.Vect(SCREEN_PIXEL_WIDTH*METER/(PIXELS_PER_METER*2), 3.0 * METER), dim.Vect(SCREEN_PIXEL_WIDTH*METER/PIXELS_PER_METER,1.0*METER)))
+    groundPos = dim.Vect(SCREEN_REAL_WIDTH * METER / 2, 3.0 * METER)
+    groundSize = dim.Vect(SCREEN_REAL_WIDTH * METER, 1.0 * METER)
+    ground = rm.StaticPlatform(w, groundPos, groundSize)
+    room.platforms.append(ground)
 
     global spaceman
     spaceman = rm.Spaceman(w, dim.Vect(9.0 * METER, 9.0 * METER))
