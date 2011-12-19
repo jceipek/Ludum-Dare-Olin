@@ -10,8 +10,7 @@ IMAGES_TO_LOAD = {"crate"         :("","crate.png"),
                   "simplePlatform":("","simplePlatform.png"),
                   "turret"        :("","turret.png"),
                   "walkingRight"  :("astronaut", "walkingRight.png"),
-                  "walkingLeft"   :("astronaut", "walkingLeft.png"),
-                  "roombg"        :("","roombg.png")
+                  "walkingLeft"   :("astronaut", "walkingLeft.png")
                   }
 
 class ImageHandler(dict):
@@ -30,9 +29,6 @@ class ImageHandler(dict):
 
         return cls._instance
 
-
-
-# TESTING CODE BELOW
 if __name__ == "__main__":
 
     from globals import *
