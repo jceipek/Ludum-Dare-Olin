@@ -2,8 +2,9 @@
 # -*- coding: us-ascii -*-
 
 import math
+import sys
 
-SIGMA = 0.00001
+EPSILON = 0.00001
 
 class Vect(object):
     '''
@@ -51,11 +52,27 @@ class Vect(object):
     def MirrorV(self):
         return Vect(self.x, -self.y)
 
+    #def Norm(self):
+    #    return (self.x ** 2 + self.y ** 2) ** fraction(1, 2)
+
     def __str__(self):
         return '<%s, %s>' % (self.x, self.y)
 
     def __eq__(self, other):
-        return self.x-other[0] <= SIGMA and self.y-other[1] <= SIGMA
+        return self.x-other[0] <= EPSILON and self.y-other[1] <= EPSILON
 
     def __ne__(self, other):
-        return not self.__eq__(other)
+        return self.__eq__(other)
+
+def vecttest():
+    a = Vect(0, 0)
+    b = Vect(0, 0)
+    c = Vect(1.0000001, 2.333348)
+    d = Vect(1.000000099, 2.333348)
+    assert c == d
+    assert a == b
+    assert b != c
+    assert a != d
+
+if __name__ == '__main__':
+    sys.exit(vecttest())

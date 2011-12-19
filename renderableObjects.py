@@ -7,7 +7,7 @@ from dimension import Vect
 
 class RenderableObject(pygame.sprite.DirtySprite):
 
-    def __init__(self,physicalPosition,physicsWorld,imageName,hasPhysics=True,canRotate=True):
+    def __init__(self,physicalPosition,physicsWorld,imageName,hasPhysics=True,isStatic=False,canRotate=True):
         pygame.sprite.DirtySprite.__init__(self)
         self.image = ImageHandler()[imageName] # Returns a pygame surface
 
@@ -32,7 +32,10 @@ class RenderableObject(pygame.sprite.DirtySprite):
 
             shapeDef = Box2D.b2PolygonDef()
             shapeDef.SetAsBox(width / 2.0 /  PIXELS_PER_METER, height / 2.0 / PIXELS_PER_METER)
-            shapeDef.density = DENSITY
+            if isStatic:
+                shapeDef.density = 0
+            else:
+                shapeDef.density = DENSITY
             shapeDef.linearDamping = AIR_RESISTANCE
             shapeDef.friction = FRICTION
         
@@ -78,3 +81,7 @@ class Crate(RenderableObject):
 class RoomBg(RenderableObject):
     def __init__(self,position,physicsWorld,imageName="roombg"):
         RenderableObject.__init__(self,position,physicsWorld,imageName,hasPhysics=False)
+
+class Platform(RenderableObject):
+    def __init__(self,position,physicsWorld,imageName="simplePlatform"):
+        RenderableObject.__init__(self,position,physicsWorld,imageName,hasPhysics=True,isStatic=True)
