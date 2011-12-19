@@ -47,15 +47,22 @@ class myContactListener(b2ContactListener):
         cp.id       = point.id
         cp.state    = state
         self.test.points.append(cp)
+        return cp
 
     def Add(self, point):
-        self.handleCall(myContactTypes.contactAdded, point)
+        cp = self.handleCall(myContactTypes.contactAdded, point)
+        if cp.shape1.GetBody().GetUserData()=="spaceman" and cp.shape2.GetBody().GetUserData()=="staticPlatform" \
+        or cp.shape2.GetBody().GetUserData()=="spaceman" and cp.shape1.GetBody().GetUserData()=="staticPlatform" :
+            spaceman.touchingGround += 1
 
     def Persist(self, point):
         self.handleCall(myContactTypes.contactPersisted, point)
 
     def Remove(self, point):
-        self.handleCall(myContactTypes.contactRemoved, point)
+        cp = self.handleCall(myContactTypes.contactRemoved, point)
+        if cp.shape1.GetBody().GetUserData()=="spaceman" and cp.shape2.GetBody().GetUserData()=="staticPlatform" \
+        or cp.shape2.GetBody().GetUserData()=="spaceman" and cp.shape1.GetBody().GetUserData()=="staticPlatform" :
+            spaceman.touchingGround -= 1
 
 class myContactPoint:
     """
@@ -98,8 +105,9 @@ def main():
     w.listener.test = w
 
     room = rm.Room(SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT)
-    room.platforms.append(rm.StaticPlatform(w, dim.Vect(8.0 * METER, 3.0 * METER), dim.Vect(8.0*METER,1.0*METER)))
+    room.platforms.append(rm.StaticPlatform(w, dim.Vect(SCREEN_PIXEL_WIDTH*METER/(PIXELS_PER_METER*2), 3.0 * METER), dim.Vect(SCREEN_PIXEL_WIDTH*METER/PIXELS_PER_METER,1.0*METER)))
 
+    global spaceman
     spaceman = rm.Spaceman(w, dim.Vect(9.0 * METER, 9.0 * METER))
     spaceman.add()
 
@@ -125,11 +133,6 @@ def main():
         for object in room.GetAllObjects():
             object.blitToScreen(screen)
 
-        collision_pairs = [(p.shape1.GetBody(), p.shape2.GetBody()) for p in w.points]
-        print ""
-        for body1, body2 in collision_pairs:
-            print body1.GetUserData(), body2.GetUserData()
-
         for event in pygame.event.get():
             if event.type == QUIT:
                 return
@@ -137,7 +140,8 @@ def main():
                 if event.key == K_ESCAPE:
                     return
                 if event.key == K_UP:
-                    spaceman.body.ApplyForce(b2Vec2(0,500),spaceman.body.GetWorldCenter())
+                    if spaceman.touchingGround >= 1:
+                        spaceman.body.ApplyForce(b2Vec2(0,500),spaceman.body.GetWorldCenter())
                 if event.key == K_g:
                     w.gravity=(0,0)
         keysPressed = pygame.key.get_pressed()

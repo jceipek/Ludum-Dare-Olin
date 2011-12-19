@@ -189,6 +189,7 @@ class Spaceman(RenderableObject):
         self.sprite.blit(self.sprWalkR, (0, 0))
 
         self.curVel = None
+        self.touchingGround = 0
     def updateImg(self, background, loopcount):
         if abs(self.body.GetLinearVelocity().x) >= 0.2:
             self.sprite.blit(background, (0, 0))
