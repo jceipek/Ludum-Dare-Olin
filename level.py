@@ -99,6 +99,8 @@ class Level(object):
     def characterJump(self):
         if self.spaceman.isOnGround():
             self.spaceman.body.ApplyForce(Box2D.b2Vec2(0,600), self.spaceman.body.GetWorldCenter())
+            self.spaceman.tryingToJump = True
+            self.spaceman.spriteIndex = 0
 
 class fwContactTypes:
     """
@@ -151,6 +153,7 @@ class MyListener(Box2D.b2ContactListener):
         name2 = cp.shape2.GetBody().GetUserData()
         if (name1=="spaceman" and name2=="platform")or(name1=="platform" and name2=="spaceman"):
             ro.TheSpaceman().touchingGround+=1
+            ro.TheSpaceman().tryingToJump=False
 
     def Persist(self, point):
         self.handleCall(fwContactTypes.contactPersisted, point)

@@ -95,6 +95,8 @@ class Spaceman(RenderableObject):
     STANDING_LEFT = 1
     WALKING_RIGHT = 2
     WALKING_LEFT = 3
+    JUMPING_RIGHT = 4
+    JUMPING_LEFT = 5
 
     def __init__(self,position,physicsWorld):
         pygame.sprite.DirtySprite.__init__(self)
@@ -163,6 +165,7 @@ class Spaceman(RenderableObject):
         self.animstate = Spaceman.STANDING_RIGHT
 
         self.touchingGround = 0
+        self.tryingToJump = False
 
         
     def update(self, msSinceLast):
@@ -181,33 +184,48 @@ class Spaceman(RenderableObject):
 
         getVel = self.body.GetLinearVelocity()
         self.curVel = (getVel.x, getVel.y)
-        if self.curVel[0] >= -1.0 and self.curVel[0] < 0.0:
+        if self.curVel[0] >= -1.5 and self.curVel[0] < 0.0:
+            self.tryStop()
             self.animstate = Spaceman.STANDING_LEFT
-            self.image = ImageHandler()["standingLeft"]
-        elif self.curVel[0] <= 1.0 and self.curVel[0] > 0.0:
+        elif self.curVel[0] <= 1.5 and self.curVel[0] > 0.0:
+            self.tryStop()
             self.animstate = Spaceman.STANDING_RIGHT
-            self.image = ImageHandler()["standingRight"]
+        elif self.curVel[0] > 1.5:
+            if self.isOnGround():
+                self.animstate = Spaceman.WALKING_RIGHT
+            elif self.tryingToJump:
+                self.animstate = Spaceman.JUMPING_RIGHT
+            else:
+                self.animstate = Spaceman.STANDING_RIGHT
+        elif self.curVel[0] < -1.5:
+            if self.isOnGround():
+                self.animstate = Spaceman.WALKING_LEFT
+            elif self.tryingToJump:
+                self.animstate = Spaceman.JUMPING_LEFT
+            else:
+                self.animstate = Spaceman.STANDING_LEFT
 
         self.spriteIndex += (msSinceLast/33.0)
         if self.animstate == Spaceman.WALKING_RIGHT:
-            if self.isOnGround():
-                #self.spriteIndex %= len(self.spritesRight)
-                self.image = self.spritesRight[int(self.spriteIndex%len(self.spritesRight))]
-            else:
-                self.image = self.sprJumpingRight[int(self.spriteIndex%len(self.sprJumpingRight))]
+            self.image = self.spritesRight[int(self.spriteIndex%len(self.spritesRight))]
         elif self.animstate == Spaceman.WALKING_LEFT:
-            if self.isOnGround():
-                #self.spriteIndex %= len(self.spritesLeft)
-                self.image = self.spritesLeft[int(self.spriteIndex%len(self.spritesLeft))]
-            else:
-                self.image = self.sprJumpingLeft[int(self.spriteIndex%len(self.sprJumpingLeft))]
+            self.image = self.spritesLeft[int(self.spriteIndex%len(self.spritesLeft))]
+        elif self.animstate == Spaceman.JUMPING_RIGHT:
+            index = int(self.spriteIndex%len(self.sprJumpingRight))
+            if self.spriteIndex>len(self.sprJumpingRight)/2:
+                index = len(self.sprJumpingRight)/2
+            self.image = self.sprJumpingRight[index]
+        elif self.animstate == Spaceman.JUMPING_LEFT:
+            index = int(self.spriteIndex%len(self.sprJumpingLeft))
+            if self.spriteIndex>len(self.sprJumpingLeft)/2:
+                index = len(self.sprJumpingLeft)/2
+            self.image = self.sprJumpingLeft[index]
+        elif self.animstate == Spaceman.STANDING_RIGHT:
+            self.image = ImageHandler()["standingRight"]
+        elif self.animstate == Spaceman.STANDING_LEFT:
+            self.image = ImageHandler()["standingLeft"]            
 
     def tryMove(self, x, y):
-        if x > 0 and self.isOnGround():
-            self.animstate = Spaceman.WALKING_RIGHT
-        elif x < 0 and self.isOnGround():
-            self.animstate = Spaceman.WALKING_LEFT
-
         self.curVel = self.body.GetLinearVelocity()
         
         if x < 0 and self.curVel.x > -MAX_WALK_SPEED: #Not going too fast Left
@@ -220,6 +238,11 @@ class Spaceman(RenderableObject):
                 self.body.ApplyForce(Box2D.b2Vec2(x,0), self.body.GetWorldCenter())
             else: #You can only accelerate to the max walk speed
                 self.body.ApplyForce(Box2D.b2Vec2(FPS*(MAX_WALK_SPEED-self.curVel.x)*self.body.GetMass(),0), self.body.GetWorldCenter())
+    
+    def tryStop(self):
+        print "trying to stop"
+        self.curVel = self.body.GetLinearVelocity()
+        self.body.ApplyForce(Box2D.b2Vec2(FPS*(-self.curVel.x)*self.body.GetMass(),FPS*(-self.curVel.y)*self.body.GetMass()), self.body.GetWorldCenter())
     
     def isOnGround(self):
         return self.touchingGround>0
