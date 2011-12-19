@@ -42,9 +42,10 @@ class ImageToolbox:
 
         self.surface = self.surface.convert()
 
-    def FindClickedObject(self,pos):
+    def findClickedObject(self,pos):
+        # Find the object you clicked, based on the mouse pos passed in
         for i in xrange(len(self.hitboxes)):
-            if self.hitboxes[i].InBox(pos):
+            if self.hitboxes[i].inBox(pos):
                 return self.images[i]
 
         return None
@@ -56,7 +57,7 @@ class PixelHitbox:
         self.left = left
         self.right = right
 
-    def InBox(self,pos):
+    def inBox(self,pos):
         return self.left<= pos[0] <= self.right and self.top<= pos[1] <= self.bottom
 
 class LevelDesigner:
@@ -126,23 +127,42 @@ class LevelDesigner:
         print "Mouse Clicked at ", pos
         if self.clickInToolbox(pos):
             if not self.selectedItem:
-                self.selectedItem = self.toolbox.FindClickedObject(pos)
-                print "Found object: ",self.selectedItem
+                clickedObj = self.toolbox.findClickedObject(pos)
+                print "Found object: ",clickedObj
+                self.selectedItem = copy.deepcopy(clickedObj) # Copy pointer to image surface, and replace it. \
+                                                                     # This is to work around the fact that deepcopy 
+                                                                     # will make a dead surface
+                self.selectedItem.image = clickedObj.image
 
-        else:
-            pos = dim.Vect(PIXEL * pos[0], PIXEL * pos[1])
-            
-            physxCoord = mgr.ViewPort().PhysxCoords(pos)
-            newObj = copy.deepcopy(self.selectedItem)
-            newObj.image = self.selectedItem.image # Copy pointer to sprite
-            newObj.initPosition = physxCoord
+            else:
+                if self.selectedItem in self.room.boxes:
+                    self.room.boxes.remove(self.selectedItem)  #Trash the object we have selected
+                self.selectedItem = None # Deselect the current object
 
-            self.room.boxes.append(newObj)
-
-            self.selectedItem = None
+        else: 
+            if self.selectedItem:
+                pos = dim.Vect(PIXEL * pos[0], PIXEL * pos[1])
+                physxCoord = mgr.ViewPort().PhysxCoords(pos)
+                # We want to place the object
+                self.selectedItem.initPosition = physxCoord            
+                self.selectedItem.update()
+                if not self.selectedItem in self.room.boxes:
+                    self.room.boxes.append(self.selectedItem)
+                self.selectedItem = None
+            else:
+                # We want to select the object here
+                self.selectedItem = self.findClickedObject(pos) #Oops, this only works for stuff in the toolbox...
+                print "Found object to move: ",self.selectedItem
 
     def clickInToolbox(self,pos):
         return pos[0] > SCREEN_PIXEL_WIDTH
+
+    def findClickedObject(self, pos):
+        for b in self.room.boxes:
+            print b.rect.x,b.rect.y
+            if b.rect.collidepoint(pos):
+                return b
+        return None
         
 if (__name__ == "__main__"):
     LevelDesigner().main()
