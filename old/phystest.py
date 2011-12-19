@@ -97,7 +97,7 @@ def main():
     w.listener.test = w
 
     room = rm.Room(SCREEN_PIXEL_WIDTH, SCREEN_PIXEL_HEIGHT)
-    groundPos = dim.Vect(SCREEN_REAL_WIDTH * METER / 2, 3.0 * METER)
+    groundPos = dim.Vect(SCREEN_REAL_WIDTH * METER/2.0, 3.0 * METER)
     groundSize = dim.Vect(SCREEN_REAL_WIDTH * METER, 1.0 * METER)
     ground = rm.StaticPlatform(w, groundPos, groundSize)
     room.platforms.append(ground)
@@ -142,24 +142,24 @@ def main():
                     return
                 if event.key == K_UP:
                     if spaceman.touchingGround >= 1:
-                        spaceman.body.ApplyForce(b2Vec2(0,500),
+                        spaceman.body.ApplyForce(b2Vec2(0,300),
                                                  spaceman.body.GetWorldCenter())
                 if event.key == pygame.K_j:
                     if kickcount <= 0:
                         kickcount = 1.0 * FRAMERATE
-                        kickd = dim.Vect(-1 * METER, 0 * METER) * 3
+                        kickd = dim.Vect(1 * METER, 0 * METER) * 9
                 if event.key == pygame.K_k:
                     if kickcount <= 0:
                         kickcount = 1.0 * FRAMERATE
-                        kickd = dim.Vect(0 * METER, 1 * METER) * 15
+                        kickd = dim.Vect(0 * METER, 1 * METER) * 9
                 if event.key == pygame.K_l:
                     if kickcount <= 0:
                         kickcount = 1.0 * FRAMERATE
-                        kickd = dim.Vect(1 * METER, 0 * METER) * 3
+                        kickd = dim.Vect(-1 * METER, 0 * METER) * 9
                 if event.key == pygame.K_i:
                     if kickcount <= 0:
                         kickcount = 1.0 * FRAMERATE
-                        kickd = dim.Vect(0 * METER, -1 * METER) * 15
+                        kickd = dim.Vect(0 * METER, -1 * METER) * 9
         keysPressed = pygame.key.get_pressed()
         if keysPressed[K_RIGHT]:
             spaceman.tryMove(10, 0)
