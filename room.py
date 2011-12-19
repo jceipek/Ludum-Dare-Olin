@@ -188,6 +188,7 @@ class Box(Serializable,RenderableObject):
 class StaticPlatform(RenderableObject):
     def __init__(self, world, pos, size):
         RenderableObject.__init__(self, world, pos, size, spriteName="simplePlatform", density=0, userData="staticPlatform")
+        self.size = size
 
     def posVect(self):
         xr = self.body.position.x
