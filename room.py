@@ -163,7 +163,7 @@ class Box(Serializable,RenderableObject):
  
 class StaticPlatform(RenderableObject):
     def __init__(self, world, pos, size):
-        RenderableObject.__init__(self, world, pos, size, density=0, userData="staticPlatform")
+        RenderableObject.__init__(self, world, pos, size, spriteName="simplePlatform", density=0, userData="staticPlatform")
 
     def posVect(self):
         xr = self.body.position.x
@@ -195,7 +195,7 @@ class StaticPlatform(RenderableObject):
 
 class Spaceman(RenderableObject):
     def __init__(self, world, pos):
-        RenderableObject.__init__(self, world, pos, SPACEMAN_SIZE, userData="spaceman")
+        RenderableObject.__init__(self, world, pos, SPACEMAN_SIZE, "walkingRight", userData="spaceman")
 
         self.IMG_COUNT = 30
 
@@ -207,6 +207,7 @@ class Spaceman(RenderableObject):
         self.image = pygame.Surface(self.inPixels)
         self.image = self.image.convert_alpha()
         self.image.blit(self.sprWalkR, (0, 0))
+        self.size = SPACEMAN_SIZE
 
         self.curVel = None
         self.touchingGround = 0
