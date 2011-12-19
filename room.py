@@ -12,6 +12,7 @@ class RenderableObject(pygame.sprite.DirtySprite):
     def __init__(self, world, pos, size, spriteName, **kwargs):
         pygame.sprite.DirtySprite.__init__(self)
 
+        self.dirty = 1 #Specify that the image should be redrawn at start
         self.image = ImageHandler()[spriteName]
 
         #world.drawables.append(self)
@@ -30,13 +31,34 @@ class RenderableObject(pygame.sprite.DirtySprite):
         imageHeight = self.image.get_height()
 
         self.rect = pygame.Rect(initPos[0],initPos[1],imageWidth,imageHeight)
+        self.old_rect = self.rect.copy()
+        self.lastDrawPosition = None
 
     def update(self,*args): # Override sprite update method
-        # Do not blit here!!!
-        bodyPos = dim.Vect(METER*self.body.position.x, METER*self.body.position.y)
+        # Do not blit here!!! Blitting happens with the sprite group!
+
+        if self.body: #Check if we have a physics body
+            bodyPos = dim.Vect(METER*self.body.position.x, METER*self.body.position.y)
+        else:
+            bodyPos = self.initPosition
         drawPos = bodyPos + (1.0/2.0) * self.size.MirrorH()
-        rectangle = self.vp.ScreenCoords(drawPos).Strip()
-        size = self.getSize()
+
+        # If the item has moved, set it as dirty
+        if self.lastDrawPosition != drawPos:
+            cornerPixelCoords = self.vp.ScreenCoords(drawPos).Strip()
+            oldPixelCoords = self.vp.ScreenCoords(self.lastDrawPosition).Strip()
+
+            # Properly place the old rectangle to blit
+            self.old_rect.move_ip(*oldPixelCoords)
+
+            # Properly place the new rectangle to blit
+            self.rect = self.old_rect.move(*cornerPixelCoords)
+
+            #Combine and set
+            self.rect = new_rect.union_ip(self.old_rect)
+
+            dirty = 1
+            self.lastDrawPosition = drawPos
 
     def add(self):
         self.prepPhysics(self.world)
