@@ -129,10 +129,6 @@ def main():
             object.blitToScreen(screen)
 
         body_pairs = [(p.shape1.GetBody(), p.shape2.GetBody()) for p in w.points]
-        print 'start'
-        for body1, body2 in body_pairs:
-            print body1.GetUserData(), body2.GetUserData()
-        print 'end'
 
         for event in pygame.event.get():
             if event.type == QUIT:
