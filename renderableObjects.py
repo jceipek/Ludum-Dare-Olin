@@ -100,6 +100,8 @@ class Spaceman(RenderableObject):
         pygame.sprite.DirtySprite.__init__(self)
         self.spriteSheetRight = ImageHandler()["walkingRight"] # Returns a pygame surface
         self.spriteSheetLeft = ImageHandler()["walkingLeft"] # Returns a pygame surface
+        self.spriteSheetJumpR = ImageHandler()["jumpingRight"] # Returns a pygame surface
+        self.spriteSheetJumpL = ImageHandler()["jumpingLeft"] # Returns a pygame surface
        
         self.curVel  = (0,0)
 
@@ -116,6 +118,8 @@ class Spaceman(RenderableObject):
 
         self.spritesRight = list()
         self.spritesLeft  = list()
+        self.sprJumpingRight  = list()
+        self.sprJumpingLeft  = list()
         self.sprStandingRight = ImageHandler()["standingRight"]
         self.sprStandingLeft = ImageHandler()["standingLeft"]
 
@@ -132,9 +136,25 @@ class Spaceman(RenderableObject):
             newSprite.blit(self.spriteSheetLeft, (0,0), area)
             newSprite.convert()
             self.spritesLeft.append(newSprite)
+        
+        for i in xrange(20):
+            newSprite = pygame.Surface((sprite_width,sprite_height),pygame.SRCALPHA,32)
+            area = pygame.Rect(i*sprite_width,0,sprite_width,sprite_height)
+            newSprite.blit(self.spriteSheetJumpR, (0,0), area)
+            newSprite.convert()
+            self.sprJumpingRight.append(newSprite)
+
+        for i in xrange(20):
+            newSprite = pygame.Surface((sprite_width,sprite_height),pygame.SRCALPHA,32)
+            area = pygame.Rect(i*sprite_width,0,sprite_width,sprite_height)
+            newSprite.blit(self.spriteSheetJumpL, (0,0), area)
+            newSprite.convert()
+            self.sprJumpingLeft.append(newSprite)
+
 
         self.spriteIndex = 0.0
-        self.image = self.spritesRight[int(self.spriteIndex)]
+        #self.image = self.spritesRight[int(self.spriteIndex)]
+        self.image = ImageHandler()["standingRight"]
 
         self.hasPhysics = True
         self._buildPhysics(width=sprite_width,height=sprite_height,canRotate=False,isStatic=False)
@@ -163,26 +183,29 @@ class Spaceman(RenderableObject):
         self.curVel = (getVel.x, getVel.y)
         if self.curVel[0] >= -1.0 and self.curVel[0] < 0.0:
             self.animstate = Spaceman.STANDING_LEFT
+            self.image = ImageHandler()["standingLeft"]
         elif self.curVel[0] <= 1.0 and self.curVel[0] > 0.0:
             self.animstate = Spaceman.STANDING_RIGHT
+            self.image = ImageHandler()["standingRight"]
 
         self.spriteIndex += (msSinceLast/33.0)
         if self.animstate == Spaceman.WALKING_RIGHT:
             if self.isOnGround():
-                self.spriteIndex %= len(self.spritesRight)
-                self.image = self.spritesRight[int(self.spriteIndex)]
+                #self.spriteIndex %= len(self.spritesRight)
+                self.image = self.spritesRight[int(self.spriteIndex%len(self.spritesRight))]
             else:
-                self.image = self.sprStandingRight
+                self.image = self.sprJumpingRight[int(self.spriteIndex%len(self.sprJumpingRight))]
         elif self.animstate == Spaceman.WALKING_LEFT:
             if self.isOnGround():
-                self.spriteIndex %= len(self.spritesLeft)
-                self.image = self.spritesLeft[int(self.spriteIndex)]
-            else: self.image = self.sprStandingLeft
+                #self.spriteIndex %= len(self.spritesLeft)
+                self.image = self.spritesLeft[int(self.spriteIndex%len(self.spritesLeft))]
+            else:
+                self.image = self.sprJumpingLeft[int(self.spriteIndex%len(self.sprJumpingLeft))]
 
     def tryMove(self, x, y):
-        if x > 0:
+        if x > 0 and self.isOnGround():
             self.animstate = Spaceman.WALKING_RIGHT
-        elif x < 0:
+        elif x < 0 and self.isOnGround():
             self.animstate = Spaceman.WALKING_LEFT
 
         self.curVel = self.body.GetLinearVelocity()

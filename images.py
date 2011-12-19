@@ -11,6 +11,8 @@ IMAGES_TO_LOAD = {"crate"         :("","crate.png"),
                   "turret"        :("","turret.png"),
                   "walkingRight"  :("astronaut", "walkingRight.png"),
                   "walkingLeft"   :("astronaut", "walkingLeft.png"),
+                  "jumpingRight"  :("astronaut", "jumpingRight.png"),
+                  "jumpingLeft"   :("astronaut", "jumpingLeft.png"),
                   "standingRight" :("astronaut", "standingRight.png"),
                   "standingLeft" :("astronaut", "standingLeft.png"),
                   "roombg"        :("","roombg.png")
