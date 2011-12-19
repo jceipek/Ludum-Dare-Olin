@@ -1,4 +1,3 @@
-from __future__ import division
 import pygame
 from globals import *
 from dimension import Vect
