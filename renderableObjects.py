@@ -1,10 +1,13 @@
 import pygame
+import Box2D
+from globals import *
 from images import ImageHandler
 from viewport import Viewport
+from dimension import Vect
 
 class RenderableObject(pygame.sprite.DirtySprite):
 
-    def __init__(self,physicalPosition,imageName):
+    def __init__(self,physicalPosition,physicsWorld,imageName,canRotate=True):
         pygame.sprite.DirtySprite.__init__(self)
         self.image = ImageHandler()[imageName] # Returns a pygame surface
 
@@ -12,7 +15,27 @@ class RenderableObject(pygame.sprite.DirtySprite):
         height = self.image.get_height()
         self.rect = pygame.Rect(0,0,width,height)
 
+        if not isinstance(physicalPosition, Vect):
+            physicalPosition = Vect(*physicalPosition)
         self.physicalPosition = physicalPosition
+
+        self.physicsWorld = physicsWorld
+
+        bodyDef = Box2D.b2BodyDef()
+        bodyDef.position = (self.physicalPosition[0],self.physicalPosition[1])
+        bodyDef.fixedRotation = not canRotate
+        bodyDef.linearDamping = 0.15
+        self.body = self.physicsWorld.CreateBody(bodyDef)
+        self.body.SetUserData(self)
+
+        shapeDef = Box2D.b2PolygonDef()
+        shapeDef.SetAsBox(width / 2.0 /  PIXELS_PER_METER, height / 2.0 / PIXELS_PER_METER)
+        shapeDef.density = DENSITY
+        shapeDef.linearDamping = AIR_RESISTANCE
+        shapeDef.friction = FRICTION
+        
+        self.body.CreateShape(shapeDef)
+        self.body.SetMassFromShapes()
 
     def update(self):
         '''
@@ -21,6 +44,11 @@ class RenderableObject(pygame.sprite.DirtySprite):
         if Viewport().hasMoved:
             self.rect.center = Viewport().convertPhysicalToPixelCoords(self.__physicalPosition)
             self.dirty = 1
+            
+        newPhysicalPosition = Vect(self.body.position.x,self.body.position.y)
+        if newPhysicalPosition != self.physicalPosition:
+            self.dirty = 1
+            self.physicalPosition = newPhysicalPosition
 
     def __setPhysicalPosition(self,value):
         self.__physicalPosition = value
@@ -41,9 +69,9 @@ class RenderableObject(pygame.sprite.DirtySprite):
     pixelPosition = property(__getPixelPosition,__setPixelPosition)
 
 class Crate(RenderableObject):
-    def __init__(self,position,imageName="crate"):
-        RenderableObject.__init__(self,position,imageName)
+    def __init__(self,position,physicsWorld,imageName="crate"):
+        RenderableObject.__init__(self,position,physicsWorld,imageName)
 
 class RoomBg(RenderableObject):
-    def __init__(self,position,imageName="roombg"):
-        RenderableObject.__init__(self,position,imageName)
+    def __init__(self,position,physicsWorld,imageName="roombg"):
+        RenderableObject.__init__(self,position,physicsWorld,imageName)

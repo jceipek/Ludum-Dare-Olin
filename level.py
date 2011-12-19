@@ -4,6 +4,7 @@ from dimension import Vect
 from viewport import Viewport
 from globals import *
 from images import ImageHandler
+import Box2D
 
 class Level(object):
     '''
@@ -25,20 +26,26 @@ class Level(object):
         self.physicalSize = Vect(float(bgimage.get_width())/PIXELS_PER_METER,float(bgimage.get_height())/PIXELS_PER_METER)
         self.drawDebug = False
 
+        world_bounds = Box2D.b2AABB()
+        world_bounds.lowerBound = (0,0)
+        world_bounds.upperBound = (self.physicalSize[0],self.physicalSize[1])
+        doSleep = True
+        self.physicsWorld = Box2D.b2World(world_bounds, GRAVITY, doSleep)
+
     def setup(self):
         # Separate setup function such that Level properties
         # such as physical size can be read before RenderableObjects
         # are created
 
         roomCenter = self.physicalSize / 2.0
-        roombg = ro.RoomBg(roomCenter)
+        roombg = ro.RoomBg(roomCenter,self.physicsWorld)
         roombg.add(self.allObjects)
         self.allObjects.change_layer(roombg,Level.ROOM_BG)
 
-        box = ro.Crate((0,0))
+        box = ro.Crate((10,10),self.physicsWorld)
         box.add(self.allObjects)
         self.allObjects.change_layer(box,Level.DYNAMIC)
-        box = ro.Crate((0,10))
+        box = ro.Crate((20,10),self.physicsWorld)
         box.add(self.allObjects)
         self.allObjects.change_layer(box,Level.DYNAMIC)
         print "Physical position: ",box.physicalPosition
