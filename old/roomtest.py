@@ -145,7 +145,7 @@ class LevelDesigner:
                 physxCoord = mgr.ViewPort().PhysxCoords(pos)
                 # We want to place the object
                 self.selectedItem.initPosition = physxCoord
-                self.selectedItem.update()
+                #self.selectedItem.update()
                 if not self.selectedItem in self.room.boxes:
                     self.room.boxes.append(self.selectedItem)
                 self.selectedItem = None
