@@ -159,7 +159,7 @@ class Spaceman(RenderableObject):
         self.image = ImageHandler()["standingRight"]
 
         self.hasPhysics = True
-        self._buildPhysics(width=sprite_width,height=sprite_height,canRotate=False,isStatic=False)
+        self._buildPhysics(width=sprite_width/2.0,height=sprite_height,canRotate=False,isStatic=False)
         self.body.SetUserData("spaceman")
 
         self.animstate = Spaceman.STANDING_RIGHT
