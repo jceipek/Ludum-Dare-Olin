@@ -64,6 +64,14 @@ class Level(object):
         platform.add(self.allObjects)
         self.allObjects.change_layer(platform,Level.FIXED)
 
+        platform = ro.Platform((20,5),self.physicsWorld)
+        platform.add(self.allObjects)
+        self.allObjects.change_layer(platform,Level.FIXED)
+
+        platform = ro.Platform((15,15),self.physicsWorld)
+        platform.add(self.allObjects)
+        self.allObjects.change_layer(platform,Level.FIXED)
+
         for x in xrange(2,25,4):
             platform = ro.Platform((x, 1),self.physicsWorld)
             platform.add(self.allObjects)
@@ -100,7 +108,7 @@ class Level(object):
         self.spaceman.tryMove(-600,0)
     def characterJump(self):
         if self.spaceman.isOnGround():
-            self.spaceman.body.ApplyForce(Box2D.b2Vec2(0,600), self.spaceman.body.GetWorldCenter())
+            self.spaceman.body.ApplyForce(Box2D.b2Vec2(0,300)*self.spaceman.body.GetMass(), self.spaceman.body.GetWorldCenter())
             self.spaceman.tryingToJump = True
             self.spaceman.spriteIndex = 0
     def moveShip(self, x, y):
