@@ -89,6 +89,10 @@ class Platform(RenderableObject):
     def __init__(self,position,physicsWorld,imageName="simplePlatform"):
         RenderableObject.__init__(self,position,physicsWorld,imageName,hasPhysics=True,isStatic=True,canRotate=False,userData="platform")
 
+class Wall(RenderableObject):
+    def __init__(self,position,physicsWorld,imageName="simpleWall"):
+        RenderableObject.__init__(self,position,physicsWorld,imageName,hasPhysics=True,isStatic=True,canRotate=False,userData="wall")
+
 class Spaceman(RenderableObject):
 
     STANDING_RIGHT = 0

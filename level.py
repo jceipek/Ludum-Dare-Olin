@@ -72,10 +72,29 @@ class Level(object):
         platform.add(self.allObjects)
         self.allObjects.change_layer(platform,Level.FIXED)
 
-        for x in xrange(2,25,4):
-            platform = ro.Platform((x, 1),self.physicsWorld)
+        platform = ro.Platform((5,15),self.physicsWorld)
+        platform.add(self.allObjects)
+        self.allObjects.change_layer(platform,Level.FIXED)
+
+        platform = ro.Wall((2,5),self.physicsWorld)
+        platform.add(self.allObjects)
+        self.allObjects.change_layer(platform,Level.FIXED)
+
+        for x in xrange(2,29,4):
+            platform = ro.Platform((x, 0),self.physicsWorld)
             platform.add(self.allObjects)
             self.allObjects.change_layer(platform,Level.FIXED)
+        for x in xrange(2,29,4):
+            platform = ro.Platform((x, 19),self.physicsWorld)
+            platform.add(self.allObjects)
+            self.allObjects.change_layer(platform,Level.FIXED)
+        for y in xrange(2,21,4):
+            wall = ro.Wall((0, y),self.physicsWorld)
+            wall.add(self.allObjects)
+            self.allObjects.change_layer(wall,Level.FIXED)
+            wall = ro.Wall((25.5, y),self.physicsWorld)
+            wall.add(self.allObjects)
+            self.allObjects.change_layer(wall,Level.FIXED)
 
         
 
