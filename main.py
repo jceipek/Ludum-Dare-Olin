@@ -13,7 +13,7 @@ class Game:
         #self.activeLevel.drawDebug = True
         self.clock = pygame.time.Clock()
         pygame.mixer.music.load("alone2.mp3")
-        pygame.mixer.music.play(loops=-1)
+        pygame.mixer.music.play(-1)
 
     def main(self):
 
