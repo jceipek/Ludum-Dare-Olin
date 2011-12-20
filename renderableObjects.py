@@ -80,6 +80,27 @@ class RenderableObject(pygame.sprite.DirtySprite):
 class Crate(RenderableObject):
     def __init__(self,position,physicsWorld,imageName="crate"):
         RenderableObject.__init__(self,position,physicsWorld,imageName)
+        self._image = self.image
+        self.rotation = 0.0
+
+    def update(self, msSinceLast):
+        '''
+        Overrides Sprite update
+        '''
+        if Viewport().hasMoved:
+            self.rect.center = Viewport().convertPhysicalToPixelCoords(self.__physicalPosition)
+            self.dirty = 1
+            
+        if self.hasPhysics:
+            newPhysicalPosition = Vect(self.body.position.x,self.body.position.y)
+            if newPhysicalPosition != self.physicalPosition:
+                self.physicalPosition = newPhysicalPosition
+
+            newRotation = self.body.angle
+            if abs(newRotation - self.rotation) > 0.001:
+                self.rotation = newRotation
+                self.dirty = 1
+                self.image = pygame.transform.rotate(self._image, self.rotation*(180.0/3.14159))
 
 class RoomBg(RenderableObject):
     def __init__(self,position,physicsWorld,imageName="roombg"):
