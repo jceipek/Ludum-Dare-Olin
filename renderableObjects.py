@@ -25,7 +25,7 @@ class RenderableObject(pygame.sprite.DirtySprite):
             self._buildPhysics(width,height,canRotate,isStatic)
             self.body.SetUserData(userData)
 
-    def _buildPhysics(self,width,height,canRotate,isStatic):
+    def _buildPhysics(self,width,height,canRotate,isStatic,friction=FRICTION):
         bodyDef = Box2D.b2BodyDef()
         bodyDef.position = (self.physicalPosition[0],self.physicalPosition[1])
         bodyDef.fixedRotation = not canRotate
@@ -40,7 +40,7 @@ class RenderableObject(pygame.sprite.DirtySprite):
         else:
             shapeDef.density = DENSITY
         shapeDef.linearDamping = AIR_RESISTANCE
-        shapeDef.friction = FRICTION
+        shapeDef.friction = friction
         
         self.body.CreateShape(shapeDef)
         self.body.SetMassFromShapes()
