@@ -34,7 +34,7 @@ class RenderableObject(pygame.sprite.DirtySprite):
         #self.body.SetUserData(self)
 
         shapeDef = Box2D.b2PolygonDef()
-        shapeDef.SetAsBox(width / 2.0 /  PIXELS_PER_METER, height / 2.0 / PIXELS_PER_METER)
+        shapeDef.SetAsBox((width / 2.0) /  PIXELS_PER_METER, (height / 2.0) / PIXELS_PER_METER)
         if isStatic:
             shapeDef.density = 0
         else:
@@ -184,20 +184,20 @@ class Spaceman(RenderableObject):
 
         getVel = self.body.GetLinearVelocity()
         self.curVel = (getVel.x, getVel.y)
-        if self.curVel[0] >= -1.5 and self.curVel[0] < 0.0:
+        if self.curVel[0] >= -2.0 and self.curVel[0] < 0.0:
             self.tryStop()
             self.animstate = Spaceman.STANDING_LEFT
-        elif self.curVel[0] <= 1.5 and self.curVel[0] > 0.0:
+        elif self.curVel[0] <= 2.0 and self.curVel[0] > 0.0:
             self.tryStop()
             self.animstate = Spaceman.STANDING_RIGHT
-        elif self.curVel[0] > 1.5:
+        elif self.curVel[0] > 2.0:
             if self.isOnGround():
                 self.animstate = Spaceman.WALKING_RIGHT
             elif self.tryingToJump:
                 self.animstate = Spaceman.JUMPING_RIGHT
             else:
                 self.animstate = Spaceman.STANDING_RIGHT
-        elif self.curVel[0] < -1.5:
+        elif self.curVel[0] < -2.0:
             if self.isOnGround():
                 self.animstate = Spaceman.WALKING_LEFT
             elif self.tryingToJump:

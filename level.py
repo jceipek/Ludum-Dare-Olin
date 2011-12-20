@@ -67,7 +67,9 @@ class Level(object):
         for x in xrange(2,25,4):
             platform = ro.Platform((x, 1),self.physicsWorld)
             platform.add(self.allObjects)
-            self.allObjects.change_layer(platform,Level.FIXED)        
+            self.allObjects.change_layer(platform,Level.FIXED)
+
+        
 
         self.spaceman = ro.TheSpaceman((10,10),self.physicsWorld)
         self.spaceman.add(self.allObjects)
