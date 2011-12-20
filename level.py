@@ -55,10 +55,14 @@ class Level(object):
         box = ro.Crate((10,10),self.physicsWorld)
         box.add(self.allObjects)
         self.allObjects.change_layer(box,Level.DYNAMIC)
+        
+        '''
+        
+        
         box = ro.Crate((10,15),self.physicsWorld)
         box.add(self.allObjects)
         self.allObjects.change_layer(box,Level.DYNAMIC)
-        '''
+        
 
         platform = ro.Platform((10,5),self.physicsWorld)
         platform.add(self.allObjects)

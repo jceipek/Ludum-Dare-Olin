@@ -1,7 +1,7 @@
 import pygame
 import os
 
-IMAGES_TO_LOAD = {"crate"         :("","crate.png"),
+IMAGES_TO_LOAD = {"crate"         :("","glowcrate.png"),
                   "door"          :("","door.png"),
                   "floorTurret"   :("","floorTurret.png"),
                   "laserBottom"   :("","laserBottom.png"),
