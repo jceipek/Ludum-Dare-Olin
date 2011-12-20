@@ -13,13 +13,14 @@ class Game:
         self.loadLevel("roombg")
         #self.activeLevel.drawDebug = True
         self.clock = pygame.time.Clock()
-        pygame.mixer.music.load("alone2.mp3")
+        pygame.mixer.music.load("title.mp3")
         pygame.mixer.music.play(-1)
 
     def main(self):
 
         self.running = True
         self.state = "INTRO"
+               
         msSinceLast = 0
 
         intro = self.image = ImageHandler()["start"]
@@ -32,7 +33,9 @@ class Game:
                     self.running = False
                 elif event.type == pygame.KEYDOWN:
                     self.state = "PLAYING"
-
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load("alone2.mp3") 
+        pygame.mixer.music.play(-1)
 
         while self.running and self.state == "PLAYING":
             self.processEventLoop()
