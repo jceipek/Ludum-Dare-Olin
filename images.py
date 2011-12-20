@@ -15,8 +15,11 @@ IMAGES_TO_LOAD = {"crate"         :("","glowcrate.png"),
                   "jumpingRight"  :("astronaut", "jumpingRight.png"),
                   "jumpingLeft"   :("astronaut", "jumpingLeft.png"),
                   "standingRight" :("astronaut", "standingRight.png"),
-                  "standingLeft" :("astronaut", "standingLeft.png"),
-                  "roombg"        :("","roombg.png")
+                  "standingLeft"  :("astronaut", "standingLeft.png"),
+                  "roombg"        :("","roombg.png"),
+                  "start"         :("","IntroPage.png"),
+                  "lose"          :("","GameOver.png"),
+                  "win"           :("","YouWin.png")
                   }
 
 class ImageHandler(dict):
