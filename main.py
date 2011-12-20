@@ -4,6 +4,7 @@ import sys
 from globals import *
 from level import Level
 from viewport import Viewport
+from images import ImageHandler
 
 class Game:
     def __init__(self):
@@ -12,14 +13,31 @@ class Game:
         self.loadLevel("roombg")
         #self.activeLevel.drawDebug = True
         self.clock = pygame.time.Clock()
-        pygame.mixer.music.load("alone2.mp3")
+        pygame.mixer.music.load("title.mp3")
         pygame.mixer.music.play(-1)
 
     def main(self):
 
         self.running = True
+        self.state = "INTRO"
+               
         msSinceLast = 0
-        while self.running:
+
+        intro = self.image = ImageHandler()["start"]
+        self.surface.blit(intro, (0,0))
+        pygame.display.flip()
+        
+        while self.running and self.state == "INTRO":
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+                elif event.type == pygame.KEYDOWN:
+                    self.state = "PLAYING"
+        pygame.mixer.music.stop()
+        pygame.mixer.music.load("alone2.mp3") 
+        pygame.mixer.music.play(-1)
+
+        while self.running and self.state == "PLAYING":
             self.processEventLoop()
             self.activeLevel.update(msSinceLast)
             msSinceLast = self.clock.tick(FRAMERATE)

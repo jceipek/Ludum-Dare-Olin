@@ -265,7 +265,7 @@ class Spaceman(RenderableObject):
                 self.body.ApplyForce(Box2D.b2Vec2(FPS*(MAX_WALK_SPEED-self.curVel.x)*self.body.GetMass(),0), self.body.GetWorldCenter())
     
     def tryStop(self, horiz=True, vert=False):
-        print "trying to stop"
+        #print "trying to stop"
         self.curVel = self.body.GetLinearVelocity()
         if horiz:
             self.body.ApplyForce(Box2D.b2Vec2(FPS*(-self.curVel.x)*self.body.GetMass(),0), self.body.GetWorldCenter())
