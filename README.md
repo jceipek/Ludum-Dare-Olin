@@ -24,13 +24,18 @@ STATUS
 ======
 In active development.
 
-INSTALLATION
-============
+RUNNING ON WINDOWS
+==================
+1. Download and extract the most recent archive from https://github.com/jceipek/Ludum-Dare-Olin/downloads
+
+2. Run the program by opening the .exe file extracted in step 1.
+
+INSTALLATION (REQUIRED TO RUN FROM SOURCE)
+===========================================
 You need python 2.6 or 2.7, a compatible version of pygame, and the pyBox2D physics engine module for python.
 
-
-RUNNING
-=======
+RUNNING FROM SOURCE (CROSS-PLATFORM)
+====================================
 Run the command:
 
         $ python main.py
