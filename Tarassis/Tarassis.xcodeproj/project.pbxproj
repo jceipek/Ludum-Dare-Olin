@@ -1,0 +1,377 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		273777A614B3901700361CD8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 273777A514B3901700361CD8 /* Foundation.framework */; };
+		273777A914B3901700361CD8 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 273777A814B3901700361CD8 /* main.cpp */; };
+		273777AB14B3901700361CD8 /* ResourcePath.mm in Sources */ = {isa = PBXBuildFile; fileRef = 273777AA14B3901700361CD8 /* ResourcePath.mm */; };
+		273777AF14B3901700361CD8 /* sansation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 273777AE14B3901700361CD8 /* sansation.ttf */; };
+		273777B814B3901700361CD8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 273777B614B3901700361CD8 /* InfoPlist.strings */; };
+		273777C014B392BD00361CD8 /* MainScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 273777BF14B392BD00361CD8 /* MainScreen.cpp */; };
+		273777C514B3A03700361CD8 /* IntroPage.png in Resources */ = {isa = PBXBuildFile; fileRef = 273777C414B3A03700361CD8 /* IntroPage.png */; };
+		2737787914B3B94700361CD8 /* title.ogg in Resources */ = {isa = PBXBuildFile; fileRef = 2737787814B3B94700361CD8 /* title.ogg */; };
+		2737787B14B3C2B300361CD8 /* Tarassis.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2737787A14B3C2B300361CD8 /* Tarassis.icns */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		273777A114B3901700361CD8 /* Tarassis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tarassis.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		273777A514B3901700361CD8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		273777A814B3901700361CD8 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		273777AA14B3901700361CD8 /* ResourcePath.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ResourcePath.mm; sourceTree = "<group>"; };
+		273777AC14B3901700361CD8 /* ResourcePath.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ResourcePath.hpp; sourceTree = "<group>"; };
+		273777AE14B3901700361CD8 /* sansation.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sansation.ttf; sourceTree = "<group>"; };
+		273777B514B3901700361CD8 /* Tarassis-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Tarassis-Info.plist"; sourceTree = "<group>"; };
+		273777B714B3901700361CD8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		273777BE14B3913000361CD8 /* constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
+		273777BF14B392BD00361CD8 /* MainScreen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainScreen.cpp; sourceTree = "<group>"; };
+		273777C114B394EA00361CD8 /* MainScreen.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MainScreen.hpp; sourceTree = "<group>"; };
+		273777C414B3A03700361CD8 /* IntroPage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IntroPage.png; sourceTree = "<group>"; };
+		2737787814B3B94700361CD8 /* title.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = title.ogg; sourceTree = "<group>"; };
+		2737787A14B3C2B300361CD8 /* Tarassis.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Tarassis.icns; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2737779E14B3901700361CD8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				273777A614B3901700361CD8 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2737779514B3901600361CD8 = {
+			isa = PBXGroup;
+			children = (
+				273777A714B3901700361CD8 /* Tarassis */,
+				273777A414B3901700361CD8 /* Frameworks */,
+				273777A214B3901700361CD8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		273777A214B3901700361CD8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				273777A114B3901700361CD8 /* Tarassis.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		273777A414B3901700361CD8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				273777A514B3901700361CD8 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		273777A714B3901700361CD8 /* Tarassis */ = {
+			isa = PBXGroup;
+			children = (
+				273777BE14B3913000361CD8 /* constants.h */,
+				273777A814B3901700361CD8 /* main.cpp */,
+				273777C114B394EA00361CD8 /* MainScreen.hpp */,
+				273777BF14B392BD00361CD8 /* MainScreen.cpp */,
+				273777AA14B3901700361CD8 /* ResourcePath.mm */,
+				273777AC14B3901700361CD8 /* ResourcePath.hpp */,
+				273777AD14B3901700361CD8 /* Resources */,
+				273777B414B3901700361CD8 /* Supporting Files */,
+			);
+			path = Tarassis;
+			sourceTree = "<group>";
+		};
+		273777AD14B3901700361CD8 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				2737787A14B3C2B300361CD8 /* Tarassis.icns */,
+				2737787514B3B86400361CD8 /* music */,
+				273777C214B3A03700361CD8 /* images */,
+				273777AE14B3901700361CD8 /* sansation.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		273777B414B3901700361CD8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				273777B514B3901700361CD8 /* Tarassis-Info.plist */,
+				273777B614B3901700361CD8 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		273777C214B3A03700361CD8 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				273777C314B3A03700361CD8 /* backgrounds */,
+			);
+			path = images;
+			sourceTree = "<group>";
+		};
+		273777C314B3A03700361CD8 /* backgrounds */ = {
+			isa = PBXGroup;
+			children = (
+				273777C414B3A03700361CD8 /* IntroPage.png */,
+			);
+			path = backgrounds;
+			sourceTree = "<group>";
+		};
+		2737787514B3B86400361CD8 /* music */ = {
+			isa = PBXGroup;
+			children = (
+				2737787814B3B94700361CD8 /* title.ogg */,
+			);
+			path = music;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		273777A014B3901700361CD8 /* Tarassis */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 273777BB14B3901700361CD8 /* Build configuration list for PBXNativeTarget "Tarassis" */;
+			buildPhases = (
+				2737779C14B3901700361CD8 /* ShellScript */,
+				2737779D14B3901700361CD8 /* Sources */,
+				2737779E14B3901700361CD8 /* Frameworks */,
+				2737779F14B3901700361CD8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Tarassis;
+			productName = Tarassis;
+			productReference = 273777A114B3901700361CD8 /* Tarassis.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2737779714B3901600361CD8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = "Franklin W. Olin College of Engineering";
+			};
+			buildConfigurationList = 2737779A14B3901600361CD8 /* Build configuration list for PBXProject "Tarassis" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 2737779514B3901600361CD8;
+			productRefGroup = 273777A214B3901700361CD8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				273777A014B3901700361CD8 /* Tarassis */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2737779F14B3901700361CD8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				273777AF14B3901700361CD8 /* sansation.ttf in Resources */,
+				273777B814B3901700361CD8 /* InfoPlist.strings in Resources */,
+				273777C514B3A03700361CD8 /* IntroPage.png in Resources */,
+				2737787914B3B94700361CD8 /* title.ogg in Resources */,
+				2737787B14B3C2B300361CD8 /* Tarassis.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2737779C14B3901700361CD8 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This shell script simply copies required sfml dylibs/frameworks into the application bundle frameworks folder.\n# If you're using static libraries (which is not recommended) you should remove this script from your project.\n\n# Are we building a project that uses framework or dylibs ?\nif [ $SFML_LINK_PREFIX = $SFML_LINK_FRAMEWORKS_PREFIX ]\nthen\n    frameworks=1\nelse\n    frameworks=0\nfi\n\nrequire () # $1 is a SFML module like 'system' or 'audio'\n{\n    dest=$BUILT_PRODUCTS_DIR/$PRODUCT_NAME.app/Contents/Frameworks\n    \n    if [ -z $1 ]\n    then\n        echo \"no parameter! ERROR!\"\n        exit\n    else\n        # clean potentially old stuff\n        rm -f $dest/libsfml-$1.2.dylib\n        rm -f $dest/libsfml-$1-d.2.dylib\n        rm -fr $dest/sfml-$1.framework\n    \n        # copy SFML libraries\n        if [ $frameworks ]\n        then\n            ditto /Library/Frameworks/sfml-$1.framework $dest/sfml-$1.framework\n        elif [ $CONFIGURATION = \"Debug\" ]\n        then\n            ditto /usr/local/lib/libsfml-$1-d.2.dylib $dest/libsfml-$1-d.2.dylib\n        else\n            ditto /usr/local/lib/libsfml-$1.2.dylib $dest/libsfml-$1.2.dylib\n        fi\n        \n        if [ $1 = \"audio\" ]\n        then\n            # copy sndfile framework too\n            ditto /Library/Frameworks/sndfile.framework $dest/sndfile.framework\n        fi\n    fi\n}\n\nif [ -n \"$SFML_SYSTEM\" ]\nthen\n    require \"system\"\nfi\n\nif [ -n \"$SFML_AUDIO\" ]\nthen\n    require \"audio\"\nfi\n\nif [ -n \"$SFML_NETWORK\" ]\nthen\n    require \"network\"\nfi\n\nif [ -n \"$SFML_WINDOW\" ]\nthen\n    require \"window\"\nfi\n\nif [ -n \"$SFML_GRAPHICS\" ]\nthen\n    require \"graphics\"\nfi\n\t\t\t\t\t";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2737779D14B3901700361CD8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				273777A914B3901700361CD8 /* main.cpp in Sources */,
+				273777AB14B3901700361CD8 /* ResourcePath.mm in Sources */,
+				273777C014B392BD00361CD8 /* MainScreen.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		273777B614B3901700361CD8 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				273777B714B3901700361CD8 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		273777B914B3901700361CD8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = "";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_ENABLE_OBJC_GC = unsupported;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(HEADER_SEARCH_PATHS)";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"$(OTHER_LDFLAGS)",
+					"$(SFML_SYSTEM)",
+					"$(SFML_WINDOW)",
+					"$(SFML_GRAPHICS)",
+					"$(SFML_AUDIO)",
+					"$(SFML_NETWORK)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SFML_AUDIO = "$(SFML_LINK_PREFIX)sfml-audio$(SFML_LINK_SUFFIX)";
+				SFML_GRAPHICS = "$(SFML_LINK_PREFIX)sfml-graphics$(SFML_LINK_SUFFIX)";
+				SFML_LINK_DYLIBS_PREFIX = "-l";
+				SFML_LINK_DYLIBS_SUFFIX = "-d";
+				SFML_LINK_FRAMEWORKS_PREFIX = "-framework ";
+				SFML_LINK_FRAMEWORKS_SUFFIX = "";
+				SFML_LINK_PREFIX = "$(SFML_LINK_FRAMEWORKS_PREFIX)";
+				SFML_LINK_SUFFIX = "$(SFML_LINK_FRAMEWORKS_SUFFIX)";
+				SFML_NETWORK = "";
+				SFML_SYSTEM = "$(SFML_LINK_PREFIX)sfml-system$(SFML_LINK_SUFFIX)";
+				SFML_WINDOW = "$(SFML_LINK_PREFIX)sfml-window$(SFML_LINK_SUFFIX)";
+			};
+			name = Debug;
+		};
+		273777BA14B3901700361CD8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = "";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_ENABLE_OBJC_GC = unsupported;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "$(HEADER_SEARCH_PATHS)";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OTHER_LDFLAGS = (
+					"$(OTHER_LDFLAGS)",
+					"$(SFML_SYSTEM)",
+					"$(SFML_WINDOW)",
+					"$(SFML_GRAPHICS)",
+					"$(SFML_AUDIO)",
+					"$(SFML_NETWORK)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SFML_AUDIO = "$(SFML_LINK_PREFIX)sfml-audio$(SFML_LINK_SUFFIX)";
+				SFML_GRAPHICS = "$(SFML_LINK_PREFIX)sfml-graphics$(SFML_LINK_SUFFIX)";
+				SFML_LINK_DYLIBS_PREFIX = "-l";
+				SFML_LINK_DYLIBS_SUFFIX = "";
+				SFML_LINK_FRAMEWORKS_PREFIX = "-framework ";
+				SFML_LINK_FRAMEWORKS_SUFFIX = "";
+				SFML_LINK_PREFIX = "$(SFML_LINK_FRAMEWORKS_PREFIX)";
+				SFML_LINK_SUFFIX = "$(SFML_LINK_FRAMEWORKS_SUFFIX)";
+				SFML_NETWORK = "";
+				SFML_SYSTEM = "$(SFML_LINK_PREFIX)sfml-system$(SFML_LINK_SUFFIX)";
+				SFML_WINDOW = "$(SFML_LINK_PREFIX)sfml-window$(SFML_LINK_SUFFIX)";
+			};
+			name = Release;
+		};
+		273777BC14B3901700361CD8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				INFOPLIST_FILE = "Tarassis/Tarassis-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		273777BD14B3901700361CD8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				INFOPLIST_FILE = "Tarassis/Tarassis-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2737779A14B3901600361CD8 /* Build configuration list for PBXProject "Tarassis" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				273777B914B3901700361CD8 /* Debug */,
+				273777BA14B3901700361CD8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		273777BB14B3901700361CD8 /* Build configuration list for PBXNativeTarget "Tarassis" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				273777BC14B3901700361CD8 /* Debug */,
+				273777BD14B3901700361CD8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2737779714B3901600361CD8 /* Project object */;
+}
