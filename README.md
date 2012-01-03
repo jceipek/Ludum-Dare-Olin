@@ -41,10 +41,15 @@ in the root directory.
 CREDITS
 =======
 Julian Ceipek - 3D Art and Coding
+
 Matt Belland - Coding
+
 Kiefer Hicks - Coding
+
 Kai Ausin - Concept and 2D Art
+
 Xy Ziemba - Coding
+
 Jae Young Park - Music
 
 
