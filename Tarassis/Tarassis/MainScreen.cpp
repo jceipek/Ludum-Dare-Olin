@@ -12,8 +12,7 @@
 
 
 
-MainScreen::MainScreen (sf::RenderWindow *window) {
-    this->window = window;
+MainScreen::MainScreen (sf::RenderWindow *window) :Screen(window) {
     
     // Load a sprite to display
     sf::Texture texture;
@@ -31,25 +30,14 @@ void MainScreen::updateLogic() {
     sf::Event event;
     while (this->window->PollEvent(event))
     {
-        this->processStandardInput(event);
+        this->processInput(event);
     }
 }
 
 void MainScreen::updateDraw() {
-    // Draw the sprite
     this->window->Draw(this->background);
-    
-    //std::cout << "Drawing\n";
 }
 
-void MainScreen::processStandardInput(sf::Event event) {
-    // Process events
-
-    // Close window : exit
-    if (event.Type == sf::Event::Closed)
-        this->window->Close();
-        
-        // Escape pressed : exit
-        if (event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Escape)
-            this->window->Close();
+void MainScreen::processInput(sf::Event event) {
+    Screen::processInput(event);
 }

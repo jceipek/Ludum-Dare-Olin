@@ -16,6 +16,8 @@
 		273777C514B3A03700361CD8 /* IntroPage.png in Resources */ = {isa = PBXBuildFile; fileRef = 273777C414B3A03700361CD8 /* IntroPage.png */; };
 		2737787914B3B94700361CD8 /* title.ogg in Resources */ = {isa = PBXBuildFile; fileRef = 2737787814B3B94700361CD8 /* title.ogg */; };
 		2737787B14B3C2B300361CD8 /* Tarassis.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2737787A14B3C2B300361CD8 /* Tarassis.icns */; };
+		273E234314B3E8A80064005D /* Game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 273E234214B3E8A80064005D /* Game.cpp */; };
+		273E234714B41E490064005D /* Screen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 273E234614B41E490064005D /* Screen.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +35,10 @@
 		273777C414B3A03700361CD8 /* IntroPage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IntroPage.png; sourceTree = "<group>"; };
 		2737787814B3B94700361CD8 /* title.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = title.ogg; sourceTree = "<group>"; };
 		2737787A14B3C2B300361CD8 /* Tarassis.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Tarassis.icns; sourceTree = "<group>"; };
+		273E234214B3E8A80064005D /* Game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Game.cpp; sourceTree = "<group>"; };
+		273E234514B3E8AE0064005D /* Game.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Game.hpp; sourceTree = "<group>"; };
+		273E234614B41E490064005D /* Screen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Screen.cpp; sourceTree = "<group>"; };
+		273E234814B41E550064005D /* Screen.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Screen.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +83,10 @@
 			children = (
 				273777BE14B3913000361CD8 /* constants.h */,
 				273777A814B3901700361CD8 /* main.cpp */,
+				273E234814B41E550064005D /* Screen.hpp */,
+				273E234614B41E490064005D /* Screen.cpp */,
+				273E234514B3E8AE0064005D /* Game.hpp */,
+				273E234214B3E8A80064005D /* Game.cpp */,
 				273777C114B394EA00361CD8 /* MainScreen.hpp */,
 				273777BF14B392BD00361CD8 /* MainScreen.cpp */,
 				273777AA14B3901700361CD8 /* ResourcePath.mm */,
@@ -217,6 +227,8 @@
 				273777A914B3901700361CD8 /* main.cpp in Sources */,
 				273777AB14B3901700361CD8 /* ResourcePath.mm in Sources */,
 				273777C014B392BD00361CD8 /* MainScreen.cpp in Sources */,
+				273E234314B3E8A80064005D /* Game.cpp in Sources */,
+				273E234714B41E490064005D /* Screen.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

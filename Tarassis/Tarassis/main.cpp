@@ -1,13 +1,8 @@
 #include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
 #include "ResourcePath.hpp"
 #include "constants.h"
 #include "MainScreen.hpp"
-
-enum gameState {
-    MAIN_SCREEN,
-    PLAYING
-    } gameState;
+#include "Game.hpp"
 
 int main (int argc, const char * argv[])
 {
@@ -21,20 +16,12 @@ int main (int argc, const char * argv[])
     	return EXIT_FAILURE;
     sf::Text text("Hello SFML", font, 50);
     text.SetColor(sf::Color::Black);*/
-
-    // Load a music to play
-    sf::Music music;
-    if (!music.OpenFromFile(ResourcePath() + "title.ogg"))
-    	return EXIT_FAILURE;
-
-    // Play the music
-    music.SetLoop(true);
-    music.Play();
     
-    MainScreen tempScreen(&window);
+    
+    Game game(&window);
+    
+    //MainScreen tempScreen(&window);
         
-    
-    gameState = MAIN_SCREEN;
 
     // Start the game loop
     while (window.IsOpened())
@@ -43,16 +30,7 @@ int main (int argc, const char * argv[])
     	// Clear screen
     	window.Clear();
         
-        switch (gameState) {
-            case MAIN_SCREEN:
-                //<#statements#>
-                tempScreen.updateLogic();
-                tempScreen.updateDraw();
-                break;
-                
-            default:
-                break;
-        }
+        game.step();
     	
     	// Draw the string
     	//window.Draw(text);
