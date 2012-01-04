@@ -15,6 +15,7 @@
 #include "MainScreen.hpp"
 
 enum gameState {
+    INITIALIZING,
     MAIN_SCREEN,
     PLAYING
 };
@@ -25,7 +26,7 @@ class Game {
     int activeLevelIndex;
     enum gameState state;
     
-    MainScreen menu;
+    MainScreen* menu;
     
     // Load background music
     sf::Music music;
@@ -33,6 +34,7 @@ class Game {
     
 public:
     Game (sf::RenderWindow*);
+    ~Game();
     void loadNextLevel();
     void loadMenu();
     int getActiveLevelIndex();

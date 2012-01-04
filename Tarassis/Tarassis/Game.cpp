@@ -10,10 +10,19 @@
 
 #include "Game.hpp"
 
-Game::Game (sf::RenderWindow* window) : menu(window) {
+Game::Game (sf::RenderWindow* window) {
+    this->state = INITIALIZING;
     this->window = window;
     this->activeLevelIndex = 0;
+    this->menu = NULL;
     this->loadMenu();
+}
+
+Game::~Game() {
+    if (this->menu != NULL) {
+        std::cout << "Deleting menu\n";
+        delete this->menu;
+    }
 }
 
 void Game::loadNextLevel() {
@@ -21,7 +30,9 @@ void Game::loadNextLevel() {
 }
 
 void Game::loadMenu() {
-    //this->menu = MainScreen::MainScreen(this->window);
+    std::cout << "Loading menu\n";
+    this->menu = new MainScreen(this->window);
+    
     
     if (!this->music.OpenFromFile(ResourcePath() + "title.ogg"))
         std::cout << "Unable to load title music!";
@@ -41,11 +52,11 @@ enum gameState Game::getGameState() {
     return this->state;
 }
 
-void Game::step() {
+void Game::step() {    
     switch (this->state) {
         case MAIN_SCREEN:
-            menu.updateLogic();
-            menu.updateDraw();
+            this->menu->updateLogic();
+            this->menu->updateDraw();
             break;
             
         default:
